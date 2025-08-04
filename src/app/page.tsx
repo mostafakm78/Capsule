@@ -11,7 +11,7 @@ export default function Home() {
     <>
       <Header bungee={bungee} />
       <Main />
-      <Footer />
+      <Footer bungee={bungee}/>
     </>
   );
 }

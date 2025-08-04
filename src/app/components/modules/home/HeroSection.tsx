@@ -75,7 +75,7 @@ export default function HeroSection() {
       );
   }, []);
   return (
-    <section className="flex relative mb-6 bg-linear-to-b from-foreground/20 to-background justify-center pt-12 items-center">
+    <header className="flex relative mb-6 bg-linear-to-b from-foreground/20 to-background justify-center pt-12 items-center">
       <div className="flex flex-col px-10 items-center py-6 gap-8 rounded-lg w-full">
         <div className="flex items-center justify-center gap-16 w-full">
           <div className="flex flex-col w-1/2 gap-10 justify-center items-center">
@@ -123,6 +123,6 @@ export default function HeroSection() {
           </div>
         </div>
       </div>
-    </section>
+    </header>
   );
 }

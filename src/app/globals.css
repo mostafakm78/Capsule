@@ -176,8 +176,8 @@ body {
 }
 
 * {
-  --sb-track-color: oklch(0.961 0.007 89);
-  --sb-thumb-color: oklch(0.141 0.005 285.823);
+  --sb-track-color: oklch(95.731% 0.00388 106.905);
+  --sb-thumb-color: oklch(0.271 0.047 251);
   --sb-size: 10px;
 }
 
@@ -200,11 +200,11 @@ body {
   }
 }
 
-@layer base {
+/* @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
   }
-}
+} */

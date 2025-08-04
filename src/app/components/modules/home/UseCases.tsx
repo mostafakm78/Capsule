@@ -154,7 +154,7 @@ export default function UseCases() {
               <div className="w-full h-full rounded-md bg-primary"></div>
             </div>
             <div className="flex flex-col items-center justify-center gap-4">
-              <Image src="/images/think.png" alt="think" width={200} height={200} className="drop-shadow-xl" />
+              <Image src="/images/privacy.png" alt="think" width={200} height={200} className="drop-shadow-xl" />
               <h3 className="text-foreground text-3xl font-kalmeh">امنیت و حریم خصوصی داره ؟</h3>
               <p className="text-foreground/70 text-xl">بله خیلی مهمه چون کاربر داده شخصی می‌ده</p>
             </div>
@@ -179,10 +179,7 @@ export default function UseCases() {
             <div className="dot w-5 h-5 rounded-full bg-secondary"></div>
           </div>
           <div className="w-[90%] h-[50%] flex-col layer z-10 flex justify-around items-center rounded-lg right-layer">
-            <p className="text-foreground/80 text-xl text-justify">
-              کپسول خاطره یک پلتفرم آنلاین است که به شما امکان می‌دهد خاطرات و لحظات مهم زندگی خود را در قالب کپسول‌های دیجیتال ذخیره کنید. این کپسول‌ها می‌توانند شامل متن، عکس، ویدئو و صدا باشند. با استفاده از این پلتفرم، شما می‌توانید خاطرات خود را به صورت امن نگهداری کنید و در آینده به آن‌ها
-              دسترسی داشته باشید.
-            </p>
+            <p className="text-foreground/80 text-xl text-justify">کپسول یه جور زمان‌نگهداره. خاطره‌هات رو با صدا، عکس یا نوشته می‌ذاری توش، زمان باز شدنش رو مشخص می‌کنی، و بعد... می‌مونه تا روزی که برگردی و دوباره بخونیش. برای خودت، برای یه عزیز، یا حتی واسه کسی که هنوز پیداش نکردی.</p>
           </div>
         </div>
       </div>

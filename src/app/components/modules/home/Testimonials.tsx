@@ -24,8 +24,8 @@ export default function Testimonials() {
             </svg>
             <h4 className="text-4xl font-kalmeh text-foreground">شما در مورد کپسول چی گفتین ؟</h4>
           </div>
-          <p className="text-xl text-foreground/70 w-2/3 "> بخش کوچیکی از نظرات کاربرای کپسول درباره تجربه ای که اینجا داشتن</p>
-          <div className="flex items-center w-2/3 justify-between text-xl text-foreground/70">
+          <p className="text-xl text-foreground/70 w-2/3 mr-14"> بخش کوچیکی از نظرات کاربرای کپسول درباره تجربه ای که اینجا داشتن</p>
+          <div className="flex items-center w-2/3 justify-between text-xl text-foreground/70 mr-14">
             <div className="flex gap-3">
               <BiSolidRightArrow onClick={() => swiperApi?.slidePrev()} className="cursor-pointer" />
               <BiSolidLeftArrow onClick={() => swiperApi?.slideNext()} className="cursor-pointer" />

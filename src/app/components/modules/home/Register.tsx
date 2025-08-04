@@ -6,7 +6,7 @@ import { IoLockClosedOutline } from 'react-icons/io5';
 
 export default function Register() {
   return (
-    <section className="flex flex-col mb-16 px-10 justify-center mt-44 items-center">
+    <section className="flex flex-col mb-20 px-10 justify-center mt-44 items-center">
       <div className="flex gap-10 justify-center items-center">
         <div className="w-full space-y-6">
           <div className="flex items-center">
@@ -17,7 +17,7 @@ export default function Register() {
             </svg>
             <h4 className="text-4xl font-kalmeh text-foreground">خاطرات امروز، گنجینه فردای تو هستند.</h4>
           </div>
-          <p className="text-xl text-foreground/70 w-2/3 ">متن، عکس، ویدئو یا صدایی که امروز ثبت می‌کنی، فردا ممکنه باارزش‌ترین چیزی باشه که داری</p>
+          <p className="text-xl text-foreground/70 w-2/3 mr-14">متن، عکس، ویدئو یا صدایی که امروز ثبت می‌کنی، فردا ممکنه باارزش‌ترین چیزی باشه که داری</p>
         </div>
         <div className="w-full flex flex-col items-center justify-center gap-6">
           <h4 className="text-2xl">همین حالا اولین کپسول خاطره‌ات رو بساز!</h4>

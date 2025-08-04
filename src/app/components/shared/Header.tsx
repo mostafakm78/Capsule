@@ -8,7 +8,11 @@ import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(useGSAP);
 
-export default function Header({ bungee }) {
+interface Logo {
+  bungee: { className: string };
+}
+
+export default function Header({ bungee }: Logo) {
   const timeline = gsap.timeline();
 
   useGSAP(() => {
@@ -82,7 +86,7 @@ export default function Header({ bungee }) {
           <Image className="logo" src="/images/Logo.png" alt="Logo" width={50} height={50} />
           <h1 className={`${bungee.className}`}>Capsule</h1>
         </div>
-        <Link className="nav-link text-foreground text-lg" href="">
+        <Link className="nav-link text-foreground text-lg" href="/">
           صفحه اصلی
         </Link>
         <Link className="nav-link text-foreground text-lg" href="">
@@ -94,9 +98,8 @@ export default function Header({ bungee }) {
         <Link className="nav-link text-foreground text-lg" href="">
           درباره کپسول
         </Link>
-        <Link className="nav-link hover:bg-primary text-foreground flex gap-2 items-center justify-between bg-secondary p-2 rounded-md text-lg" href="">
-          <span className="mt-1 text-background/90 text-sm font-sans font-semibold">Mostafa kamari</span>
-          <Image className="rounded-full" src="/images/default.png" alt="default profile photo" width={30} height={30} />
+        <Link className="nav-link rounded-full ring-2 ring-foreground/50 text-lg" href="">
+          <Image className="rounded-full" src="/images/default.png" alt="default profile photo" width={45} height={45} />
         </Link>
         <div className="theme">
           <ThemeToggle />
