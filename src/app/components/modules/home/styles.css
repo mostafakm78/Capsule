@@ -16,7 +16,21 @@
   background-color: oklch(0.772 0.128 56);
 }
 
-
 .dark .swiper-slide {
   background-color: oklch(63.495% 0.03002 244.977);
+}
+
+
+@media screen and (max-width: 768px) and (min-width: 481px) {
+  .swiper {
+    width: 400px;
+    height: 250px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .swiper {
+    width: 270px;
+    height: 250px;
+  }
 }

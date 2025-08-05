@@ -165,13 +165,12 @@
   --primary: oklch(0.55 0.15 270);
   --secondary: oklch(0.772 0.128 56);
   --muted: oklch(1 0 0);
-  --accent: oklch(0.257 0.059 253);
+  --accent: oklch(35.465% 0.07358 252.977);
 }
 
 body {
   font-family: Vazirmatn, sans-serif;
   font-weight: normal;
-  box-sizing: content-box;
   overflow-x: hidden;
 }
 
