@@ -70,7 +70,7 @@ export default function Register() {
             </span>
             <h4 className="text-foreground/70">امن، شخصی، برای همیشه</h4>
           </div>
-          <ShinyButton className="section-two w-full bg-secondary hover:bg-primary hover:border-primary shadow-lg py-4">
+          <ShinyButton className="w-full bg-secondary hover:bg-primary hover:border-primary shadow-lg py-4">
             <Link href="">شروع رایگان</Link>
           </ShinyButton>
         </div>

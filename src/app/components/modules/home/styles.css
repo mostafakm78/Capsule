@@ -20,6 +20,27 @@
   background-color: oklch(63.495% 0.03002 244.977);
 }
 
+.nav-link span::before {
+  content: attr(data-hover);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  color: inherit;
+  white-space: nowrap;
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.3s ease;
+  pointer-events: none;
+  user-select: none;
+}
+
+.nav-link:hover span {
+  transform: translateY(-100%);
+}
+
+.nav-link:hover span::before {
+  transform: translateY(-100%);
+}
 
 @media screen and (max-width: 768px) and (min-width: 481px) {
   .swiper {

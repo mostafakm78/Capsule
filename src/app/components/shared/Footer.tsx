@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
-import { FaInstagram, FaTelegram, FaLinkedin, FaWhatsapp, FaArrowUp , FaGithub  } from 'react-icons/fa';
+import { FaInstagram, FaTelegram, FaLinkedin, FaWhatsapp, FaArrowUp, FaGithub } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';
 import { Button } from '@/components/ui/button';
 
@@ -13,7 +13,7 @@ interface Logo {
 
 export default function Footer({ bungee }: Logo) {
   const scrollToUp = () => {
-    const top = window.scrollTo({
+    window.scrollTo({
       top: 0,
       behavior: 'smooth',
     });
@@ -55,13 +55,13 @@ export default function Footer({ bungee }: Logo) {
         </div>
         <div className="col-span-4 self-start flex flex-col gap-2">
           <h4 className="font-kalmeh text-xl text-foreground">بخش های سایت</h4>
-          <Link className='text-foreground/80 pr-4 relative before:content-[""] before:h-[10px] before:w-[10px] before:bg-foreground/50 before:rounded-full before:absolute before:top-1/2 before:right-0 before:-translate-y-1/2' href="">
+          <Link className='text-foreground/80 pr-4 relative before:content-[""] before:h-[10px] before:w-[10px] before:bg-foreground/50 before:rounded-full before:absolute before:top-1/2 before:right-0 before:-translate-y-1/2' href="/capsules">
             کپسول های عمومی
           </Link>
           <Link className='text-foreground/80 pr-4 relative before:content-[""] before:h-[10px] before:w-[10px] before:bg-foreground/50 before:rounded-full before:absolute before:top-1/2 before:right-0 before:-translate-y-1/2' href="">
             قوانین و مقررات
           </Link>
-          <Link className='text-foreground/80 pr-4 relative before:content-[""] before:h-[10px] before:w-[10px] before:bg-foreground/50 before:rounded-full before:absolute before:top-1/2 before:right-0 before:-translate-y-1/2' href="">
+          <Link className='text-foreground/80 pr-4 relative before:content-[""] before:h-[10px] before:w-[10px] before:bg-foreground/50 before:rounded-full before:absolute before:top-1/2 before:right-0 before:-translate-y-1/2' href="/about-us">
             درباره کپسول
           </Link>
           <Link className='text-foreground/80 pr-4 relative before:content-[""] before:h-[10px] before:w-[10px] before:bg-foreground/50 before:rounded-full before:absolute before:top-1/2 before:right-0 before:-translate-y-1/2' href="">
@@ -105,7 +105,7 @@ export default function Footer({ bungee }: Logo) {
           </div>
         </div>
       </div>
-        <p className="text-sm">© {new Date().getFullYear()} کپسول خاطره با ❤️ برای حافظه‌ی لحظه‌ها ساخته شده.</p>
+      <p className="text-sm">© {new Date().getFullYear()} کپسول خاطره با ❤️ برای حافظه‌ی لحظه‌ها ساخته شده.</p>
     </footer>
   );
 }

@@ -1,11 +1,13 @@
 'use client';
 
-import Link from 'next/link';
 import { ThemeToggle } from './Theme';
 import Image from 'next/image';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { usePathname } from 'next/navigation';
+import { Sidebar } from './Sidebar';
+import LoginButton from './LoginButton';
+import HeaderLink from './HeaderLink';
 
 gsap.registerPlugin(useGSAP);
 
@@ -36,11 +38,11 @@ export default function Header({ bungee }: Logo) {
         '.brand',
         {
           opacity: 0,
-          x: 50,
+          y: -50,
         },
         {
           opacity: 1,
-          x: 0,
+          y: 0,
           duration: 0.5,
           ease: 'power2.out',
           stagger: 0.1,
@@ -50,7 +52,7 @@ export default function Header({ bungee }: Logo) {
         '.nav-link',
         {
           opacity: 0,
-          x: 50,
+          x: -50,
         },
         {
           opacity: 1,
@@ -79,34 +81,52 @@ export default function Header({ bungee }: Logo) {
         duration: 0.1,
         ease: 'power1.inOut',
       });
+
+    return () => timeline.kill();
   }, []);
 
   return (
-    <header className={`flex w-full ${pathname === '/' ? 'bg-foreground/20' : 'bg-background'} items-center justify-center  `}>
-      <nav className="header w-11/12 z-10 lg:w-10/12 bg-accent py-6 px-10 mt-8 flex items-center shadow-lg justify-around rounded-xl gap-4">
-        <div className="brand flex xl:text-5xl lg:text-4xl text-3xl text-muted items-center gap-2 justify-center lg:px-12">
+    <header
+      className={`flex z-10 flex-col relative w-full ${
+        pathname === '/' ? 'bg-foreground/20' : 'bg-background pb-10 after:bg-linear-to-b after:from-foreground/30 after:to-foreground/10 after:content-[""] after:w-full after:h-full after:absolute dark:after:opacity-45 after:opacity-80 after:z-[1] after:blur-2xl'
+      } items-center justify-center`}
+    >
+      <nav className="header relative w-11/12 z-10 lg:w-10/12 bg-background py-6 px-10 mt-8 flex items-center shadow-lg justify-around rounded-xl gap-4">
+        <div className="nav-link lg:hidden text-4xl cursor-pointer">
+          <Sidebar />
+        </div>
+        <div className="brand flex xl:text-5xl lg:text-4xl text-3xl text-muted items-center gap-2 justify-center">
           <Image className="logo h-[30px] w-[30px] lg:h-[40px] lg:w-[40px] xl:w-[50px] xl:h-[50px]" src="/images/Logo.png" alt="Logo" width={20} height={20} />
           <h1 className={`${bungee.className}`}>Capsule</h1>
         </div>
-        <Link className="nav-link hidden md:block text-foreground text-lg" href="/">
-          صفحه اصلی
-        </Link>
-        <Link className="nav-link hidden md:block text-foreground text-lg" href="/login">
-          ورود به حساب
-        </Link>
-        <Link className="nav-link hidden md:block text-foreground text-lg" href="/capsules">
-          کپسول های عمومی
-        </Link>
-        <Link className="nav-link hidden xl:block text-foreground text-lg" href="/about">
-          درباره کپسول
-        </Link>
-        <Link className="nav-link hidden rounded-full ring-2 ring-foreground/50 text-lg" href="">
-          <Image className="rounded-full" src="/images/default.png" alt="default profile photo" width={45} height={45} />
-        </Link>
-        <div className="theme">
-          <ThemeToggle />
+        <div className="flex items-center gap-6">
+          <div className="nav-link hidden lg:block">
+            <ThemeToggle />
+          </div>
+          <div className="nav-link">
+            <LoginButton />
+          </div>
+          {/* <Link className="nav-link  rounded-full ring-2 ring-foreground/50 text-lg" href="">
+            <Image className="rounded-full" src="/images/default.png" alt="default profile photo" width={35} height={35} />
+          </Link> */}
         </div>
       </nav>
+      <div className="header z-10 shadow-md lg:block hidden bg-accent w-8/12 py-5 rounded-b-xl">
+        <div className="lg:flex items-center justify-center gap-10 hidden">
+          <div className="theme hidden lg:block">
+            <HeaderLink text="صفحه اصلی" link="/" />
+          </div>
+          <div className="theme hidden lg:block">
+            <HeaderLink text="کپسول های عمومی" link="/capsules" />
+          </div>
+          <div className="theme hidden lg:block">
+            <HeaderLink text="درباره کپسول" link="/about-us" />
+          </div>
+          <div className="theme hidden lg:block">
+            <HeaderLink text="ارتباط با ما" link="/contact-us" />
+          </div>
+        </div>
+      </div>
     </header>
   );
 }
