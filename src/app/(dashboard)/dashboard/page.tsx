@@ -1,5 +1,5 @@
+import HomePagePanel from '@/app/components/modules/dashboard/HomePagePanel';
+
 export default function Dashboard() {
-    return (
-        <h1>salam</h1>
-    )
+  return <HomePagePanel />;
 }

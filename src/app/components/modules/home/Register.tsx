@@ -1,7 +1,6 @@
 'use client';
 
 import { ShinyButton } from '@/app/components/shared/shiny-button';
-import Link from 'next/link';
 import { IoLockClosedOutline } from 'react-icons/io5';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
