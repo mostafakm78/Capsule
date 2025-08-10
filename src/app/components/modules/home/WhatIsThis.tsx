@@ -20,9 +20,9 @@ export default function WhatIsThis() {
       {
         opacity: 1,
         x: 0,
-        duration: 0.5,
-        delay: 0.3,
-        stagger: 0.3,
+        duration: 0.2,
+        delay: 0.2,
+        stagger: 0.2,
         scrollTrigger: {
           trigger: '.text',
           start: 'top 80%',
@@ -39,9 +39,9 @@ export default function WhatIsThis() {
       {
         opacity: 1,
         x: 0,
-        duration: 0.5,
-        delay: 0.3,
-        stagger: 0.3,
+        duration: 0.2,
+        delay: 0.2,
+        stagger: 0.2,
         scrollTrigger: {
           trigger: '.arrow',
           start: 'top 80%',

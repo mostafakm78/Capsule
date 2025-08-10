@@ -27,9 +27,9 @@ export default function Testimonials() {
       {
         opacity: 1,
         x: 0,
-        duration: 0.5,
-        delay: 0.3,
-        stagger: 0.3,
+        duration: 0.2,
+        delay: 0.2,
+        stagger: 0.1,
         scrollTrigger: {
           trigger: '.section-right',
           start: 'top 80%',
@@ -43,8 +43,8 @@ export default function Testimonials() {
       },
       {
         opacity: 1,
-        duration: 0.5,
-        delay: 0.7,
+        duration: 0.3,
+        delay: 0.2,
         scrollTrigger: {
           trigger: '.section-left',
           start: 'top 80%',

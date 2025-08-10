@@ -111,7 +111,7 @@ export default function Header({ bungee }: Logo) {
           </Link> */}
         </div>
       </nav>
-      <div className="header z-10 shadow-md lg:block hidden bg-accent w-8/12 py-5 rounded-b-xl">
+      <div className="header z-[9] shadow-md lg:block hidden bg-accent w-8/12 py-5 rounded-b-xl">
         <div className="lg:flex items-center justify-center gap-10 hidden">
           <div className="theme hidden lg:block">
             <HeaderLink text="صفحه اصلی" link="/" />

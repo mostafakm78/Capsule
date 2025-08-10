@@ -1,15 +1,19 @@
 'use client';
 
-import { ShinyButton } from '@/components/magicui/shiny-button';
+import { ShinyButton } from '@/app/components/shared/shiny-button';
 import Link from 'next/link';
 import { IoLockClosedOutline } from 'react-icons/io5';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useRouter } from 'next/navigation';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 export default function Register() {
+
+  const router = useRouter();
+
   useGSAP(() => {
     gsap.fromTo(
       '.section-one',
@@ -20,9 +24,9 @@ export default function Register() {
       {
         opacity: 1,
         x: 0,
-        duration: 0.5,
-        delay: 0.3,
-        stagger: 0.3,
+        duration: 0.2,
+        delay: 0.2,
+        stagger: 0.1,
         scrollTrigger: {
           trigger: '.section-one',
           start: 'top 80%',
@@ -38,9 +42,9 @@ export default function Register() {
       {
         opacity: 1,
         y: 0,
-        duration: 0.5,
-        delay: 0.3,
-        stagger: 0.3,
+        duration: 0.2,
+        delay: 0.2,
+        stagger: 0.1,
         scrollTrigger: {
           trigger: '.section-two',
           start: 'top 80%',
@@ -70,8 +74,8 @@ export default function Register() {
             </span>
             <h4 className="text-foreground/70">امن، شخصی، برای همیشه</h4>
           </div>
-          <ShinyButton className="w-full bg-secondary hover:bg-primary hover:border-primary shadow-lg py-4">
-            <Link href="">شروع رایگان</Link>
+          <ShinyButton onClick={() => router.push('/login')} className="w-full bg-secondary hover:bg-primary hover:border-primary shadow-lg py-4">
+            شروع رایگان
           </ShinyButton>
         </div>
       </div>

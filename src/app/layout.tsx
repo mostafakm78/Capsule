@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from './components/providers/Theme-provider';
+import { ReduxProvider } from './components/providers/Redux-Provider';
 
 export const metadata: Metadata = {
   title: 'Capsule',
@@ -16,7 +17,7 @@ export default function RootLayout({
     <html lang="fa" dir="rtl" suppressHydrationWarning>
       <body className="bg-background">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
+          <ReduxProvider>{children}</ReduxProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -7,10 +7,10 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useState } from 'react';
+import { useRef, useState, useLayoutEffect } from 'react';
 import { Textarea } from '@/components/ui/textarea';
+import gsap from 'gsap';
 
-// اسکیماها برای هر مرحله جداگانه
 const step1Schema = z.object({
   firstName: z.string().min(2, { message: 'نام الزامی است' }),
   lastName: z.string().min(2, { message: 'نام خانوادگی الزامی است' }),
@@ -30,6 +30,35 @@ const fullSchema = step1Schema.extend(step2Schema.shape).extend(step3Schema.shap
 
 export default function ContactUsFrom() {
   const [step, setStep] = useState<number>(1);
+  const formRef = useRef<HTMLDivElement | null>(null);
+
+  useLayoutEffect(() => {
+    if (formRef.current) {
+      gsap.fromTo(
+        '.anime',
+        {
+          opacity: 0,
+          x: 50,
+        },
+        {
+          opacity: 1,
+          x: 0,
+          stagger: 0.3,
+        }
+      );
+      gsap.fromTo(
+        '.title-anime',
+        {
+          opacity: 0,
+          y: -20,
+        },
+        {
+          opacity: 1,
+          y: 0,
+        }
+      );
+    }
+  }, [step]);
 
   const form = useForm({
     resolver: zodResolver(fullSchema),
@@ -71,34 +100,36 @@ export default function ContactUsFrom() {
   };
 
   return (
-    <div className="flex flex-col w-2/3 mt-10">
+    <div className="flex flex-col lg:w-2/3 w-full mt-10">
       <div className="flex items-center justify-center">
         {[1, 2, 3].map((s, i, arr) => (
           <div key={s} className="flex items-center">
-            <div className={`h-[70px] w-[70px] flex items-center justify-center rounded-full ${step >= s ? 'bg-primary' : 'bg-background'} duration-300`}>
+            <div className={`lg:h-[70px] h-[60px] w-[60px] lg:w-[70px] flex items-center justify-center shadow-lg rounded-full ${step >= s ? 'bg-primary' : 'bg-accent/50'} duration-300`}>
               <span className={`text-2xl ${step >= s ? 'text-background' : 'text-foreground/70'}`}>{s === 1 ? '۱' : s === 2 ? '۲' : '۳'}</span>
             </div>
-            {i !== arr.length - 1 && <div className={`h-[4px] w-[100px] relative bg-background after:content-[""] after:w-0 after:h-full after:absolute after:bg-primary after:right-0 ${step > s ? 'after:w-full' : ''} after:duration-300`}></div>}
+            {i !== arr.length - 1 && <div className={`h-[4px] lg:w-[100px] w-[80px] relative bg-accent/50 after:content-[""] after:w-0 after:h-full after:absolute after:bg-primary after:right-0 ${step > s ? 'after:w-full' : ''} after:duration-300`}></div>}
           </div>
         ))}
       </div>
 
-      <div className="bg-white h-[400px] p-8 rounded-lg shadow-lg mt-8">
+      <div className="bg-white dark:bg-slate-900 h-[500px] flex flex-col justify-between p-8 rounded-lg shadow-lg mt-8">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 flex flex-col">
+            <div ref={formRef} key={step} className="flex flex-col"></div>
             {step === 1 && (
               <>
-                <h4 className="text-xl font-bold text-center">مرحله ۱: اطلاعات شخصی</h4>
+                <h4 className="title-anime text-2xl text-foreground font-bold text-center">مرحله ۱: اطلاعات شخصی</h4>
                 <FormField
                   control={form.control}
                   name="firstName"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>نام:</FormLabel>
+                    <FormItem className="p-4">
+                      <FormLabel className="anime lg:text-2xl text-xl">
+                        نام: <FormMessage className="text-red-500" />
+                      </FormLabel>
                       <FormControl>
-                        <Input placeholder="نام شما" {...field} />
+                        <Input className="anime" placeholder="نام شما" {...field} />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -107,12 +138,13 @@ export default function ContactUsFrom() {
                   control={form.control}
                   name="lastName"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>نام خانوادگی:</FormLabel>
+                    <FormItem className="p-4">
+                      <FormLabel className="anime lg:text-2xl text-xl">
+                        نام خانوادگی: <FormMessage className="text-red-500" />
+                      </FormLabel>
                       <FormControl>
-                        <Input placeholder="نام خانوادگی شما" {...field} />
+                        <Input className="anime" placeholder="نام خانوادگی شما" {...field} />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -121,17 +153,18 @@ export default function ContactUsFrom() {
 
             {step === 2 && (
               <>
-                <h4 className="text-xl font-bold text-center">مرحله ۲: اطلاعات تماس</h4>
+                <h4 className="title-anime text-2xl text-foreground font-bold text-center">مرحله ۲: اطلاعات تماس</h4>
                 <FormField
                   control={form.control}
                   name="email"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>ایمیل:</FormLabel>
+                    <FormItem className="p-4">
+                      <FormLabel className="anime lg:text-2xl text-xl">
+                        ایمیل: <FormMessage className="text-red-500" />
+                      </FormLabel>
                       <FormControl>
-                        <Input placeholder="your@email.com" {...field} />
+                        <Input className="anime" placeholder="your@email.com" {...field} />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -140,12 +173,13 @@ export default function ContactUsFrom() {
                   control={form.control}
                   name="phone"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>شماره تماس:</FormLabel>
+                    <FormItem className="p-4">
+                      <FormLabel className="anime lg:text-2xl text-xl">
+                        شماره تماس: <FormMessage className="text-red-500" />
+                      </FormLabel>
                       <FormControl>
-                        <Input placeholder="09123456789" {...field} />
+                        <Input className="anime" placeholder="09123456789" {...field} />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -154,17 +188,18 @@ export default function ContactUsFrom() {
 
             {step === 3 && (
               <>
-                <h4 className="text-xl font-bold text-center">مرحله ۳: جزئیات پیام</h4>
+                <h4 className="title-anime text-2xl text-foreground font-bold text-center">مرحله ۳: جزئیات پیام</h4>
                 <FormField
                   control={form.control}
                   name="title"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>عنوان:</FormLabel>
+                    <FormItem className="p-4">
+                      <FormLabel className="anime lg:text-2xl text-xl">
+                        عنوان: <FormMessage className="text-red-500" />
+                      </FormLabel>
                       <FormControl>
-                        <Input placeholder="عنوان پیام" {...field} />
+                        <Input className="anime" placeholder="عنوان پیام" {...field} />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -173,12 +208,13 @@ export default function ContactUsFrom() {
                   control={form.control}
                   name="description"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>توضیحات:</FormLabel>
+                    <FormItem className="p-4">
+                      <FormLabel className="anime lg:text-2xl text-xl">
+                        توضیحات: <FormMessage className="text-red-500" />
+                      </FormLabel>
                       <FormControl>
-                        <Textarea placeholder="توضیحات بیشتر" {...field} />
+                        <Textarea className="anime" placeholder="توضیحات بیشتر" {...field} />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -188,19 +224,19 @@ export default function ContactUsFrom() {
         </Form>
         <div className={`flex ${step === 1 ? 'justify-end' : 'justify-between'} items-center w-full mt-6`}>
           {step > 1 && (
-            <Button type="button" variant="outline" onClick={onBack}>
+            <Button type="button" variant="outline" className="cursor-pointer" onClick={onBack}>
               قبلی
             </Button>
           )}
 
           {step < 3 && (
-            <Button type="button" onClick={onNext}>
+            <Button type="button" className="hover:text-background cursor-pointer" onClick={onNext}>
               بعدی
             </Button>
           )}
 
           {step === 3 && (
-            <Button type="submit" onClick={onFinalSubmit} className="bg-green-600 text-white">
+            <Button type="submit" onClick={onFinalSubmit} className="bg-green-600 hover:bg-foreground w-1/4 text-white cursor-pointer">
               ارسال
             </Button>
           )}

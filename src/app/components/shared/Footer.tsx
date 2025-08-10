@@ -55,51 +55,51 @@ export default function Footer({ bungee }: Logo) {
         </div>
         <div className="col-span-4 self-start flex flex-col gap-2">
           <h4 className="font-kalmeh text-xl text-foreground">بخش های سایت</h4>
-          <Link className='text-foreground/80 pr-4 relative before:content-[""] before:h-[10px] before:w-[10px] before:bg-foreground/50 before:rounded-full before:absolute before:top-1/2 before:right-0 before:-translate-y-1/2' href="/capsules">
+          <Link className='text-foreground/80 pr-4 relative before:content-[""] before:h-[10px] before:w-[10px] before:bg-foreground/50 before:rounded-full before:absolute before:top-1/2 before:right-0 before:-translate-y-1/2 hover:before:bg-primary hover:text-primary duration-300' href="/capsules">
             کپسول های عمومی
           </Link>
-          <Link className='text-foreground/80 pr-4 relative before:content-[""] before:h-[10px] before:w-[10px] before:bg-foreground/50 before:rounded-full before:absolute before:top-1/2 before:right-0 before:-translate-y-1/2' href="">
+          <Link className='text-foreground/80 pr-4 relative before:content-[""] before:h-[10px] before:w-[10px] before:bg-foreground/50 before:rounded-full before:absolute before:top-1/2 before:right-0 before:-translate-y-1/2 hover:before:bg-primary hover:text-primary duration-300' href="/terms">
             قوانین و مقررات
           </Link>
-          <Link className='text-foreground/80 pr-4 relative before:content-[""] before:h-[10px] before:w-[10px] before:bg-foreground/50 before:rounded-full before:absolute before:top-1/2 before:right-0 before:-translate-y-1/2' href="/about-us">
+          <Link className='text-foreground/80 pr-4 relative before:content-[""] before:h-[10px] before:w-[10px] before:bg-foreground/50 before:rounded-full before:absolute before:top-1/2 before:right-0 before:-translate-y-1/2 hover:before:bg-primary hover:text-primary duration-300' href="/about-us">
             درباره کپسول
           </Link>
-          <Link className='text-foreground/80 pr-4 relative before:content-[""] before:h-[10px] before:w-[10px] before:bg-foreground/50 before:rounded-full before:absolute before:top-1/2 before:right-0 before:-translate-y-1/2' href="">
+          <Link className='text-foreground/80 pr-4 relative before:content-[""] before:h-[10px] before:w-[10px] before:bg-foreground/50 before:rounded-full before:absolute before:top-1/2 before:right-0 before:-translate-y-1/2 hover:before:bg-primary hover:text-primary duration-300' href="/contact-us">
             ارتباط با ما
           </Link>
         </div>
         <div className="col-span-4 lg:ml-28 flex flex-col gap-4 self-start">
           <h4 className="font-kalmeh lg:self-start self-center text-xl">ارتباط با ما</h4>
-          <div className="flex items-center justify-center gap-10 text-lg">
+          <div className="flex group items-center justify-center gap-10 text-lg">
             <div className="flex items-center justify-between gap-2">
-              <span className="relative z-[2] after:content-[''] after:absolute after:w-[20px] after:h-[20px] after:top-1 after:left-2 after:rounded-full after:bg-primary/20">
+              <span className="relative group-hover:scale-120 duration-300 z-[2] after:content-[''] after:absolute after:w-[20px] after:h-[20px] after:top-1 after:left-2 after:rounded-full after:bg-primary/20">
                 <MdEmail className="text-primary" />
               </span>
               <h4 className="text-foreground/70">ایمیل:</h4>
             </div>
-            <Link className="text-base" href="">
+            <Link className="text-base group-hover:scale-105 duration-300" href="">
               Mostafa@gmail.com
             </Link>
           </div>
-          <div className="flex items-center justify-center gap-10 text-lg">
+          <div className="flex group items-center justify-center gap-10 text-lg">
             <div className="flex items-center justify-between gap-2">
-              <span className="relative z-[2] after:content-[''] after:absolute after:w-[20px] after:h-[20px] after:top-1 after:left-2 after:rounded-full after:bg-primary/20">
+              <span className="relative group-hover:scale-120 duration-300 z-[2] after:content-[''] after:absolute after:w-[20px] after:h-[20px] after:top-1 after:left-2 after:rounded-full after:bg-primary/20">
                 <FaGithub className="text-primary" />
               </span>
               <h4 className="text-foreground/70">گیتهاب:</h4>
             </div>
-            <Link className="text-base" href="">
+            <Link className="text-base group-hover:scale-105 duration-300" href="">
               Mostafa kamari
             </Link>
           </div>
-          <div className="flex items-center justify-center gap-10 text-lg">
+          <div className="flex group items-center justify-center gap-10 text-lg">
             <div className="flex items-center justify-between gap-2">
-              <span className="relative z-[2] after:content-[''] after:absolute after:w-[20px] after:h-[20px] after:top-1 after:left-2 after:rounded-full after:bg-primary/20">
+              <span className="relative group-hover:scale-120 duration-300 z-[2] after:content-[''] after:absolute after:w-[20px] after:h-[20px] after:top-1 after:left-2 after:rounded-full after:bg-primary/20">
                 <FaTelegram className="text-primary" />
               </span>
               <h4 className="text-foreground/70">تلگرام:</h4>
             </div>
-            <Link className="text-base" href="">
+            <Link className="text-base group-hover:scale-105 duration-300" href="">
               Mostafakamari78@
             </Link>
           </div>
