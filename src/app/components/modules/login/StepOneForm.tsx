@@ -42,12 +42,13 @@ export default function StepOneForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>ایمیل:</FormLabel>
+              <FormLabel>
+                ایمیل: <FormMessage className="text-red-500" />
+              </FormLabel>
               <FormControl>
                 <Input placeholder="your@gmail.com" {...field} />
               </FormControl>
               <FormDescription>ایمیل اکانت خود را وارد کنید</FormDescription>
-              <FormMessage />
             </FormItem>
           )}
         />

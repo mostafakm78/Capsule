@@ -178,7 +178,7 @@ export default function CapsulesIndex() {
                   </Link>
                 </CardFooter>
               </Card>
-              <Card className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white dark:bg-slate-900 h-[350px] border-none shadow-sm">
+              <Card className="flex flex-col relative bg-white dark:bg-slate-900 h-[350px] border-none shadow-sm">
                 <CardHeader>
                   <div className="absolute -top-[8%] left-1/2 -translate-x-1/2">
                     <Avatar className="h-12 w-12 ring-2 ring-secondary">
@@ -215,22 +215,22 @@ export default function CapsulesIndex() {
           <Pagination>
             <PaginationContent>
               <PaginationItem>
-                <PaginationNext className="bg-primary text-background hover:bg-foreground hover:text-background" href="#" />
+                <PaginationNext className="bg-primary dark:hover:text-foreground text-background hover:bg-foreground hover:text-background" href="#" />
               </PaginationItem>
               <PaginationItem>
                 <PaginationEllipsis />
               </PaginationItem>
               <PaginationItem className="space-x-1">
-                <PaginationLink className="bg-primary text-background hover:bg-foreground hover:text-background" href="#">
+                <PaginationLink className="bg-primary dark:hover:text-foreground text-background hover:bg-foreground hover:text-background" href="#">
                   1
                 </PaginationLink>
-                <PaginationLink className="bg-primary text-background hover:bg-foreground hover:text-background" href="#">
+                <PaginationLink className="bg-primary dark:hover:text-foreground text-background hover:bg-foreground hover:text-background" href="#">
                   2
                 </PaginationLink>
               </PaginationItem>
 
               <PaginationItem>
-                <PaginationPrevious className="bg-primary text-background hover:bg-foreground hover:text-background" href="#" />
+                <PaginationPrevious className="bg-primary dark:hover:text-foreground text-background hover:bg-foreground hover:text-background" href="#" />
               </PaginationItem>
             </PaginationContent>
           </Pagination>

@@ -3,8 +3,8 @@ export default function TermsIndex() {
     <section className="flex items-center justify-center px-10">
       <div className="flex flex-col gap-20 items-center lg:w-[90%]">
         <div className="flex flex-col items-center gap-3">
-          <h3 className="text-5xl font-kalmeh">قوانین و مقررات سایت</h3>
-          <p className="text-2xl text-foreground/80">در این صفحه شرایط استفاده از وبسایت آموزشی راکت را مشاهده میکنید.</p>
+          <h3 className="lg:text-5xl text-4xl font-kalmeh">قوانین و مقررات سایت</h3>
+          <p className="lg:text-2xl text-lg text-foreground/80">در این صفحه شرایط استفاده از وبسایت آموزشی راکت را مشاهده میکنید.</p>
         </div>
         <div className="flex flex-col space-y-4 bg-white dark:bg-slate-900 text-lg text-foreground/60 rounded-lg p-10">
           <h1>به کپسول خوش آمدید.</h1>

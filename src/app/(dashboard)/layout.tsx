@@ -28,8 +28,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const persianDayOfWeekIndex = (dayOfWeek + 6) % 7;
 
   return (
-    <div className="flex bg-white dark:bg-slate-900 h-screen">
-      <aside className="bg-white dark:bg-slate-900 w-2/12 min-h-full hidden lg:flex flex-col py-10">
+    <div className="flex bg-white dark:bg-slate-900 min-h-screen">
+      <aside className="bg-white dark:bg-slate-900 xl:w-[18.5%] lg:w-3/12 min-h-full h-full hidden lg:flex flex-col py-10">
         <Link href="/" className="px-4 flex xl:text-3xl lg:text-2xl text-2xl text-muted items-center gap-2 justify-center">
           <Image className="h-[30px] w-[30px] lg:h-[35px] lg:w-[35px] xl:w-[40px] xl:h-[40px]" src="/images/Logo.png" alt="Logo" width={20} height={20} />
           <h1 className={`${bungee.className}`}>Capsule</h1>
@@ -75,7 +75,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <div className='bg-foreground text-xl p-2 text-background rounded-lg lg:hidden block'>
                 <PanelSidebar />
               </div>
-              <div className='flex lg:flex-row flex-col h-full lg:items-center lg:gap-3 items-start'>
+              <div className='flex lg:flex-row flex-col h-full lg:items-center xl:gap-3 lg:gap-1 items-start'>
                 <span className="lg:text-2xl text-base md:text-lg font-bold">مصطفی کمری عزیز ؛ خوش اومدی. 👋</span>
                 <Separator orientation="vertical" className="bg-foreground/20 h-full lg:block hidden" />
                 <span className="text-[11px] lg:text-base text-foreground/80">
@@ -84,7 +84,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </div>
             </div>
           </div>
-          <div className="flex items-center lg:gap-6 gap-3">
+          <div className="flex items-center xl:gap-6 gap-3">
             <div className="lg:block hidden">
               <ThemeToggle />
             </div>
@@ -98,7 +98,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         </nav>
 
-        <main className="flex-1 bg-background p-10 lg:rounded-tr-4xl">{children}</main>
+        <main className="flex-1 w-full bg-background xl:p-10 lg:p-2 lg:rounded-tr-4xl">{children}</main>
       </div>
     </div>
   );

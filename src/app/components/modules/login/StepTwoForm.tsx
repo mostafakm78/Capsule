@@ -44,7 +44,9 @@ export default function StepTwoForm() {
           render={({ field }) => (
             <FormItem>
               <div className="flex justify-between items-center">
-                <FormLabel>ایمیل:</FormLabel>
+                <FormLabel>
+                  ایمیل: <FormMessage className="text-red-500" />
+                </FormLabel>
                 <span onClick={() => dispatch(setStep(1))} className="text-primary text-sm cursor-pointer hover:underline">
                   ویرایش
                 </span>
@@ -53,7 +55,6 @@ export default function StepTwoForm() {
                 <Input disabled {...field} />
               </FormControl>
               <FormDescription>ایمیل شما</FormDescription>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -63,17 +64,20 @@ export default function StepTwoForm() {
           render={({ field }) => (
             <FormItem>
               <div className="flex justify-between items-center">
-                <FormLabel>پسورد:</FormLabel>
+                <FormLabel>
+                  پسورد: <FormMessage className="text-red-500" />
+                </FormLabel>
                 <span className="text-primary text-sm cursor-pointer hover:underline">فراموش کرده‌اید؟</span>
               </div>
               <FormControl>
                 <div className="relative">
                   <Input placeholder="پسورد اکانت" type={hide === true ? 'password' : 'text'} {...field} />
-                  <div onClick={() => setHide(!hide)}>{hide === false && <IoEye className="absolute text-foreground/60 text-xl top-1/2 -translate-y-1/2 left-0 ml-3 cursor-pointer" />}
-                  {hide === true && (<IoEyeOff className="absolute text-foreground/60 text-xl top-1/2 -translate-y-1/2 left-0 ml-3 cursor-pointer" />)}</div>
+                  <div onClick={() => setHide(!hide)}>
+                    {hide === false && <IoEye className="absolute text-foreground/60 text-xl top-1/2 -translate-y-1/2 left-0 ml-3 cursor-pointer" />}
+                    {hide === true && <IoEyeOff className="absolute text-foreground/60 text-xl top-1/2 -translate-y-1/2 left-0 ml-3 cursor-pointer" />}
+                  </div>
                 </div>
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
