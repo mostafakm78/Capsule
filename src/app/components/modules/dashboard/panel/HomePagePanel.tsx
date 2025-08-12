@@ -26,7 +26,7 @@ export default function HomePagePanel() {
   const [isEnd, setIsEnd] = useState(false);
 
   return (
-    <section className="flex mb-16 flex-col justify-center h-full gap-10">
+    <section className="flex flex-col justify-center h-full gap-10">
       <div className="grid grid-cols-12 w-full p-4 gap-2">
         <div className="border-emerald-500 dark:border-emerald-500/60 xl:col-span-3 col-span-6 flex items-center gap-2 bg-white dark:bg-slate-900 border-2 rounded-lg py-4 px-2">
           <div className="bg-emerald-500 p-2 rounded-full">
@@ -90,7 +90,7 @@ export default function HomePagePanel() {
                 md:max-w-[730px]
                 lg:max-w-[730px]
                 xl:max-w-4xl
-                2xl:max-w-6xl
+                2xl:max-w-7xl
                 overflow-x-hidden"
         >
           <Swiper

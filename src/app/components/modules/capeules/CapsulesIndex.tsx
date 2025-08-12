@@ -178,7 +178,7 @@ export default function CapsulesIndex() {
                   </Link>
                 </CardFooter>
               </Card>
-              <Card className="flex flex-col relative bg-white dark:bg-slate-900 h-[350px] border-none shadow-sm">
+              <Card className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white dark:bg-slate-900 h-[350px] border-none shadow-sm">
                 <CardHeader>
                   <div className="absolute -top-[8%] left-1/2 -translate-x-1/2">
                     <Avatar className="h-12 w-12 ring-2 ring-secondary">

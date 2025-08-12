@@ -1,3 +1,5 @@
+'use client';
+
 import { Separator } from '@/components/ui/separator';
 import jalaali from 'jalaali-js';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -13,12 +15,21 @@ import { BiSupport } from 'react-icons/bi';
 import { PiQuestionFill } from 'react-icons/pi';
 import { ImExit } from 'react-icons/im';
 import { RiNotification4Line } from 'react-icons/ri';
-import { PanelSidebar } from '../components/modules/dashboard/PanelSidebar';
+import { usePathname } from 'next/navigation';
+import { DashboardSidebar } from '../components/modules/dashboard/DashboardSidebar';
 const bungee = Bungee({
   weight: '400',
 });
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const pathName = usePathname();
+
+  const linkClasses = (href: string) => {
+    const isActive = href === '/' ? pathName === '/' : pathName.startsWith(href);
+
+    return `flex items-center text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300 ${isActive ? 'bg-background text-primary' : ''}`;
+  };
+
   const now = new Date();
 
   const { jy: year, jm: month, jd: day } = jalaali.toJalaali(now);
@@ -35,29 +46,29 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <h1 className={`${bungee.className}`}>Capsule</h1>
         </Link>
         <div className="flex flex-col text-foreground/85 py-18 px-5 gap-6">
-          <div className="flex items-center text-lg active:text-primary justify-start gap-3 bg-background p-2 rounded-lg text-primary hover:text-primary duration-300">
+          <div className={linkClasses('/dashboard/panel')}>
             <MdHomeFilled className="text-2xl" />
-            <Link href="/">صفحه اصلی پنل</Link>
+            <Link href="/dashboard/panel">صفحه اصلی پنل</Link>
           </div>
-          <div className="flex items-center text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300">
+          <div className={linkClasses('/dashboard/create-capsule')}>
             <HiMiniSquaresPlus className="text-2xl" />
-            <Link href="/">افزودن کپسول جدید</Link>
+            <Link href="/dashboard/create-capsule">افزودن کپسول جدید</Link>
           </div>
-          <div className="flex items-center text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300">
+          <div className={linkClasses('/dashboard/capsules')}>
             <BsCapsule className="text-2xl" />
-            <Link href="/">کپسول های شما</Link>
+            <Link href="/dashboard/capsules">کپسول های شما</Link>
           </div>
-          <div className="flex items-center text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300">
+          <div className={linkClasses('/dashboard/setting')}>
             <IoSettingsSharp className="text-2xl" />
-            <Link href="/">تنظیمات حساب</Link>
+            <Link href="/dashboard/setting">تنظیمات حساب</Link>
           </div>
-          <div className="flex items-center text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300">
+          <div className={linkClasses('/dashboard/support')}>
             <BiSupport className="text-2xl" />
-            <Link href="/">پشتیبانی</Link>
+            <Link href="/dashboard/support">پشتیبانی</Link>
           </div>
-          <div className="flex items-center text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300">
+          <div className={linkClasses('/dashboard/guide')}>
             <PiQuestionFill className="text-2xl" />
-            <Link href="/">راهنما</Link>
+            <Link href="/dashboard/guide">راهنما</Link>
           </div>
         </div>
         <div className="flex flex-col text-foreground/70 pt-5 px-5 gap-6">
@@ -71,11 +82,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <div className="flex flex-col flex-1">
         <nav className="bg-white dark:bg-slate-900 flex items-center justify-between lg:py-6 lg:px-8 py-4 pt-8 px-3">
           <div className="flex h-full lg:gap-3 gap-1 items-center">
-            <div className='flex gap-2 h-full items-center justify-center'>
-              <div className='bg-foreground text-xl p-2 text-background rounded-lg lg:hidden block'>
-                <PanelSidebar />
+            <div className="flex gap-2 h-full items-center justify-center">
+              <div className="bg-foreground text-xl p-2 text-background rounded-lg lg:hidden block">
+                <DashboardSidebar />
               </div>
-              <div className='flex lg:flex-row flex-col h-full lg:items-center xl:gap-3 lg:gap-1 items-start'>
+              <div className="flex lg:flex-row flex-col h-full lg:items-center xl:gap-3 lg:gap-1 items-start">
                 <span className="lg:text-2xl text-base md:text-lg font-bold">مصطفی کمری عزیز ؛ خوش اومدی. 👋</span>
                 <Separator orientation="vertical" className="bg-foreground/20 h-full lg:block hidden" />
                 <span className="text-[11px] lg:text-base text-foreground/80">
@@ -98,7 +109,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         </nav>
 
-        <main className="flex-1 w-full bg-background xl:p-10 lg:p-2 lg:rounded-tr-4xl">{children}</main>
+        <main className="flex-1 w-full bg-background lg:p-10 p-4 pb-10 lg:rounded-tr-4xl">{children}</main>
       </div>
     </div>
   );

@@ -11,12 +11,20 @@ import { ImExit } from 'react-icons/im';
 import { PiQuestionFill } from 'react-icons/pi';
 import { BiSupport } from 'react-icons/bi';
 import { HiMiniSquaresPlus } from 'react-icons/hi2';
+import { usePathname } from 'next/navigation';
 
 const bungee = Bungee({
   weight: '400',
 });
 
-export function PanelSidebar() {
+export function DashboardSidebar() {
+    const pathName = usePathname();
+
+      const linkClasses = (href: string) => {
+        const isActive = href === '/' ? pathName === '/' : pathName.startsWith(href);
+
+        return `flex items-center ${isActive ? 'bg-white dark:bg-slate-900 text-primary' : ''} text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300`;
+      };
   return (
     <aside>
       <Sheet>
@@ -40,29 +48,29 @@ export function PanelSidebar() {
             </div>
           </div>
           <div className="flex overflow-y-auto flex-col text-foreground/85 py-18 px-5 gap-6">
-            <div className="flex items-center text-lg active:text-primary justify-start gap-3 bg-white p-2 rounded-lg text-primary hover:text-primary duration-300">
+            <div className={linkClasses('/dashboard/panel')}>
               <MdHomeFilled className="text-2xl" />
-              <Link href="/">صفحه اصلی پنل</Link>
+              <Link href="/dashboard/panel">صفحه اصلی پنل</Link>
             </div>
-            <div className="flex items-center text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300">
+            <div className={linkClasses('/dashboard/create-capsule')}>
               <HiMiniSquaresPlus className="text-2xl" />
-              <Link href="/">افزودن کپسول جدید</Link>
+              <Link href="/dashboard/create-capsule">افزودن کپسول جدید</Link>
             </div>
-            <div className="flex items-center text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300">
+            <div className={linkClasses('/dashboard/capsules')}>
               <BsCapsule className="text-2xl" />
-              <Link href="/">کپسول های شما</Link>
+              <Link href="/dashboard/capsules">کپسول های شما</Link>
             </div>
-            <div className="flex items-center text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300">
+            <div className={linkClasses('/dashboard/setting')}>
               <IoSettingsSharp className="text-2xl" />
-              <Link href="/">تنظیمات حساب</Link>
+              <Link href="/dashboard/setting">تنظیمات حساب</Link>
             </div>
-            <div className="flex items-center text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300">
+            <div className={linkClasses('/dashboard/support')}>
               <BiSupport className="text-2xl" />
-              <Link href="/">پشتیبانی</Link>
+              <Link href="/dashboard/support">پشتیبانی</Link>
             </div>
-            <div className="flex items-center text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300">
+            <div className={linkClasses('/dashboard/guide')}>
               <PiQuestionFill className="text-2xl" />
-              <Link href="/">راهنما</Link>
+              <Link href="/dashboard/guide">راهنما</Link>
             </div>
             <div className="flex flex-col text-foreground/70 pt-5  gap-6">
               <div className="flex items-center text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300">
