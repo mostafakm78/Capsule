@@ -78,7 +78,7 @@ export default function HomePagePanel() {
               <FaLongArrowAltLeft onClick={() => swiperApi?.slideNext()} className={`cursor-pointer transition-opacity duration-300 ${isEnd ? 'opacity-40 pointer-events-none' : 'opacity-100'}`} />
             </div>
           </div>
-          <Link className="flex group items-center gap-2 lg:mt-0 mt-6 text-base" href="">
+          <Link className="flex group items-center gap-2 lg:mt-0 mt-6 text-base" href="/dashboard/user-capsules">
             <span className="text-foreground/80 group-hover:text-primary/80 duration-300">مشاهده تمامی کپسول ها</span>
             <FaLongArrowAltLeft className="text-2xl text-foreground group-hover:text-primary duration-300" />
           </Link>

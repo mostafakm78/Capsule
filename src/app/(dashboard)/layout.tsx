@@ -54,9 +54,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <HiMiniSquaresPlus className="text-2xl" />
             <Link href="/dashboard/create-capsule">افزودن کپسول جدید</Link>
           </div>
-          <div className={linkClasses('/dashboard/capsules')}>
+          <div className={linkClasses('/dashboard/user-capsules')}>
             <BsCapsule className="text-2xl" />
-            <Link href="/dashboard/capsules">کپسول های شما</Link>
+            <Link href="/dashboard/user-capsules">کپسول های شما</Link>
           </div>
           <div className={linkClasses('/dashboard/setting')}>
             <IoSettingsSharp className="text-2xl" />
