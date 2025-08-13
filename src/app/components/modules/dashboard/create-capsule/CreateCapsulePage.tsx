@@ -18,7 +18,7 @@ type Tab = 'info' | 'tags' | 'status';
 
 export default function CreateCapsulePage() {
   const [tab, setTab] = useState<Tab>('info');
-  const colorCode = useSelector((state: RootState) => state.capsuleColor.colorCode);
+  const colorCode = useSelector((state: RootState) => state.capsuleSetting.colorCode);
 
   return (
     <section className="flex flex-col h-full gap-10">

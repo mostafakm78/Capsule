@@ -1,12 +1,11 @@
-
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './authSlice'
-import capsuleColorReducer from './capsuleColorSlice'
+import authReducer from './authSlice';
+import capsuleSettingReducer from './capsuleSettingSlice';
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    capsuleColor: capsuleColorReducer,
+    capsuleSetting: capsuleSettingReducer,
   },
 });
 

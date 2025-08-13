@@ -1,6 +1,6 @@
 'use client';
 
-import { setColor } from '@/app/store/capsuleColorSlice';
+import { setColor } from '@/app/store/capsuleSettingSlice';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -27,7 +27,7 @@ const colors: ColorOption[] = [
 export default function CapsuleInfo() {
   const [preview, setPreview] = useState<string | null>(null);
   const [selected, setSelected] = useState<string>('default');
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -39,7 +39,10 @@ export default function CapsuleInfo() {
   return (
     <div className="flex w-full p-8 h-full flex-col">
       <div className="flex flex-col gap-6">
-        <h4 className="text-foreground/95 pr-5 relative text-xl after:content-[''] after:absolute after:w-2.5 after:h-2.5 after:bg-foreground/80 after:rounded-full after:right-0 after:top-1/2 after:-translate-y-1/2">عنوان کپسول</h4>
+        <div className="space-y-1">
+          <h4 className="text-foreground/95 pr-5 relative text-xl after:content-[''] after:absolute after:w-2.5 after:h-2.5 after:bg-foreground/80 after:rounded-full after:right-0 after:top-1/2 after:-translate-y-1/2">اطلاعات</h4>
+          <p className="text-foreground/80">در این قسمت میتونین اسم ، یادداشت‌ها ، عکس و حتی رنگ کپسول خودتون رو مشخص کنین.</p>
+        </div>
         <Label className="flex flex-col items-start text-base text-foreground/80">
           اسم کپسول
           <Input type="text" placeholder="مثال : تولد برادرم" className="md:text-sm md:placeholder:text-sm" />
@@ -79,8 +82,10 @@ export default function CapsuleInfo() {
             </RadioGroup>
           </div>
         </div>
-        <div className='w-full flex justify-center mt-8'>
-            <Button className='w-1/2 text-lg py-6 cursor-pointer bg-background text-foreground hover:bg-foreground hover:text-background'>ثبت</Button>
+        <div className="w-full flex justify-center mt-8">
+          <Button disabled className="cursor-pointer w-1/3 py-6 text-lg">
+            ثبت
+          </Button>
         </div>
       </div>
     </div>

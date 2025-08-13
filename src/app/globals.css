@@ -212,6 +212,12 @@ body {
   --sb-size: 10px;
 }
 
+.dark * {
+    --sb-track-color: oklch(0.271 0.047 251);
+  --sb-thumb-color: oklch(95.731% 0.00388 106.905);
+  --sb-size: 10px;
+}
+
 *::-webkit-scrollbar {
   width: var(--sb-size);
 }
