@@ -1,17 +1,18 @@
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FaLongArrowAltLeft } from 'react-icons/fa';
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
+import { LinkProps } from '@/lib/types';
+import { DashboardCategorySidebar } from './DashboardCategorySidebar';
 
-const sortLinks = [
-    {link : '/' , title : 'همه کپسول ها'},
-    {link : '/' , title : 'جدید ترین'},
-    {link : '/' , title : 'قدیمی ترین'},
-]
+const sortLinks: LinkProps[] = [
+  { link: '/', title: 'همه کپسول ها' },
+  { link: '/', title: 'جدید ترین' },
+  { link: '/', title: 'قدیمی ترین' },
+];
 
-const filterLinks = [
+const filterLinks: LinkProps[] = [
   { link: '/', title: 'خوشحال‌کننده' },
   { link: '/', title: 'ناراحت‌کننده' },
   { link: '/', title: 'هیجان‌انگیز' },
@@ -39,13 +40,17 @@ export default function UserCapsulesIndex() {
       <div className="flex flex-col h-full justify-start gap-10">
         <span className='text-foreground text-xl pr-4 relative font-bold after:content-[""] after:h-2 after:w-2 after:rounded-full after:absolute after:bg-foreground after:right-0 after:top-1/2 after:-translate-y-1/2'>کپسول های شما</span>
         <div className="grid lg:grid-cols-12 grid-cols-1 w-full gap-10 place-items-center">
-          <div className="lg:col-span-3 space-y-4 w-full lg:place-self-start">
+          <div className="lg:col-span-3 lg:block hidden space-y-4 w-full lg:place-self-start">
             <div className="bg-white rounded-lg shadow-md dark:bg-slate-900 flex flex-col p-8">
               <h6 className="text-xl font-semibold">مرتب سازی بر اساس</h6>
               <Separator className="w-full bg-foreground/20 my-4" />
-              <div className='flex flex-col'>
+              <div className="flex flex-col gap-1">
                 {sortLinks.map((links, i) => (
-                  <Link className='text-foreground/90 pr-4 relative hover:text-primary duration-300 after:content-[""] after:bg-foreground/70 after:absolute after:right-0 after:h-2 after:w-2 after:rounded-full after:top-1/2 after:-translate-y-1/2 hover:after:bg-primary after:duration-300' key={i} href={links.link}>
+                  <Link
+                    className='text-foreground/90 pr-4 relative hover:text-primary duration-300 after:content-[""] after:bg-foreground/70 after:absolute after:right-0 after:h-2 after:w-2 after:rounded-full after:top-1/2 after:-translate-y-1/2 hover:after:bg-primary after:duration-300'
+                    key={i}
+                    href={links.link}
+                  >
                     {links.title}
                   </Link>
                 ))}
@@ -54,9 +59,13 @@ export default function UserCapsulesIndex() {
             <div className="bg-white rounded-lg shadow-md dark:bg-slate-900 flex flex-col p-8">
               <h6 className="text-xl font-semibold">فیلتر بر اساس</h6>
               <Separator className="w-full bg-foreground/20 my-4" />
-              <div className='flex flex-col gap-0.5'>
+              <div className="flex flex-col gap-1.5">
                 {filterLinks.map((links, i) => (
-                  <Link className='text-foreground/90 pr-4 relative hover:text-primary duration-300 after:content-[""] after:bg-foreground/70 after:absolute after:right-0 after:h-2 after:w-2 after:rounded-full after:top-1/2 after:-translate-y-1/2 hover:after:bg-primary after:duration-300' key={i} href={links.link}>
+                  <Link
+                    className='text-foreground/90 pr-4 relative hover:text-primary duration-300 after:content-[""] after:bg-foreground/70 after:absolute after:right-0 after:h-2 after:w-2 after:rounded-full after:top-1/2 after:-translate-y-1/2 hover:after:bg-primary after:duration-300'
+                    key={i}
+                    href={links.link}
+                  >
                     {links.title}
                   </Link>
                 ))}
@@ -67,13 +76,7 @@ export default function UserCapsulesIndex() {
             <div className="grid lg:grid-cols-12 md:grid-cols-2 grid-cols-1 gap-y-10 gap-x-6">
               <Card className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white dark:bg-slate-900 h-[350px] border-none shadow-sm">
                 <CardHeader>
-                  <div className="absolute -top-[8%] left-1/2 -translate-x-1/2">
-                    <Avatar className="h-12 w-12 ring-2 ring-secondary">
-                      <AvatarImage src="https://github.com/shadcn.png" />
-                      <AvatarFallback>CP</AvatarFallback>
-                    </Avatar>
-                  </div>
-                  <CardTitle className="text-center text-xl mt-2 text-foreground">کپسول عمومی</CardTitle>
+                  <CardTitle className="text-center text-xl  text-foreground">کپسول عمومی</CardTitle>
                   <CardDescription className="text-center text-base text-foreground/80">
                     <p>
                       از کاربر : <span>مصطفی کمری</span>
@@ -97,13 +100,7 @@ export default function UserCapsulesIndex() {
               </Card>
               <Card className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white dark:bg-slate-900 h-[350px] border-none shadow-sm">
                 <CardHeader>
-                  <div className="absolute -top-[8%] left-1/2 -translate-x-1/2">
-                    <Avatar className="h-12 w-12 ring-2 ring-secondary">
-                      <AvatarImage src="https://github.com/shadcn.png" />
-                      <AvatarFallback>CP</AvatarFallback>
-                    </Avatar>
-                  </div>
-                  <CardTitle className="text-center text-xl mt-2 text-foreground">کپسول عمومی</CardTitle>
+                  <CardTitle className="text-center text-xl text-foreground">کپسول عمومی</CardTitle>
                   <CardDescription className="text-center text-base text-foreground/80">
                     <p>
                       از کاربر : <span>مصطفی کمری</span>
@@ -127,13 +124,7 @@ export default function UserCapsulesIndex() {
               </Card>
               <Card className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white dark:bg-slate-900 h-[350px] border-none shadow-sm">
                 <CardHeader>
-                  <div className="absolute -top-[8%] left-1/2 -translate-x-1/2">
-                    <Avatar className="h-12 w-12 ring-2 ring-secondary">
-                      <AvatarImage src="https://github.com/shadcn.png" />
-                      <AvatarFallback>CP</AvatarFallback>
-                    </Avatar>
-                  </div>
-                  <CardTitle className="text-center text-xl mt-2 text-foreground">کپسول عمومی</CardTitle>
+                  <CardTitle className="text-center text-xl text-foreground">کپسول عمومی</CardTitle>
                   <CardDescription className="text-center text-base text-foreground/80">
                     <p>
                       از کاربر : <span>مصطفی کمری</span>
@@ -157,13 +148,7 @@ export default function UserCapsulesIndex() {
               </Card>
               <Card className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white dark:bg-slate-900 h-[350px] border-none shadow-sm">
                 <CardHeader>
-                  <div className="absolute -top-[8%] left-1/2 -translate-x-1/2">
-                    <Avatar className="h-12 w-12 ring-2 ring-secondary">
-                      <AvatarImage src="https://github.com/shadcn.png" />
-                      <AvatarFallback>CP</AvatarFallback>
-                    </Avatar>
-                  </div>
-                  <CardTitle className="text-center text-xl mt-2 text-foreground">کپسول عمومی</CardTitle>
+                  <CardTitle className="text-center text-xl text-foreground">کپسول عمومی</CardTitle>
                   <CardDescription className="text-center text-base text-foreground/80">
                     <p>
                       از کاربر : <span>مصطفی کمری</span>
@@ -187,13 +172,7 @@ export default function UserCapsulesIndex() {
               </Card>
               <Card className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white dark:bg-slate-900 h-[350px] border-none shadow-sm">
                 <CardHeader>
-                  <div className="absolute -top-[8%] left-1/2 -translate-x-1/2">
-                    <Avatar className="h-12 w-12 ring-2 ring-secondary">
-                      <AvatarImage src="https://github.com/shadcn.png" />
-                      <AvatarFallback>CP</AvatarFallback>
-                    </Avatar>
-                  </div>
-                  <CardTitle className="text-center text-xl mt-2 text-foreground">کپسول عمومی</CardTitle>
+                  <CardTitle className="text-center text-xl text-foreground">کپسول عمومی</CardTitle>
                   <CardDescription className="text-center text-base text-foreground/80">
                     <p>
                       از کاربر : <span>مصطفی کمری</span>
@@ -242,6 +221,9 @@ export default function UserCapsulesIndex() {
             </PaginationContent>
           </Pagination>
         </div>
+      </div>
+      <div className="lg:hidden fixed flex items-center justify-center text-3xl bg-primary shadow-lg ring w-13 h-13 rounded-full left-5 bottom-10 cursor-pointer">
+        <DashboardCategorySidebar />
       </div>
     </section>
   );

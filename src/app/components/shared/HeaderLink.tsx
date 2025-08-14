@@ -9,16 +9,16 @@ type HeaderLinkProps = {
 export default function HeaderLink({ text, link }: HeaderLinkProps) {
   const pathName = usePathname();
 
-  let activeLink = 'font-medium';
+  let activeLink = 'font-light';
 
   if (link === '/' && pathName === '/') {
-    activeLink = 'font-bold';
+    activeLink = 'font-medium';
   } else if (link === '/capsules' && pathName === '/capsules') {
-    activeLink = 'font-bold';
+    activeLink = 'font-medium';
   } else if (link === '/about-us' && pathName === '/about-us') {
-    activeLink = 'font-bold';
+    activeLink = 'font-medium';
   } else if (link === '/contact-us' && pathName === '/contact-us') {
-    activeLink = 'font-bold';
+    activeLink = 'font-medium';
   }
 
   return (
