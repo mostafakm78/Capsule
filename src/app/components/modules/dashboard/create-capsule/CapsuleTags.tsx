@@ -5,13 +5,11 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import Image from 'next/image';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { dashboardCreateCapsuleCategories } from '@/lib/types';
 
-type CategoriesProps = {
-  title: string;
-  items: string[];
-};
 
-const categories: CategoriesProps[] = [
+
+const categories: dashboardCreateCapsuleCategories[] = [
   { title: '🧠 دسته‌بندی‌های احساسی', items: ['خوشحال‌کننده', 'ناراحت‌کننده', 'هیجان‌انگیز', 'آرامش‌بخش', 'ترسناک', 'الهام‌بخش'] },
   { title: '📌 دسته‌بندی‌های موضوعی', items: ['خاطره شخصی', 'رویا', 'سفر', 'خانواده', 'دوستان', 'مدرسه / دانشگاه', 'عشق', 'کار', 'چالش‌ها'] },
   { title: '⏳ دسته‌بندی‌های زمانی', items: ['کودکی', 'نوجوانی', 'بزرگسالی'] },

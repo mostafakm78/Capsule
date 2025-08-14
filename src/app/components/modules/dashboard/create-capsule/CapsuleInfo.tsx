@@ -6,17 +6,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
+import { dashboardCreateCapsuleColorOption } from '@/lib/types';
 import Image from 'next/image';
 import { useState } from 'react';
 import { MdOutlineCameraAlt } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 
-type ColorOption = {
-  id: string;
-  colorCode: string;
-};
 
-const colors: ColorOption[] = [
+const colors: dashboardCreateCapsuleColorOption[] = [
   { id: 'default', colorCode: 'bg-white dark:bg-slate-900' },
   { id: 'red', colorCode: 'bg-red-600/15 dark:bg-red-800/50' },
   { id: 'green', colorCode: 'bg-green-600/15 dark:bg-green-800/50' },
@@ -73,7 +70,7 @@ export default function CapsuleInfo() {
           <p className="text-sm self-start text-foreground/70">شما میتونین برای نمایش کپسول خودتون چه در پنل خصوصی خودتون و چه در بخش عمومی از رنگ های زیر انتخاب کنین.</p>
           <div className="mt-4">
             <RadioGroup value={selected} onValueChange={(value: string) => setSelected(value)} className="flex gap-4">
-              {colors.map(({ id, colorCode }: ColorOption) => (
+              {colors.map(({ id, colorCode }: dashboardCreateCapsuleColorOption) => (
                 <label onClick={() => dispatch(setColor(colorCode))} key={id} htmlFor={id} className="cursor-pointer relative">
                   <RadioGroupItem id={id} value={id} className="peer hidden" aria-label={id} />
                   <div className={`${colorCode} ring ring-foreground w-10 h-10 rounded-full peer-checked:border-primary transition-all`} title={id} />

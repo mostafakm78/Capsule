@@ -11,6 +11,7 @@ import { FaCheck } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/app/store/store';
 import { setEmail, setStep } from '@/app/store/authSlice';
+import { Separator } from '@/components/ui/separator';
 
 const formSchemaStepOne = z.object({
   email: z.email({
@@ -35,37 +36,41 @@ export default function StepOneForm() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 w-full">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                ایمیل: <FormMessage className="text-red-500" />
-              </FormLabel>
-              <FormControl>
-                <Input placeholder="your@gmail.com" {...field} />
-              </FormControl>
-              <FormDescription>ایمیل اکانت خود را وارد کنید</FormDescription>
-            </FormItem>
-          )}
-        />
-        <div className="text-[12px] flex gap-1 items-center font-light text-foreground">
-          <FaCheck className="bg-primary text-background rounded-full text-[14px] p-0.5" />
-          <p>
-            ورود/ثبت نام شما به منظور پذیرش{' '}
-            <Link className="text-blue-600 underline" href="/terms">
-              قوانین
-            </Link>{' '}
-            میباشد
-          </p>
-        </div>
-        <Button className="w-full py-5 text-lg" type="submit">
-          ادامه
-        </Button>
-      </form>
-    </Form>
+    <>
+      <p className="text-base text-foreground/70 self-start">ایمیل خود را وارد کنید</p>
+      <Separator className="bg-foreground/10 my-4" />
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 w-full">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  ایمیل: <FormMessage className="text-red-500" />
+                </FormLabel>
+                <FormControl>
+                  <Input placeholder="your@gmail.com" {...field} />
+                </FormControl>
+                <FormDescription>ایمیل اکانت خود را وارد کنید</FormDescription>
+              </FormItem>
+            )}
+          />
+          <div className="text-[12px] flex gap-1 items-center font-light text-foreground">
+            <FaCheck className="bg-primary text-background rounded-full text-[14px] p-0.5" />
+            <p>
+              ورود/ثبت نام شما به منظور پذیرش{' '}
+              <Link className="text-blue-600 underline" href="/terms">
+                قوانین
+              </Link>{' '}
+              میباشد
+            </p>
+          </div>
+          <Button className="w-full py-5 text-lg" type="submit">
+            ادامه
+          </Button>
+        </form>
+      </Form>
+    </>
   );
 }

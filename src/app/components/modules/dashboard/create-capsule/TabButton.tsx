@@ -1,8 +1,9 @@
+import { dashboardCreateCapsuleTab } from "@/lib/types";
 
 type TabButtonProps = {
-  id: 'info' | 'tags' | 'status';
-  currentTab: 'info' | 'tags' | 'status';
-  setTab: React.Dispatch<React.SetStateAction<'info' | 'tags' | 'status'>>;
+  id: dashboardCreateCapsuleTab
+  currentTab: dashboardCreateCapsuleTab
+  setTab: React.Dispatch<React.SetStateAction<dashboardCreateCapsuleTab>>;
   icon: React.ComponentType<{ className?: string }>;
   children: React.ReactNode;
 };

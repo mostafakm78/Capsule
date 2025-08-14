@@ -5,45 +5,65 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FaLongArrowAltLeft } from 'react-icons/fa';
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 
+const sortLinks = [
+    {link : '/' , title : 'همه کپسول ها'},
+    {link : '/' , title : 'جدید ترین'},
+    {link : '/' , title : 'قدیمی ترین'},
+]
+
+const filterLinks = [
+  { link: '/', title: 'خوشحال‌کننده' },
+  { link: '/', title: 'ناراحت‌کننده' },
+  { link: '/', title: 'هیجان‌انگیز' },
+  { link: '/', title: 'آرامش‌بخش' },
+  { link: '/', title: 'ترسناک' },
+  { link: '/', title: 'الهام‌بخش' },
+  { link: '/', title: 'رویا' },
+  { link: '/', title: 'سفر' },
+  { link: '/', title: 'خانواده' },
+  { link: '/', title: 'دوستان' },
+  { link: '/', title: 'عشق' },
+  { link: '/', title: 'کار' },
+  { link: '/', title: 'چالش‌ها' },
+  { link: '/', title: 'دوستان' },
+  { link: '/', title: 'کودکی' },
+  { link: '/', title: 'نوجوانی' },
+  { link: '/', title: 'خاطره شخصی' },
+  { link: '/', title: 'بزرگسالی' },
+  { link: '/', title: 'مدرسه / دانشگاه' },
+];
+
 export default function UserCapsulesIndex() {
   return (
     <section className="flex flex-col h-full gap-10">
       <div className="flex flex-col h-full justify-start gap-10">
         <span className='text-foreground text-xl pr-4 relative font-bold after:content-[""] after:h-2 after:w-2 after:rounded-full after:absolute after:bg-foreground after:right-0 after:top-1/2 after:-translate-y-1/2'>کپسول های شما</span>
         <div className="grid lg:grid-cols-12 grid-cols-1 w-full gap-10 place-items-center">
-          <div className="lg:col-span-3 space-y-4 w-full lg:h-[300px] lg:place-self-start">
+          <div className="lg:col-span-3 space-y-4 w-full lg:place-self-start">
             <div className="bg-white rounded-lg shadow-md dark:bg-slate-900 flex flex-col p-8">
               <h6 className="text-xl font-semibold">مرتب سازی بر اساس</h6>
               <Separator className="w-full bg-foreground/20 my-4" />
-              <Link href="/">همه کپسول ها</Link>
-              <Link href="/">قدیمی ترین</Link>
-              <Link href="/">جدید ترین</Link>
+              <div className='flex flex-col'>
+                {sortLinks.map((links, i) => (
+                  <Link className='text-foreground/90 pr-4 relative hover:text-primary duration-300 after:content-[""] after:bg-foreground/70 after:absolute after:right-0 after:h-2 after:w-2 after:rounded-full after:top-1/2 after:-translate-y-1/2 hover:after:bg-primary after:duration-300' key={i} href={links.link}>
+                    {links.title}
+                  </Link>
+                ))}
+              </div>
             </div>
-            <div className="bg-white rounded-lg  shadow-md dark:bg-slate-900 flex flex-col p-8">
+            <div className="bg-white rounded-lg shadow-md dark:bg-slate-900 flex flex-col p-8">
               <h6 className="text-xl font-semibold">فیلتر بر اساس</h6>
               <Separator className="w-full bg-foreground/20 my-4" />
-              <Link href="/">خوشحال‌کننده </Link>
-              <Link href="/">ناراحت‌کننده</Link>
-              <Link href="/">هیجان‌انگیز</Link>
-              <Link href="/">آرامش‌بخش</Link>
-              <Link href="/">ترسناک</Link>
-              <Link href="/">الهام‌بخش</Link>
-              <Link href="/">خاطره شخصی</Link>
-              <Link href="/">رویا</Link>
-              <Link href="/">سفر</Link>
-              <Link href="/">خانواده</Link>
-              <Link href="/">دوستان</Link>
-              <Link href="/">عشق</Link>
-              <Link href="/">کار</Link>
-              <Link href="/">چالش‌ها</Link>
-              <Link href="/">دوستان</Link>
-              <Link href="/">مدرسه / دانشگاه</Link>
-              <Link href="/">کودکی</Link>
-              <Link href="/">نوجوانی</Link>
-              <Link href="/">بزرگسالی</Link>
+              <div className='flex flex-col gap-0.5'>
+                {filterLinks.map((links, i) => (
+                  <Link className='text-foreground/90 pr-4 relative hover:text-primary duration-300 after:content-[""] after:bg-foreground/70 after:absolute after:right-0 after:h-2 after:w-2 after:rounded-full after:top-1/2 after:-translate-y-1/2 hover:after:bg-primary after:duration-300' key={i} href={links.link}>
+                    {links.title}
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
-          <div className="lg:col-span-9 w-full min-h-screen">
+          <div className="lg:col-span-9 w-full min-h-screen place-self-start">
             <div className="grid lg:grid-cols-12 md:grid-cols-2 grid-cols-1 gap-y-10 gap-x-6">
               <Card className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white dark:bg-slate-900 h-[350px] border-none shadow-sm">
                 <CardHeader>

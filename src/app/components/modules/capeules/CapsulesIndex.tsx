@@ -7,6 +7,34 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FaLongArrowAltLeft } from 'react-icons/fa';
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 
+const sortLinks = [
+  { link: '/', title: 'همه کپسول ها' },
+  { link: '/', title: 'جدید ترین' },
+  { link: '/', title: 'قدیمی ترین' },
+];
+
+const filterLinks = [
+  { link: '/', title: 'خوشحال‌کننده' },
+  { link: '/', title: 'ناراحت‌کننده' },
+  { link: '/', title: 'هیجان‌انگیز' },
+  { link: '/', title: 'آرامش‌بخش' },
+  { link: '/', title: 'ترسناک' },
+  { link: '/', title: 'الهام‌بخش' },
+  { link: '/', title: 'رویا' },
+  { link: '/', title: 'سفر' },
+  { link: '/', title: 'خانواده' },
+  { link: '/', title: 'دوستان' },
+  { link: '/', title: 'عشق' },
+  { link: '/', title: 'کار' },
+  { link: '/', title: 'چالش‌ها' },
+  { link: '/', title: 'دوستان' },
+  { link: '/', title: 'کودکی' },
+  { link: '/', title: 'نوجوانی' },
+  { link: '/', title: 'خاطره شخصی' },
+  { link: '/', title: 'بزرگسالی' },
+  { link: '/', title: 'مدرسه / دانشگاه' },
+];
+
 export default function CapsulesIndex() {
   return (
     <section className="flex items-center justify-center">
@@ -16,47 +44,41 @@ export default function CapsulesIndex() {
           <p className="lg:text-lg text-base text-foreground/80">خاطره ها و تجربیاتی که کاربرای کپسول دوست داشتن با بقیه به اشتراک بزارن اینجاست!</p>
         </div>
         <div className="grid lg:grid-cols-12 grid-cols-1 w-full gap-10 mt-14 place-items-center">
-          <div className="lg:col-span-3 w-full h-[300px] lg:place-self-start">
+          <div className="lg:col-span-3 w-full space-y-4  lg:place-self-start">
             <div className="bg-white rounded-lg  shadow-md dark:bg-slate-900 flex flex-col p-8">
               <h6 className="text-xl font-semibold">مرتب سازی بر اساس</h6>
               <Separator className="w-full bg-foreground/20 my-4" />
               <RadioGroup className="flex flex-col gap-5" dir="rtl" defaultValue="new">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem className="border-none bg-accent dark:bg-foreground/80 focus:bg-foreground/70 cursor-pointer h-6 w-6" value="new" id="new" />
-                  <Label htmlFor="new">
-                    <Link href="" className="text-base text-foreground/80">
-                      جدید ترین
-                    </Link>
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem className="border-none bg-accent dark:bg-foreground/80 focus:bg-foreground/70 cursor-pointer h-6 w-6" value="trend" id="trend" />
-                  <Label htmlFor="trend">
-                    <Link href="" className="text-base text-foreground/80">
-                      پربازدید ترین
-                    </Link>
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem className="border-none bg-accent dark:bg-foreground/80 focus:bg-foreground/70 cursor-pointer h-6 w-6" value="score" id="score" />
-                  <Label htmlFor="score">
-                    <Link href="" className="text-base text-foreground/80">
-                      پرامتیاز ترین
-                    </Link>
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem className="border-none bg-accent dark:bg-foreground/80 focus:bg-foreground/70 cursor-pointer h-6 w-6" value="old" id="old" />
-                  <Label htmlFor="old">
-                    <Link href="" className="text-base text-foreground/80">
-                      قدیمی ترین
-                    </Link>
-                  </Label>
-                </div>
+                {sortLinks.map((links, i) => (
+                  <div key={i} className="flex items-center space-x-2">
+                    <RadioGroupItem className="border-none bg-accent dark:bg-foreground/80 focus:bg-foreground/70 cursor-pointer h-6 w-6" value="new" id="new" />
+                    <Label htmlFor="new">
+                      <Link href={links.link} className="text-base text-foreground/80">
+                        {links.title}
+                      </Link>
+                    </Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+            <div className="bg-white rounded-lg shadow-md dark:bg-slate-900 flex flex-col p-8">
+              <h6 className="text-xl font-semibold">مرتب سازی بر اساس</h6>
+              <Separator className="w-full bg-foreground/20 my-4" />
+              <RadioGroup className="flex flex-col gap-5" dir="rtl" defaultValue="new">
+                {filterLinks.map((links, i) => (
+                  <div key={i} className="flex items-center space-x-2">
+                    <RadioGroupItem className="border-none bg-accent dark:bg-foreground/80 focus:bg-foreground/70 cursor-pointer h-6 w-6" value="new" id="new" />
+                    <Label htmlFor="new">
+                      <Link href={links.link} className="text-base text-foreground/80">
+                        {links.title}
+                      </Link>
+                    </Label>
+                  </div>
+                ))}
               </RadioGroup>
             </div>
           </div>
-          <div className="lg:col-span-9 w-full min-h-screen">
+          <div className="lg:col-span-9 w-full min-h-screen place-self-start">
             <div className="grid lg:grid-cols-12 md:grid-cols-2 grid-cols-1 gap-y-10 gap-x-6">
               <Card className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white dark:bg-slate-900 h-[350px] border-none shadow-sm">
                 <CardHeader>

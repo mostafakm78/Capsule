@@ -8,12 +8,20 @@ import { usePathname } from 'next/navigation';
 import { Sidebar } from './Sidebar';
 import LoginButton from './LoginButton';
 import HeaderLink from './HeaderLink';
+import { LinkProps } from '@/lib/types';
 
 gsap.registerPlugin(useGSAP);
 
 interface Logo {
   bungee: { className: string };
 }
+
+const headerLinks : LinkProps[] = [
+    {link : '/' , title : 'صفحه اصلی'},
+    {link : '/capsules' , title : 'کپسول های عمومی'},
+    {link : '/about-us' , title : 'درباره ما'},
+    {link : '/contact-us' , title : 'ارتباط با ما'},
+]
 
 export default function Header({ bungee }: Logo) {
   const pathname = usePathname();
@@ -113,18 +121,11 @@ export default function Header({ bungee }: Logo) {
       </nav>
       <div className="header z-[9] shadow-md lg:block hidden bg-accent w-8/12 py-5 rounded-b-xl">
         <div className="lg:flex items-center justify-center gap-10 hidden">
-          <div className="theme hidden lg:block">
-            <HeaderLink text="صفحه اصلی" link="/" />
+            {headerLinks.map((links , i) =>
+            <div key={i} className="theme hidden lg:block">
+            <HeaderLink text={links.title} link={links.link} />
           </div>
-          <div className="theme hidden lg:block">
-            <HeaderLink text="کپسول های عمومی" link="/capsules" />
-          </div>
-          <div className="theme hidden lg:block">
-            <HeaderLink text="درباره کپسول" link="/about-us" />
-          </div>
-          <div className="theme hidden lg:block">
-            <HeaderLink text="ارتباط با ما" link="/contact-us" />
-          </div>
+            )}
         </div>
       </div>
     </header>

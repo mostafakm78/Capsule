@@ -1,6 +1,5 @@
 'use client';
 
-import { Separator } from '@/components/ui/separator';
 import { Bungee } from 'next/font/google';
 import Image from 'next/image';
 import StepTwoForm from './StepTwoForm';
@@ -23,14 +22,10 @@ export default function LoginOrSignup() {
       </div>
       <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xl gap-2 shadow-black/5 py-8 px-12 flex flex-col lg:w-[30%] w-10/12 md:w-6/12 items-center justify-center">
         <h4 className="text-2xl text-foreground/80 self-start font-bold">ورود/ثبت نام</h4>
-        <p className="text-base text-foreground/70 self-start">ایمیل خود را وارد کنید</p>
-        <Separator className="bg-foreground/10 my-4" />
         {step === 1 && <StepOneForm />}
         {step === 2 && <StepTwoForm />}
       </div>
-      <div>
         <span className="text-sm text-foreground/50">همه حقوق برای کپسول محفوظ است</span>
-      </div>
     </section>
   );
 }

@@ -4,70 +4,64 @@ import { PiSubtitlesFill } from 'react-icons/pi';
 import { FaImage } from 'react-icons/fa6';
 import { GrStatusInfo } from 'react-icons/gr';
 import dynamic from 'next/dynamic';
-import { useState } from 'react';
+import { ComponentType, JSX, useState } from 'react';
 import { TabButton } from './TabButton';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { dashboardCreateCapsuleTab } from '@/lib/types';
 
 const CapsuleInfo = dynamic(() => import('./CapsuleInfo'));
 const CapsuleTags = dynamic(() => import('./CapsuleTags'));
 const CapsuleStatus = dynamic(() => import('./CapsuleStatus'));
 
-type Tab = 'info' | 'tags' | 'status';
+
+
+const tabs: { id: dashboardCreateCapsuleTab; label: string; icon: ComponentType<{ className?: string }>; component: JSX.Element }[] = [
+  { id: 'info', label: 'اطلاعات کپسول', icon: PiSubtitlesFill, component: <CapsuleInfo /> },
+  { id: 'tags', label: 'تگ‌ها و دسته‌بندی محصول', icon: FaImage, component: <CapsuleTags /> },
+  { id: 'status', label: 'وضعیت انتشار کپسول', icon: GrStatusInfo, component: <CapsuleStatus /> },
+];
 
 export default function CreateCapsulePage() {
-  const [tab, setTab] = useState<Tab>('info');
+  const [tab, setTab] = useState<dashboardCreateCapsuleTab>('info');
   const colorCode = useSelector((state: RootState) => state.capsuleSetting.colorCode);
 
   return (
     <section className="flex flex-col h-full gap-10">
       <div className="flex lg:flex-row flex-col h-full justify-start gap-10">
+        {/* Desktop Tabs */}
         <div className="lg:flex hidden w-3/12 flex-col gap-4">
-          <TabButton id="info" currentTab={tab} setTab={setTab} icon={PiSubtitlesFill}>
-            اطلاعات کپسول
-          </TabButton>
-          <TabButton id="tags" currentTab={tab} setTab={setTab} icon={FaImage}>
-            تگ‌ها و دسته‌بندی محصول
-          </TabButton>
-          <TabButton id="status" currentTab={tab} setTab={setTab} icon={GrStatusInfo}>
-            وضعیت انتشار کپسول
-          </TabButton>
+          {tabs.map(({ id, label, icon: Icon }) => (
+            <TabButton key={id} id={id} currentTab={tab} setTab={setTab} icon={Icon}>
+              {label}
+            </TabButton>
+          ))}
         </div>
+
+        {/* Mobile Select */}
         <div className="lg:hidden flex lg:w-3/12 w-full flex-col gap-4">
-          <Select defaultValue="info" value={tab} onValueChange={(value : Tab) => setTab(value)} dir="rtl">
+          <Select value={tab} onValueChange={(value: dashboardCreateCapsuleTab) => setTab(value)} dir="rtl">
             <SelectTrigger className="w-full">
-              <SelectValue defaultValue="info"/>
+              <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="info">
-                <div className="flex items-center text-base font-medium gap-2">
-                  <div className="bg-primary p-1 rounded-md">
-                    <PiSubtitlesFill />
+              {tabs.map(({ id, label, icon: Icon }) => (
+                <SelectItem key={id} value={id}>
+                  <div className="flex items-center text-base font-medium gap-2">
+                    <div className="bg-primary p-1 rounded-md">
+                      <Icon />
+                    </div>
+                    {label}
                   </div>
-                  اطلاعات کپسول
-                </div>
-              </SelectItem>
-              <SelectItem value="tags">
-                <div className="flex items-center text-base font-medium gap-2">
-                  <div className="bg-primary p-1 rounded-md">
-                    <FaImage />
-                  </div>
-                  تگ‌ها و دسته‌بندی محصول
-                </div>
-              </SelectItem>
-              <SelectItem value="status">
-                <div className="flex items-center text-base font-medium gap-2">
-                  <div className="bg-primary p-1 rounded-md">
-                    <GrStatusInfo />
-                  </div>
-                  وضعیت انتشار کپسول
-                </div>
-              </SelectItem>
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
-        <div className={`h-full lg:w-9/12 w-full ${colorCode} rounded-lg shadow-md shadow-black/5`}>{tab === 'info' ? <CapsuleInfo /> : tab === 'tags' ? <CapsuleTags /> : <CapsuleStatus />}</div>
+
+        {/* Tab Content */}
+        <div className={`h-full lg:w-9/12 w-full ${colorCode} rounded-lg shadow-md shadow-black/5`}>{tabs.find((t) => t.id === tab)?.component}</div>
       </div>
     </section>
   );

@@ -16,6 +16,8 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 export default function Testimonials() {
   const [swiperApi, setSwiperApi] = useState<SwiperApi | null>(null);
+  const [isBeginning , setIsBeginning] = useState<boolean>(true)
+  const [isEnd , setIsEnd] = useState<boolean>(false)
 
   useGSAP(() => {
     gsap.fromTo(
@@ -68,8 +70,8 @@ export default function Testimonials() {
           <p className="section-right lg:text-xl text-base text-foreground/70 lg:w-2/3 w-full lg:mr-14 mx-auto"> بخش کوچیکی از نظرات کاربرای کپسول درباره تجربه ای که اینجا داشتن</p>
           <div className="section-right flex items-center w-2/3 justify-between lg:text-xl text-2xl text-foreground/70 lg:mr-14 mx-auto">
             <div className="flex gap-3">
-              <BiSolidRightArrow onClick={() => swiperApi?.slidePrev()} className="cursor-pointer" />
-              <BiSolidLeftArrow onClick={() => swiperApi?.slideNext()} className="cursor-pointer" />
+              <BiSolidRightArrow onClick={() => swiperApi?.slidePrev()} className={`cursor-pointer ${isBeginning ? 'opacity-50' : ''}`}  />
+              <BiSolidLeftArrow onClick={() => swiperApi?.slideNext()} className={`cursor-pointer ${isEnd ? 'opacity-50' : ''}`} />
             </div>
             <svg className="text-foreground/60 transform hidden lg:block lg:rotate-0" width="81" height="25" viewBox="0 0 81 25" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -86,7 +88,7 @@ export default function Testimonials() {
           </div>
         </div>
         <div className="section-left w-full relative after:content-[''] after:absolute after:h-full after:w-full after:bg-foreground/25 after:top-1/2 after:left-1/2 after:-translate-y-1/2 after:-translate-x-1/2 after:blur-2xl">
-          <Card setSwiperApi={setSwiperApi} />
+          <Card setSwiperApi={setSwiperApi} isEnd={setIsEnd} isBegining={setIsBeginning}/>
         </div>
       </div>
     </section>
