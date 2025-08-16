@@ -12,12 +12,15 @@ import { HiMiniSquaresPlus } from 'react-icons/hi2';
 import { BsCapsule } from 'react-icons/bs';
 import { IoSettingsSharp } from 'react-icons/io5';
 import { PiQuestionFill } from 'react-icons/pi';
+import { TbCategoryFilled } from 'react-icons/tb';
 import { ImExit } from 'react-icons/im';
 import { RiNotification4Line } from 'react-icons/ri';
 import { usePathname } from 'next/navigation';
 import { DashboardSidebar } from '../components/modules/dashboard/DashboardSidebar';
 import { LinkProps } from '@/lib/types';
 import { JSX } from 'react';
+import { AdminSidebar } from '../components/modules/dashboard/AdminSidebar';
+import { FaUsers } from 'react-icons/fa';
 const bungee = Bungee({
   weight: '400',
 });
@@ -30,11 +33,27 @@ const dashboardLinks: (LinkProps & { icon: JSX.Element })[] = [
   { link: '/dashboard/guide', title: 'راهنما', icon: <PiQuestionFill className="text-2xl" /> },
 ];
 
+const adminLinks: (LinkProps & { icon: JSX.Element })[] = [
+  { link: '/dashboard/admin', title: 'صفحه اصلی پنل', icon: <MdHomeFilled className="text-2xl" /> },
+  { link: '/dashboard/admin/users', title: 'کاربران سایت', icon: <FaUsers className="text-2xl" /> },
+  { link: '/dashboard/admin/capsules', title: 'کپسول‌های سایت', icon: <BsCapsule className="text-2xl" /> },
+  { link: '/dashboard/admin/categories', title: 'دسته بندی ها', icon: <TbCategoryFilled className="text-2xl" /> },
+  { link: '/dashboard/admin/setting', title: 'تنظیمات حساب', icon: <IoSettingsSharp className="text-2xl" /> },
+];
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathName = usePathname();
 
+  const admin = pathName.startsWith('/dashboard/admin');
+
   const linkClasses = (href: string) => {
     const isActive = href === '/' ? pathName === '/' : pathName.startsWith(href);
+
+    return `flex items-center text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300 ${isActive ? 'bg-background text-primary' : ''}`;
+  };
+
+  const linkClassesAdmin = (href: string) => {
+    const isActive = href === '/dashboard/admin' ? pathName === href : pathName.startsWith(href);
 
     return `flex items-center text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300 ${isActive ? 'bg-background text-primary' : ''}`;
   };
@@ -55,12 +74,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <h1 className={`${bungee.className}`}>Capsule</h1>
         </Link>
         <div className="flex flex-col text-foreground/85 py-18 px-5 gap-6">
-        {dashboardLinks.map((links , i) =>
-        <div key={i} className={linkClasses(links.link)}>
-            {links.icon}
-            <Link href={links.link}>{links.title}</Link>
-          </div>
-        )}
+          {!admin &&
+            dashboardLinks.map((links, i) => (
+              <div key={i} className={linkClasses(links.link)}>
+                {links.icon}
+                <Link href={links.link}>{links.title}</Link>
+              </div>
+            ))}
+          {admin &&
+            adminLinks.map((links, i) => (
+              <div key={i} className={linkClassesAdmin(links.link)}>
+                {links.icon}
+                <Link href={links.link}>{links.title}</Link>
+              </div>
+            ))}
         </div>
         <div className="flex flex-col text-foreground/70 pt-5 px-5 gap-6">
           <div className="flex items-center text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300">
@@ -75,7 +102,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className="flex h-full lg:gap-3 gap-1 items-center">
             <div className="flex gap-2 h-full items-center justify-center">
               <div className="bg-foreground text-xl p-2 text-background rounded-lg lg:hidden block">
-                <DashboardSidebar />
+                {!admin && <DashboardSidebar />}
+                {admin && <AdminSidebar />}
               </div>
               <div className="flex lg:flex-row flex-col h-full lg:items-center xl:gap-3 lg:gap-1 items-start">
                 <span className="lg:text-2xl text-base md:text-lg font-bold">مصطفی کمری عزیز ؛ خوش اومدی. 👋</span>
