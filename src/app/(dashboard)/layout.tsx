@@ -11,15 +11,24 @@ import { MdHomeFilled } from 'react-icons/md';
 import { HiMiniSquaresPlus } from 'react-icons/hi2';
 import { BsCapsule } from 'react-icons/bs';
 import { IoSettingsSharp } from 'react-icons/io5';
-import { BiSupport } from 'react-icons/bi';
 import { PiQuestionFill } from 'react-icons/pi';
 import { ImExit } from 'react-icons/im';
 import { RiNotification4Line } from 'react-icons/ri';
 import { usePathname } from 'next/navigation';
 import { DashboardSidebar } from '../components/modules/dashboard/DashboardSidebar';
+import { LinkProps } from '@/lib/types';
+import { JSX } from 'react';
 const bungee = Bungee({
   weight: '400',
 });
+
+const dashboardLinks: (LinkProps & { icon: JSX.Element })[] = [
+  { link: '/dashboard/panel', title: 'صفحه اصلی پنل', icon: <MdHomeFilled className="text-2xl" /> },
+  { link: '/dashboard/create-capsule', title: 'افزودن کپسول جدید', icon: <HiMiniSquaresPlus className="text-2xl" /> },
+  { link: '/dashboard/user-capsules', title: 'کپسول های شما', icon: <BsCapsule className="text-2xl" /> },
+  { link: '/dashboard/setting', title: 'تنظیمات حساب', icon: <IoSettingsSharp className="text-2xl" /> },
+  { link: '/dashboard/guide', title: 'راهنما', icon: <PiQuestionFill className="text-2xl" /> },
+];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathName = usePathname();
@@ -46,30 +55,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <h1 className={`${bungee.className}`}>Capsule</h1>
         </Link>
         <div className="flex flex-col text-foreground/85 py-18 px-5 gap-6">
-          <div className={linkClasses('/dashboard/panel')}>
-            <MdHomeFilled className="text-2xl" />
-            <Link href="/dashboard/panel">صفحه اصلی پنل</Link>
+        {dashboardLinks.map((links , i) =>
+        <div key={i} className={linkClasses(links.link)}>
+            {links.icon}
+            <Link href={links.link}>{links.title}</Link>
           </div>
-          <div className={linkClasses('/dashboard/create-capsule')}>
-            <HiMiniSquaresPlus className="text-2xl" />
-            <Link href="/dashboard/create-capsule">افزودن کپسول جدید</Link>
-          </div>
-          <div className={linkClasses('/dashboard/user-capsules')}>
-            <BsCapsule className="text-2xl" />
-            <Link href="/dashboard/user-capsules">کپسول های شما</Link>
-          </div>
-          <div className={linkClasses('/dashboard/setting')}>
-            <IoSettingsSharp className="text-2xl" />
-            <Link href="/dashboard/setting">تنظیمات حساب</Link>
-          </div>
-          <div className={linkClasses('/dashboard/support')}>
-            <BiSupport className="text-2xl" />
-            <Link href="/dashboard/support">پشتیبانی</Link>
-          </div>
-          <div className={linkClasses('/dashboard/guide')}>
-            <PiQuestionFill className="text-2xl" />
-            <Link href="/dashboard/guide">راهنما</Link>
-          </div>
+        )}
         </div>
         <div className="flex flex-col text-foreground/70 pt-5 px-5 gap-6">
           <div className="flex items-center text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300">

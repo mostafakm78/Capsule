@@ -1,7 +1,5 @@
+import CapsulePageWrapper from '@/app/components/modules/dashboard/create-edit/CapsulePageWrapper';
+
 export default function UserCapsuleSinglePage() {
-  return (
-    <section>
-      <div>salam</div>
-    </section>
-  );
+  return <CapsulePageWrapper />;
 }

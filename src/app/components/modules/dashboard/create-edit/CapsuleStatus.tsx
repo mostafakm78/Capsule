@@ -11,7 +11,10 @@ import jalaali from 'jalaali-js';
 import Image from 'next/image';
 
 export default function CapsuleStatus() {
-  const [selected, setSelected] = useState<string>('');
+
+  const initialData = useSelector((state: RootState) => state.editOrcreate.initialData);
+
+  const [selected, setSelected] = useState<string>(initialData?.status || '');
   const [privateType, setPrivateType] = useState<string>('');
   const capsuleDate = useSelector((state: RootState) => state.capsuleSetting.capsuleDate);
 

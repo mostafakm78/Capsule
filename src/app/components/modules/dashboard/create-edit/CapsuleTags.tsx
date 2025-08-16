@@ -6,7 +6,8 @@ import Image from 'next/image';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { dashboardCreateCapsuleCategories } from '@/lib/types';
-
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/store/store';
 
 
 const categories: dashboardCreateCapsuleCategories[] = [
@@ -16,7 +17,8 @@ const categories: dashboardCreateCapsuleCategories[] = [
 ];
 
 export default function CapsuleTags() {
-  const [selected, setSelected] = useState<string>('');
+    const initialData = useSelector((state : RootState) => state.editOrcreate.initialData)
+  const [selected, setSelected] = useState<string>(initialData?.category || '');
 
   return (
     <div className="flex w-full p-8 h-full flex-col">

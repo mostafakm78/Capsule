@@ -9,7 +9,6 @@ import { IoSettingsSharp } from 'react-icons/io5';
 import { ThemeToggle } from '../../shared/Theme';
 import { ImExit } from 'react-icons/im';
 import { PiQuestionFill } from 'react-icons/pi';
-import { BiSupport } from 'react-icons/bi';
 import { HiMiniSquaresPlus } from 'react-icons/hi2';
 import { usePathname } from 'next/navigation';
 import { LinkProps } from '@/lib/types';
@@ -24,7 +23,6 @@ const sidebarLinks: (LinkProps & { icon: JSX.Element })[] = [
   { link: '/dashboard/create-capsule', title: 'افزودن کپسول جدید', icon: <HiMiniSquaresPlus className="text-2xl" /> },
   { link: '/dashboard/user-capsules', title: 'کپسول های شما', icon: <BsCapsule className="text-2xl" /> },
   { link: '/dashboard/setting', title: 'تنظیمات حساب', icon: <IoSettingsSharp className="text-2xl" /> },
-  { link: '/dashboard/support', title: 'پشتیبانی', icon: <BiSupport className="text-2xl" /> },
   { link: '/dashboard/guide', title: 'راهنما', icon: <PiQuestionFill className="text-2xl" /> },
 ];
 

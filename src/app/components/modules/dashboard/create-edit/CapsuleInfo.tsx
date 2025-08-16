@@ -1,6 +1,7 @@
 'use client';
 
 import { setColor } from '@/app/store/capsuleSettingSlice';
+import { RootState } from '@/app/store/store';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,7 +11,7 @@ import { dashboardCreateCapsuleColorOption } from '@/lib/types';
 import Image from 'next/image';
 import { useState } from 'react';
 import { MdOutlineCameraAlt } from 'react-icons/md';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 const colors: dashboardCreateCapsuleColorOption[] = [
@@ -22,9 +23,15 @@ const colors: dashboardCreateCapsuleColorOption[] = [
 ];
 
 export default function CapsuleInfo() {
-  const [preview, setPreview] = useState<string | null>(null);
-  const [selected, setSelected] = useState<string>('default');
   const dispatch = useDispatch();
+
+  const initialData = useSelector((state: RootState) => state.editOrcreate.initialData)
+
+  const [title, setTitle] = useState(initialData?.title || '');
+  const [description, setDescription] = useState(initialData?.description || '');
+  const [extra, setExtra] = useState(initialData?.extra || '');
+  const [selected, setSelected] = useState(initialData?.color || 'default');
+  const [preview, setPreview] = useState<string | null>(initialData?.image || null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -42,11 +49,11 @@ export default function CapsuleInfo() {
         </div>
         <Label className="flex flex-col items-start text-base text-foreground/80">
           اسم کپسول
-          <Input type="text" placeholder="مثال : تولد برادرم" className="md:text-sm md:placeholder:text-sm" />
+          <Input type="text" placeholder="مثال : تولد برادرم" value={title} onChange={(e) => setTitle(e.target.value)} className="md:text-sm md:placeholder:text-sm" />
         </Label>
         <Label className="flex flex-col items-start text-base text-foreground/80">
           توضیحات شما
-          <Textarea placeholder="نوشته های شما برای ذخیره در کپسول" className="md:text-sm md:placeholder:text-sm w-full h-[200px]" />
+          <Textarea placeholder="نوشته های شما برای ذخیره در کپسول" value={description} onChange={(e) => setDescription(e.target.value)} className="md:text-sm md:placeholder:text-sm w-full h-[200px]" />
         </Label>
         <div className="flex flex-col gap-2">
           <span className="text-base text-foreground/80 font-medium">عکس</span>
@@ -63,13 +70,21 @@ export default function CapsuleInfo() {
         </div>
         <Label className="flex flex-col items-start text-base text-foreground/80">
           توضیحات اضافی
-          <Textarea placeholder="نوشته های شما برای ذخیره در کپسول" className="md:text-sm md:placeholder:text-sm w-full h-[200px]" />
+          <Textarea placeholder="نوشته های شما برای ذخیره در کپسول" value={extra} onChange={(e) => setExtra(e.target.value)} className="md:text-sm md:placeholder:text-sm w-full h-[200px]" />
         </Label>
         <div className="flex flex-col items-center gap-2">
           <span className="text-foreground/80 self-start text-base font-medium">رنگ پس زمینه کپسول شما</span>
           <p className="text-sm self-start text-foreground/70">شما میتونین برای نمایش کپسول خودتون چه در پنل خصوصی خودتون و چه در بخش عمومی از رنگ های زیر انتخاب کنین.</p>
           <div className="mt-4">
-            <RadioGroup value={selected} onValueChange={(value: string) => setSelected(value)} className="flex gap-4">
+            <RadioGroup
+              value={selected}
+              onValueChange={(value: string) => {
+                setSelected(value);
+                const colorCode = colors.find((c) => c.id === value)?.colorCode;
+                if (colorCode) dispatch(setColor(colorCode));
+              }}
+              className="flex gap-4"
+            >
               {colors.map(({ id, colorCode }: dashboardCreateCapsuleColorOption) => (
                 <label onClick={() => dispatch(setColor(colorCode))} key={id} htmlFor={id} className="cursor-pointer relative">
                   <RadioGroupItem id={id} value={id} className="peer hidden" aria-label={id} />

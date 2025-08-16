@@ -87,9 +87,9 @@ export default function CapsuelesCategory() {
   }, [openSections]);
 
   return (
-    <div className="lg:col-span-3 w-full space-y-4 lg:place-self-start">
+    <div className="lg:col-span-3 lg:block md:flex md:justify-center md:gap-10 w-full space-y-4 lg:place-self-start">
       {/* مرتب سازی */}
-      <div ref={sortRef} className="bg-white h-[90px] overflow-hidden rounded-lg shadow-md dark:bg-slate-900 flex flex-col p-8">
+      <div ref={sortRef} className="bg-white md:w-full h-[90px] overflow-hidden rounded-lg shadow-md dark:bg-slate-900 flex flex-col p-8">
         <div className="flex items-center justify-between">
           <h6 className="text-xl font-semibold">مرتب سازی بر اساس</h6>
           <div ref={sortIconRef} className="cursor-pointer lg:hidden" onClick={() => toggleSection('sort')}>
@@ -101,7 +101,7 @@ export default function CapsuelesCategory() {
       </div>
 
       {/* فیلتر */}
-      <div ref={filterRef} className="bg-white h-[90px] overflow-hidden rounded-lg shadow-md dark:bg-slate-900 flex flex-col p-8">
+      <div ref={filterRef} className="bg-white md:w-full h-[90px] overflow-hidden rounded-lg shadow-md dark:bg-slate-900 flex flex-col p-8">
         <div className="flex items-center justify-between">
           <h6 className="text-xl font-semibold">فیلتر بر اساس</h6>
           <div ref={filterIconRef} className="cursor-pointer lg:hidden" onClick={() => toggleSection('filter')}>
