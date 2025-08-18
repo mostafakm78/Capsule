@@ -2,8 +2,6 @@
 
 import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-
 import 'swiper/css';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
@@ -19,8 +17,8 @@ export default function SliderHomePageDashboard({ setSwiperApi, setIsBeginning, 
   return (
     <div
       className="w-full lg:px-4 mx-auto
-                max-w-md
-                sm:max-w-xl
+                max-w-[350px]
+                sm:max-w-[350px]
                 md:max-w-[730px]
                 lg:max-w-[730px]
                 xl:max-w-4xl

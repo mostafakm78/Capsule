@@ -13,6 +13,7 @@ import { usePathname } from 'next/navigation';
 import { LinkProps } from '@/lib/types';
 import { JSX } from 'react';
 import { TbCategoryFilled } from 'react-icons/tb';
+import { Separator } from '@/components/ui/separator';
 
 const bungee = Bungee({
   weight: '400',
@@ -46,14 +47,14 @@ export function AdminSidebar() {
         <SheetContent>
           <SheetHeader className="items-center mt-10">
             <SheetTitle>
-              <div className="brand flex xl:text-5xl lg:text-4xl text-3xl text-muted items-center gap-2 justify-center">
+              <Link href="/" className="brand flex xl:text-5xl lg:text-4xl text-3xl text-muted items-center gap-2 justify-center">
                 <Image className="logo h-[30px] w-[30px] lg:h-[40px] lg:w-[40px] xl:w-[50px] xl:h-[50px]" src="/images/Logo.png" alt="Logo" width={20} height={20} />
                 <h1 className={`${bungee.className}`}>Capsule</h1>
-              </div>
+              </Link>
             </SheetTitle>
           </SheetHeader>
           <div className="flex flex-col w-full py-4 px-10">
-            <div className="border-t border-foreground/20 py-3"></div>
+            <Separator className='w-full bg-foreground/20 my-3'/>
             <div className="flex items-center justify-between">
               <span>تم سایت</span>
               <ThemeToggle />

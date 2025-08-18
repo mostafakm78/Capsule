@@ -22,8 +22,8 @@ export default function Footer({ bungee }: Logo) {
   return (
     <footer className="flex flex-col pb-16 gap-12 bg-linear-to-b from-background to-foreground/20 justify-center pt-16 items-center">
       <div className="flex lg:flex-row flex-col w-full lg:w-2/4 text-5xl text-muted items-center gap-10 justify-center px-12">
-        <div className="flex items-center gap-2">
-          <Image className="" src="/images/Logo.png" alt="Logo" width={50} height={50} />
+        <div className="flex text-3xl md:text-5xl items-center gap-2">
+          <Image className="logo h-[30px] w-[30px] lg:h-[40px] lg:w-[40px] xl:w-[50px] xl:h-[50px]" src="/images/Logo.png" alt="Logo" width={50} height={50} />
           <h1 className={`${bungee.className}`}>Capsule</h1>
         </div>
         <Separator className="bg-foreground/15 mr-6 hidden lg:block" />
@@ -45,10 +45,10 @@ export default function Footer({ bungee }: Logo) {
           </Button>
         </div>
       </div>
-      <div className="grid lg:grid-cols-12 lg:gap-0 gap-8 grid-cols-1 w-full px-12 place-items-center">
+      <div className="grid lg:grid-cols-12 lg:gap-0 gap-8 grid-cols-1 w-full px-4 md:px-12 place-items-center">
         <div className="col-span-4 self-start flex flex-col lg:mr-28 text-right justify-between gap-4">
           <h4 className="font-kalmeh text-xl lg:self-start self-center text-foreground">درباره کپسول</h4>
-          <p className="text-base text-foreground/80">
+          <p className="text-base text-foreground/80 text-center md:text-right">
             کپسول خاطره یک پلتفرم آنلاین است که به شما امکان می‌دهد خاطرات و لحظات مهم زندگی خود را در قالب کپسول‌های دیجیتال ذخیره کنید. این کپسول‌ها می‌توانند شامل متن، عکس، ویدئو و صدا باشند. با استفاده از این پلتفرم، شما می‌توانید خاطرات خود را به صورت امن نگهداری کنید و در آینده به آن‌ها دسترسی
             داشته باشید.
           </p>
@@ -105,7 +105,7 @@ export default function Footer({ bungee }: Logo) {
           </div>
         </div>
       </div>
-      <p className="text-sm">© {new Date().getFullYear()} کپسول خاطره با ❤️ برای حافظه‌ی لحظه‌ها ساخته شده.</p>
+      <p className="text-sm p-4">© {new Date().getFullYear()} کپسول خاطره با ❤️ برای حافظه‌ی لحظه‌ها ساخته شده.</p>
     </footer>
   );
 }

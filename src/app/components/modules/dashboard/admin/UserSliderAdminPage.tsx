@@ -7,7 +7,6 @@ import { FaUser } from 'react-icons/fa';
 
 import 'swiper/css';
 
-
 interface CardProps {
   setSwiperApi: (swiper: SwiperClass) => void;
   setIsEnd: (value: boolean) => void;
@@ -18,8 +17,8 @@ export default function UserSliderAdmin({ setSwiperApi, setIsBeginning, setIsEnd
   return (
     <div
       className="w-full lg:px-4 mx-auto
-                max-w-md
-                sm:max-w-xl
+                max-w-[350px]
+                sm:max-w-[350px]
                 md:max-w-[730px]
                 lg:max-w-[730px]
                 xl:max-w-4xl
@@ -68,7 +67,7 @@ export default function UserSliderAdmin({ setSwiperApi, setIsBeginning, setIsEnd
                 <AvatarFallback>CP</AvatarFallback>
               </Avatar>
             </div>
-            <div className='flex items-center justify-center gap-2'>
+            <div className="flex items-center justify-center gap-2">
               <FaUser />
               <span className="font-light text-2xl text-foreground/80">مصطفی کمری</span>
             </div>
@@ -82,7 +81,7 @@ export default function UserSliderAdmin({ setSwiperApi, setIsBeginning, setIsEnd
                 <AvatarFallback>CP</AvatarFallback>
               </Avatar>
             </div>
-            <div className='flex items-center justify-center gap-2'>
+            <div className="flex items-center justify-center gap-2">
               <FaUser />
               <span className="font-light text-2xl text-foreground/80">مصطفی کمری</span>
             </div>
@@ -96,7 +95,7 @@ export default function UserSliderAdmin({ setSwiperApi, setIsBeginning, setIsEnd
                 <AvatarFallback>CP</AvatarFallback>
               </Avatar>
             </div>
-            <div className='flex items-center justify-center gap-2'>
+            <div className="flex items-center justify-center gap-2">
               <FaUser />
               <span className="font-light text-2xl text-foreground/80">مصطفی کمری</span>
             </div>
@@ -110,7 +109,7 @@ export default function UserSliderAdmin({ setSwiperApi, setIsBeginning, setIsEnd
                 <AvatarFallback>CP</AvatarFallback>
               </Avatar>
             </div>
-            <div className='flex items-center justify-center gap-2'>
+            <div className="flex items-center justify-center gap-2">
               <FaUser />
               <span className="font-light text-2xl text-foreground/80">مصطفی کمری</span>
             </div>
@@ -124,7 +123,7 @@ export default function UserSliderAdmin({ setSwiperApi, setIsBeginning, setIsEnd
                 <AvatarFallback>CP</AvatarFallback>
               </Avatar>
             </div>
-            <div className='flex items-center justify-center gap-2'>
+            <div className="flex items-center justify-center gap-2">
               <FaUser />
               <span className="font-light text-2xl text-foreground/80">مصطفی کمری</span>
             </div>
@@ -138,7 +137,7 @@ export default function UserSliderAdmin({ setSwiperApi, setIsBeginning, setIsEnd
                 <AvatarFallback>CP</AvatarFallback>
               </Avatar>
             </div>
-            <div className='flex items-center justify-center gap-2'>
+            <div className="flex items-center justify-center gap-2">
               <FaUser />
               <span className="font-light text-2xl text-foreground/80">مصطفی کمری</span>
             </div>

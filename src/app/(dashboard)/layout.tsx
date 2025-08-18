@@ -18,7 +18,7 @@ import { RiNotification4Line } from 'react-icons/ri';
 import { usePathname } from 'next/navigation';
 import { DashboardSidebar } from '../components/modules/dashboard/DashboardSidebar';
 import { LinkProps } from '@/lib/types';
-import { JSX } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import { AdminSidebar } from '../components/modules/dashboard/AdminSidebar';
 import { FaUsers } from 'react-icons/fa';
 const bungee = Bungee({
@@ -42,6 +42,7 @@ const adminLinks: (LinkProps & { icon: JSX.Element })[] = [
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const [dateLabel, setDateLabel] = useState<string>('');
   const pathName = usePathname();
 
   const admin = pathName.startsWith('/dashboard/admin');
@@ -58,13 +59,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return `flex items-center text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300 ${isActive ? 'bg-background text-primary' : ''}`;
   };
 
-  const now = new Date();
+  useEffect(() => {
+    const now = new Date();
+    const { jy: year, jm: month, jd: day } = jalaali.toJalaali(now);
+    const persianMonths = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+    const persianWeekDays = ['یک‌شنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'];
+    const dayOfWeek = now.getDay();
+    const persianDayOfWeekIndex = (dayOfWeek + 6) % 7;
 
-  const { jy: year, jm: month, jd: day } = jalaali.toJalaali(now);
-  const persianMonths = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
-  const persianWeekDays = ['یک‌شنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'];
-  const dayOfWeek = now.getDay();
-  const persianDayOfWeekIndex = (dayOfWeek + 6) % 7;
+    setDateLabel(`${persianWeekDays[persianDayOfWeekIndex]}، ${day} ${persianMonths[month - 1]} ${year}`);
+  }, []);
 
   return (
     <div className="flex bg-white dark:bg-slate-900 min-h-screen">
@@ -98,7 +102,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </aside>
 
       <div className="flex flex-col flex-1">
-        <nav className="bg-white dark:bg-slate-900 flex items-center justify-between lg:py-6 lg:px-8 py-4 pt-8 px-3">
+        <nav className="bg-white dark:bg-slate-900 flex items-center justify-between lg:py-6 lg:px-8 py-4 pt-6 px-2">
           <div className="flex h-full lg:gap-3 gap-1 items-center">
             <div className="flex gap-2 h-full items-center justify-center">
               <div className="bg-foreground text-xl p-2 text-background rounded-lg lg:hidden block">
@@ -106,10 +110,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 {admin && <AdminSidebar />}
               </div>
               <div className="flex lg:flex-row flex-col h-full lg:items-center xl:gap-3 lg:gap-1 items-start">
-                <span className="lg:text-2xl text-base md:text-lg font-bold">مصطفی کمری عزیز ؛ خوش اومدی. 👋</span>
+                <span className="lg:text-2xl text-sm md:text-base font-bold">مصطفی کمری عزیز ؛ خوش اومدی. 👋</span>
                 <Separator orientation="vertical" className="bg-foreground/20 h-full lg:block hidden" />
-                <span className="text-[11px] lg:text-base text-foreground/80">
-                  {persianWeekDays[persianDayOfWeekIndex]}، {day} {persianMonths[month - 1]} {year}
+                <span suppressHydrationWarning className="text-[11px] lg:text-base text-foreground/80">
+                  {dateLabel}
                 </span>
               </div>
             </div>
@@ -128,7 +132,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         </nav>
 
-        <main className="flex-1 w-full bg-background lg:p-10 p-4 pb-10 lg:rounded-tr-4xl">{children}</main>
+        <main className="flex-1 w-full bg-background lg:p-10 md:p-6 p-3 py-10 lg:rounded-tr-4xl">{children}</main>
       </div>
     </div>
   );

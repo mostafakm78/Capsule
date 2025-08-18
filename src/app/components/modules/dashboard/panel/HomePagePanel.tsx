@@ -24,8 +24,8 @@ export default function HomePagePanel() {
 
   return (
     <section className="flex flex-col justify-center h-full gap-10">
-      <div className="grid grid-cols-12 w-full p-4 gap-2">
-        <div className="border-emerald-500 dark:border-emerald-500/60 xl:col-span-3 col-span-6 flex items-center gap-2 bg-white dark:bg-slate-900 border-2 rounded-lg py-4 px-2">
+      <div className="grid grid-cols-12 w-full p-1 md:p-4 gap-2">
+        <div className="border-emerald-500 dark:border-emerald-500/60 xl:col-span-3 md:col-span-6 col-span-12 flex items-center gap-2 bg-white dark:bg-slate-900 border-2 rounded-lg py-4 px-2">
           <div className="bg-emerald-500 p-2 rounded-full">
             <BsCapsule className="lg:text-3xl text-xl text-background" />
           </div>
@@ -35,7 +35,7 @@ export default function HomePagePanel() {
             <span>52</span>
           </div>
         </div>
-        <div className="border-purple-500 dark:border-purple-500/60 flex xl:col-span-3 col-span-6 items-center gap-2 bg-white dark:bg-slate-900 border-2 rounded-lg py-4 px-2">
+        <div className="border-purple-500 dark:border-purple-500/60 flex xl:col-span-3 md:col-span-6 col-span-12 items-center gap-2 bg-white dark:bg-slate-900 border-2 rounded-lg py-4 px-2">
           <div className="bg-purple-500 p-2 rounded-full">
             <IoPeopleSharp className="lg:text-3xl text-xl text-background" />
           </div>
@@ -45,7 +45,7 @@ export default function HomePagePanel() {
             <span>15</span>
           </div>
         </div>
-        <div className="border-rose-500 dark:border-rose-500/60 flex xl:col-span-3 col-span-6 items-center gap-2 bg-white dark:bg-slate-900 border-2 rounded-lg py-4 px-2">
+        <div className="border-rose-500 dark:border-rose-500/60 flex xl:col-span-3 md:col-span-6 col-span-12 items-center gap-2 bg-white dark:bg-slate-900 border-2 rounded-lg py-4 px-2">
           <div className="bg-rose-500 p-2 rounded-full">
             <IoWarningOutline className="lg:text-3xl text-xl text-background" />
           </div>
@@ -55,7 +55,7 @@ export default function HomePagePanel() {
             <span>1</span>
           </div>
         </div>
-        <div className="border-yellow-500 dark:border-yellow-500/60 xl:col-span-3 col-span-6 flex items-center gap-2 bg-white dark:bg-slate-900 border-2 rounded-lg py-4 px-2">
+        <div className="border-yellow-500 dark:border-yellow-500/60 xl:col-span-3 md:col-span-6 col-span-12 flex items-center gap-2 bg-white dark:bg-slate-900 border-2 rounded-lg py-4 px-2">
           <div className="bg-yellow-500 p-2 rounded-full">
             <GrFormView className="lg:text-3xl text-xl text-background" />
           </div>

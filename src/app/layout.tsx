@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fa" dir="rtl" suppressHydrationWarning>
-      <body className="bg-background">
+      <body className="bg-background overflow-x-hidden">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ReduxProvider>{children}</ReduxProvider>
         </ThemeProvider>

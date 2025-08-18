@@ -114,13 +114,13 @@ export default function UseCases() {
 
   return (
     <section id="pinned-section" className="lg:h-[700px]">
-      <div className="flex lg:flex-row flex-col h-full w-full px-4 lg:px-10 gap-10">
+      <div className="flex lg:flex-row flex-col h-full w-full px-1 md:px-6 lg:px-10 gap-10">
         <div
           ref={divRef}
           onMouseMove={(e) => handleMouseMove(e, divRef)}
-          className={`h-full relative lg:p-20 z-[1] lg:w-[50%] w-full bg-foreground/10 py-6 rounded-xl overflow-hidden flex flex-col justify-around items-center gap-10 before:content-[''] before:absolute before:bg-[radial-gradient(var(--color-primary))] before:w-[800px] before:h-[800px] before:top-[var(--y)] before:left-[var(--x)] before:-translate-x-1/2 before:-translate-y-1/2 before:rounded-full before:opacity-0 hover:before:opacity-100 before:blur-2xl after:content-[''] after:absolute after:inset-0.5 after:rounded-lg after:bg-background/85`}
+          className={`h-full relative lg:p-20 z-[1] lg:w-[50%] w-full bg-foreground/10 py-2 md:py-6 rounded-xl overflow-hidden flex flex-col justify-around items-center gap-10 before:content-[''] before:absolute before:bg-[radial-gradient(var(--color-primary))] before:w-[800px] before:h-[800px] before:top-[var(--y)] before:left-[var(--x)] before:-translate-x-1/2 before:-translate-y-1/2 before:rounded-full before:opacity-0 hover:before:opacity-100 before:blur-2xl after:content-[''] after:absolute after:inset-0.5 after:rounded-lg after:bg-background/85`}
         >
-          <div className="lg:w-[90%] md:w-[50%] w-[90%] p-4 lg:absolute relative h-[90%] shadow-md flex-col layer z-10 bg-[#CC66DA] flex justify-around items-center rounded-lg">
+          <div className="md:w-[90%] w-[95%] p-4 lg:absolute relative md:h-[90%] h-[95%] shadow-md flex-col layer z-10 bg-[#CC66DA] flex justify-around items-center rounded-lg">
             {/* لایه‌ی گرادیان پس‌زمینه به‌جای after */}
             <div className={`spinning-gradient absolute inset-0 -z-10 rounded-lg p-[2.5px] bg-[conic-gradient(from_var(--angle),transparent_70%,var(--color-foreground))] opacity-50`}>
               <div className="w-full h-full rounded-md bg-[#CC66DA]"></div>
@@ -130,14 +130,14 @@ export default function UseCases() {
               <h3 className="text-foreground lg:text-3xl md:text-2xl text-xl font-kalmeh">به چه دردی میخوره ؟</h3>
               <p className="text-foreground/70 lg:text-xl md:text-lg text-base">کاربرد ها</p>
             </div>
-            <ul className="list-disc lg:text-xl md:text-lg py-10 lg:py-2 text-base text-foreground/90">
+            <ul className="list-disc lg:text-xl md:text-lg px-4 py-10 lg:py-2 text-base text-foreground/90">
               <li>برای خودت در آینده</li>
               <li>برای فرزندت در ۱۰ سال بعد</li>
               <li>برای عاشقانه‌ای که هنوز نیومده</li>
               <li>تولد، سالگرد، یادبود...</li>
             </ul>
           </div>
-          <div className="lg:w-[90%] md:w-[50%] w-[90%] p-4 lg:absolute relative h-[90%] shadow-md flex-col layer z-10 bg-secondary flex justify-around items-center rounded-lg">
+          <div className="md:w-[90%] w-[95%] p-4 lg:absolute relative md:h-[90%] h-[95%] shadow-md flex-col layer z-10 bg-secondary flex justify-around items-center rounded-lg">
             {/* لایه‌ی گرادیان پس‌زمینه به‌جای after */}
             <div className={`spinning-gradient absolute inset-0 -z-10 rounded-lg p-[2.5px] bg-[conic-gradient(from_var(--angle),transparent_70%,var(--color-foreground))] opacity-50`}>
               <div className="w-full h-full rounded-md bg-secondary"></div>
@@ -147,13 +147,13 @@ export default function UseCases() {
               <h3 className="text-foreground lg:text-3xl md:text-2xl text-xl font-kalmeh">چطور کار میکنه ؟</h3>
               <p className="text-foreground/70 lg:text-xl md:text-lg text-base">مراحل ساخت کپسول در 3 قدم</p>
             </div>
-            <ul className="list-disc lg:text-xl md:text-lg py-10 lg:py-2 text-base text-foreground/90">
+            <ul className="list-disc lg:text-xl md:text-lg px-4 py-10 lg:py-2 text-base text-foreground/90">
               <li>مرحله ۱: انتخاب محتوا (متن، صدا، تصویر)</li>
               <li>مرحله ۲: تعیین زمان ارسال</li>
               <li>مرحله ۳: ارسال و انتظار برای باز شدن</li>
             </ul>
           </div>
-          <div className="lg:w-[90%] md:w-[50%] w-[90%] p-4 lg:absolute relative h-[90%] shadow-md flex-col layer z-10 bg-primary flex justify-around items-center rounded-lg">
+          <div className="md:w-[90%] w-[95%] p-4 lg:absolute relative md:h-[90%] h-[95%] shadow-md flex-col layer z-10 bg-primary flex justify-around items-center rounded-lg">
             {/* لایه‌ی گرادیان پس‌زمینه به‌جای after */}
             <div className={`spinning-gradient absolute inset-0 -z-10 rounded-lg p-[2.5px] bg-[conic-gradient(from_var(--angle),transparent_70%,var(--color-foreground))] opacity-50`}>
               <div className="w-full h-full rounded-md bg-primary"></div>
@@ -163,7 +163,7 @@ export default function UseCases() {
               <h3 className="text-foreground lg:text-3xl md:text-2xl text-xl font-kalmeh">امنیت و حریم خصوصی داره ؟</h3>
               <p className="text-foreground/70 lg:text-xl md:text-lg text-base">بله خیلی مهمه چون کاربر داده شخصی می‌ده</p>
             </div>
-            <ul className="list-disc lg:text-xl md:text-lg py-10 lg:py-2 text-base text-foreground/90">
+            <ul className="list-disc lg:text-xl md:text-lg px-4 py-10 lg:py-2 text-base text-foreground/90">
               <li>رمزگذاری انتها به انتها</li>
               <li>فقط گیرنده بهش دسترسی داره</li>
               <li>روی سرورهای امن نگهداری می‌شه</li>
@@ -173,7 +173,7 @@ export default function UseCases() {
         <div
           ref={divTwoRef}
           onMouseMove={(e) => handleMouseMove(e, divTwoRef)}
-          className={`h-full relative p-20 z-[1] lg:w-[50%] w-full bg-foreground/10 py-6 rounded-xl overflow-hidden flex flex-col justify-around items-center gap-10 before:content-[''] before:absolute before:bg-[radial-gradient(var(--color-secondary))] before:w-[800px] before:h-[800px] before:top-[var(--y)] before:left-[var(--x)] before:-translate-x-1/2 before:-translate-y-1/2 before:rounded-full before:opacity-0 hover:before:opacity-100 before:blur-2xl after:content-[''] after:absolute after:inset-0.5 after:rounded-lg after:bg-background/85`}
+          className={`h-full relative md:p-20 sm:p-10 p-4 z-[1] lg:w-[50%] w-full bg-foreground/10 py-6 rounded-xl overflow-hidden flex flex-col justify-around items-center gap-10 before:content-[''] before:absolute before:bg-[radial-gradient(var(--color-secondary))] before:w-[800px] before:h-[800px] before:top-[var(--y)] before:left-[var(--x)] before:-translate-x-1/2 before:-translate-y-1/2 before:rounded-full before:opacity-0 hover:before:opacity-100 before:blur-2xl after:content-[''] after:absolute after:inset-0.5 after:rounded-lg after:bg-background/85`}
         >
           <div className="w-[100%] lg:w-[90%] h-[50%] pt-10 lg:pt-0 flex flex-col layer z-10 justify-around items-center rounded-lg">
             <h3 className="text-foreground lg:text-5xl text-2xl text-center font-bold leading-snug">خاطره هات رو در کپسول زمان ذخیره کن!</h3>

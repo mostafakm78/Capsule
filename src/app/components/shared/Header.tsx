@@ -16,18 +16,20 @@ interface Logo {
   bungee: { className: string };
 }
 
-const headerLinks : LinkProps[] = [
-    {link : '/' , title : 'صفحه اصلی'},
-    {link : '/capsules' , title : 'کپسول های عمومی'},
-    {link : '/about-us' , title : 'درباره ما'},
-    {link : '/contact-us' , title : 'ارتباط با ما'},
-]
+const headerLinks: LinkProps[] = [
+  { link: '/', title: 'صفحه اصلی' },
+  { link: '/capsules', title: 'کپسول های عمومی' },
+  { link: '/about-us', title: 'درباره ما' },
+  { link: '/contact-us', title: 'ارتباط با ما' },
+];
 
 export default function Header({ bungee }: Logo) {
   const pathname = usePathname();
   const timeline = gsap.timeline();
 
   useGSAP(() => {
+    const isMobile = window.innerWidth < 480;
+
     timeline
       .fromTo(
         '.header',
@@ -58,18 +60,25 @@ export default function Header({ bungee }: Logo) {
       )
       .fromTo(
         '.nav-link',
-        {
-          opacity: 0,
-          x: -50,
-        },
+        isMobile
+          ? {
+              opacity: 0,
+              y: -50,
+            }
+          : {
+              opacity: 0,
+              x: -50,
+            },
         {
           opacity: 1,
           x: 0,
+          y: 0,
           ease: 'power2.out',
           stagger: 0.1,
         }
-      )
-      .fromTo(
+      );
+    if (!isMobile) {
+      timeline.fromTo(
         '.theme',
         {
           opacity: 0,
@@ -81,14 +90,15 @@ export default function Header({ bungee }: Logo) {
           ease: 'power2.out',
           stagger: 0.1,
         }
-      )
-      .to('.logo', {
-        rotation: 10,
-        repeat: 10,
-        yoyo: true,
-        duration: 0.1,
-        ease: 'power1.inOut',
-      });
+      );
+    }
+    timeline.to('.logo', {
+      rotation: 10,
+      repeat: 10,
+      yoyo: true,
+      duration: 0.1,
+      ease: 'power1.inOut',
+    });
 
     return () => timeline.kill();
   }, []);
@@ -99,11 +109,11 @@ export default function Header({ bungee }: Logo) {
         pathname === '/' ? 'bg-foreground/20' : 'bg-background pb-10 after:bg-linear-to-b after:from-foreground/30 after:to-foreground/10 after:content-[""] after:w-full after:h-full after:absolute dark:after:opacity-45 after:opacity-80 after:z-[1] after:blur-2xl'
       } items-center justify-center`}
     >
-      <nav className="header relative w-11/12 z-10 lg:w-10/12 bg-background py-6 px-10 mt-8 flex items-center shadow-lg justify-around rounded-xl gap-4">
+      <nav className="header relative w-11/12 z-10 lg:w-10/12 bg-background py-6 px-3 sm:px-6 md:px-10 mt-8 flex items-center shadow-lg justify-around rounded-xl gap-2 md:gap-4">
         <div className="nav-link lg:hidden text-4xl cursor-pointer">
           <Sidebar />
         </div>
-        <div className="brand flex xl:text-5xl lg:text-4xl text-3xl text-muted items-center gap-2 justify-center">
+        <div className="brand flex xl:text-5xl md:text-4xl text-2xl text-muted items-center gap-2 justify-center">
           <Image className="logo h-[30px] w-[30px] lg:h-[40px] lg:w-[40px] xl:w-[50px] xl:h-[50px]" src="/images/Logo.png" alt="Logo" width={20} height={20} />
           <h1 className={`${bungee.className}`}>Capsule</h1>
         </div>
@@ -121,11 +131,11 @@ export default function Header({ bungee }: Logo) {
       </nav>
       <div className="header z-[9] shadow-md lg:block hidden bg-accent w-8/12 py-5 rounded-b-xl">
         <div className="lg:flex items-center justify-center gap-10 hidden">
-            {headerLinks.map((links , i) =>
+          {headerLinks.map((links, i) => (
             <div key={i} className="theme hidden lg:block">
-            <HeaderLink text={links.title} link={links.link} />
-          </div>
-            )}
+              <HeaderLink text={links.title} link={links.link} />
+            </div>
+          ))}
         </div>
       </div>
     </header>

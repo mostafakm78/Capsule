@@ -20,7 +20,7 @@ export default function LoginOrSignup() {
         <Image className="logo h-[30px] w-[30px] lg:h-[40px] lg:w-[40px] xl:w-[50px] xl:h-[50px]" src="/images/Logo.png" alt="Logo" width={20} height={20} />
         <h1 className={`${bungee.className}`}>Capsule</h1>
       </div>
-      <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xl gap-2 shadow-black/5 py-8 px-12 flex flex-col lg:w-[30%] w-10/12 md:w-6/12 items-center justify-center">
+      <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xl gap-2 shadow-black/5 lg:py-8 py-4 md:px-12 px-6 flex flex-col lg:w-[30%] w-11/12 md:w-6/12 items-center justify-center">
         <h4 className="text-2xl text-foreground/80 self-start font-bold">ورود/ثبت نام</h4>
         {step === 1 && <StepOneForm />}
         {step === 2 && <StepTwoForm />}

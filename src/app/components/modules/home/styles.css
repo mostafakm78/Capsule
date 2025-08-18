@@ -42,16 +42,31 @@
   transform: translateY(-100%);
 }
 
-@media screen and (max-width: 768px) and (min-width: 481px) {
+@media screen and (max-width: 1000px) and (min-width: 768px) {
   .swiper {
-    width: 400px;
+    width: 450px;
     height: 250px;
   }
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 767px) and (min-width: 481px) {
   .swiper {
-    width: 270px;
+    width: 330px;
     height: 250px;
+  }
+}
+
+
+@media screen and (max-width: 480px) and (min-width: 381px) {
+  .swiper {
+    width: 200px;
+    height: 350px;
+  }
+}
+
+@media screen and (max-width: 380px) {
+  .swiper {
+    width: 180px;
+    height: 350px;
   }
 }

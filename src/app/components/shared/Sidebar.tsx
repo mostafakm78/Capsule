@@ -14,6 +14,7 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import { usePathname } from 'next/navigation';
 import { LinkProps } from '@/lib/types';
 import { JSX } from 'react';
+import { Separator } from '@/components/ui/separator';
 
 const bungee = Bungee({
   weight: '400',
@@ -40,7 +41,7 @@ export function Sidebar() {
     <aside>
       <Sheet>
         <SheetTrigger asChild>
-          <HiOutlineBars3 className="cursor-pointer text-3xl" />
+          <HiOutlineBars3 className="cursor-pointer text-3xl md:text-4xl" />
         </SheetTrigger>
         <SheetContent>
           <SheetHeader className="items-center mt-10">
@@ -54,7 +55,7 @@ export function Sidebar() {
 
           {/* تنظیمات تم */}
           <div className="flex flex-col w-full py-4 px-10">
-            <div className="border-t border-foreground/20 py-3"></div>
+            <Separator className='w-full bg-foreground/20 my-3'/>
             <div className="flex items-center justify-between">
               <span>تم سایت</span>
               <ThemeToggle />

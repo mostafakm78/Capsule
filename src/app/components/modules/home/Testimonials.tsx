@@ -56,7 +56,7 @@ export default function Testimonials() {
   }, []);
 
   return (
-    <section className="flex mb-16 lg:px-10 justify-center lg:mt-44 mt-20 items-center">
+    <section className="flex mb-16 px-4 md:px-6 lg:px-10 justify-center lg:mt-44 mt-20 items-center">
       <div className="flex lg:flex-row flex-col gap-10 justify-center items-center">
         <div className="w-full space-y-6">
           <div className="section-right flex items-center">
@@ -65,9 +65,9 @@ export default function Testimonials() {
               <circle cx="30" cy="13" r="7" fill="currentColor" fillOpacity="0.4"></circle>
               <circle cx="15" cy="4" r="4" fill="currentColor" fillOpacity="0.7"></circle>
             </svg>
-            <h4 className="lg:text-4xl text-3xl font-kalmeh mx-auto lg:mx-0 text-foreground">شما در مورد کپسول چی گفتین ؟</h4>
+            <h4 className="lg:text-4xl text-center lg:text-right text-2xl md:text-3xl font-kalmeh mx-auto lg:mx-0 text-foreground">شما در مورد کپسول چی گفتین ؟</h4>
           </div>
-          <p className="section-right lg:text-xl text-base text-foreground/70 lg:w-2/3 w-full lg:mr-14 mx-auto"> بخش کوچیکی از نظرات کاربرای کپسول درباره تجربه ای که اینجا داشتن</p>
+          <p className="section-right lg:text-xl text-sm md:text-base text-foreground/70 lg:w-2/3 w-full lg:mr-14 mx-auto"> بخش کوچیکی از نظرات کاربرای کپسول درباره تجربه ای که اینجا داشتن</p>
           <div className="section-right flex items-center w-2/3 justify-between lg:text-xl text-2xl text-foreground/70 lg:mr-14 mx-auto">
             <div className="flex gap-3">
               <BiSolidRightArrow onClick={() => swiperApi?.slidePrev()} className={`cursor-pointer ${isBeginning ? 'opacity-50' : ''}`}  />
@@ -87,7 +87,7 @@ export default function Testimonials() {
             </svg>
           </div>
         </div>
-        <div className="section-left w-full relative after:content-[''] after:absolute after:h-full after:w-full after:bg-foreground/25 after:top-1/2 after:left-1/2 after:-translate-y-1/2 after:-translate-x-1/2 after:blur-2xl">
+        <div className="section-left w-full relative after:content-[''] after:absolute after:h-full after:w-full after:bg-foreground/15 after:top-1/2 after:left-1/2 after:-translate-y-1/2 after:-translate-x-1/2 after:blur-3xl">
           <Card setSwiperApi={setSwiperApi} isEnd={setIsEnd} isBegining={setIsBeginning}/>
         </div>
       </div>

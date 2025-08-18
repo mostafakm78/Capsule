@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { TrendingUp } from 'lucide-react';
 import { Label, Pie, PieChart } from 'recharts';
+import jalaali from 'jalaali-js';
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
@@ -52,7 +53,14 @@ export function UsersChart() {
     <Card className="flex flex-col w-full h-full border-none shadow-none bg-white dark:bg-slate-900">
       <CardHeader className="items-center pb-0">
         <CardTitle>چارت نمایش بازدید های سایت</CardTitle>
-        <CardDescription>فروردین 1404</CardDescription>
+        <CardDescription>
+          {(() => {
+            const gDate = new Date();
+            const jDate = jalaali.toJalaali(gDate);
+            const months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+            return `${months[jDate.jm - 1]} ${jDate.jy}`;
+          })()}
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[250px]">
@@ -68,7 +76,7 @@ export function UsersChart() {
                           {totalVisitors.toLocaleString()}
                         </tspan>
                         <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-foreground">
-                          Visitors
+                          بازدید کنندگان
                         </tspan>
                       </text>
                     );
