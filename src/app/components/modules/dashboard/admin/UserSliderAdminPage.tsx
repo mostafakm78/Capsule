@@ -17,8 +17,8 @@ export default function UserSliderAdmin({ setSwiperApi, setIsBeginning, setIsEnd
   return (
     <div
       className="w-full lg:px-4 mx-auto
-                max-w-[350px]
-                sm:max-w-[350px]
+                max-w-[250px]
+                sm:max-w-[250px]
                 md:max-w-[730px]
                 lg:max-w-[730px]
                 xl:max-w-4xl

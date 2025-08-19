@@ -11,7 +11,7 @@ import CapsuelesCategory from './CapsulesCategory';
 export default function CapsulesIndex() {
   return (
     <section className="flex items-center justify-center">
-      <div className="px-10 flex flex-col lg:w-[90%] w-full justify-center items-center">
+      <div className="px-4 md:px-6 lg:px-10 flex flex-col lg:w-[90%] w-full justify-center items-center">
         <div className="flex flex-col gap-3 self-start">
           <h4 className="text-4xl font-kalmeh text-foreground">کپسول های عمومی</h4>
           <p className="lg:text-lg text-base text-foreground/80">خاطره ها و تجربیاتی که کاربرای کپسول دوست داشتن با بقیه به اشتراک بزارن اینجاست!</p>

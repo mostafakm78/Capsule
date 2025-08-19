@@ -36,7 +36,7 @@ export function AdminSidebar() {
       ? pathName === href
       : pathName.startsWith(href);
 
-    return `flex items-center ${isActive ? 'bg-white dark:bg-slate-900 text-primary' : ''} text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300`;
+    return `flex items-center ${isActive ? 'bg-white dark:bg-slate-900 text-primary' : ''} md:text-lg text-base active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300`;
   };
   return (
     <aside>

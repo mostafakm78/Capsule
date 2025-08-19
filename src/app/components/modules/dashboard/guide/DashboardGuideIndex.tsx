@@ -15,7 +15,7 @@ export default function DashboardGuideIndex() {
     <section className="flex flex-col h-full ">
       <div className="flex flex-col h-full justify-start gap-10">
         <span className='text-foreground text-xl pr-4 relative font-bold after:content-[""] after:h-2 after:w-2 after:rounded-full after:absolute after:bg-foreground after:right-0 after:top-1/2 after:-translate-y-1/2'>راهنمای استفاده</span>
-        <div className="flex flex-col items-center gap-8 bg-white h-full w-full rounded-lg p-6 dark:bg-slate-900">
+        <div className="flex flex-col items-center gap-8 bg-white h-full w-full rounded-lg md:p-6 p-2 dark:bg-slate-900">
           {guides.map((guideItem, i) => (
             <div key={i} className="flex gap-2 items-center py-4 px-2 border border-foreground/20 rounded-lg lg:w-2/3 w-full">
               <Image src="/images/cartoon-question.png" alt="question" width={100} height={100} />

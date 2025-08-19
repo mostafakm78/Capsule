@@ -1,12 +1,12 @@
 export default function TermsIndex() {
   return (
-    <section className="flex items-center justify-center px-10">
+    <section className="flex items-center justify-center px-4 md:px-6 lg:px-10">
       <div className="flex flex-col gap-20 items-center lg:w-[90%]">
         <div className="flex flex-col items-center gap-3">
-          <h3 className="lg:text-5xl text-4xl font-kalmeh">قوانین و مقررات سایت</h3>
-          <p className="lg:text-2xl text-lg text-foreground/80">در این صفحه شرایط استفاده از وبسایت آموزشی راکت را مشاهده میکنید.</p>
+          <h3 className="lg:text-5xl md:text-4xl text-3xl font-kalmeh">قوانین و مقررات سایت</h3>
+          <p className="lg:text-2xl md:text-lg text-base text-foreground/80">در این صفحه شرایط استفاده از وبسایت آموزشی راکت را مشاهده میکنید.</p>
         </div>
-        <div className="flex flex-col space-y-4 bg-white dark:bg-slate-900 text-lg text-foreground/60 rounded-lg p-10">
+        <div className="flex flex-col space-y-4 bg-white dark:bg-slate-900 text-lg text-foreground/60 rounded-lg md:p-10 p-4">
           <h1>به کپسول خوش آمدید.</h1>
           <p>
             هر سرویس دهنده‌ای در دنیای واقعی و مجازی بر پایه یک سری قوانین و مقررات بنا شده است تا بتواند محیط عادلانه و بهتری برای مخاطبان خود ایجاد کند. به همین منظور ما در کپسول یک سری قوانین و مقررات را گرده هم آورده‌ایم، که به شرح زیر آنها را توضیح خواهیم داد . دقت کنید عضویت در سایت و ساخت

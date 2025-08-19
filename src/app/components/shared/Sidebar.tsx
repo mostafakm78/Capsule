@@ -34,7 +34,7 @@ export function Sidebar() {
 
   const linkClasses = (href: string) => {
     const isActive = href === '/' ? pathName === '/' : pathName.startsWith(href);
-    return `flex items-center ${isActive ? 'text-secondary' : 'text-foreground/80'} text-xl bg-accent p-2 rounded-lg active:text-primary justify-start gap-4`;
+    return `flex items-center ${isActive ? 'text-secondary' : 'text-foreground/80'} text-base md:text-xl bg-accent p-2 rounded-lg active:text-primary justify-start gap-4`;
   };
 
   return (

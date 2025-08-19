@@ -31,8 +31,8 @@ export default function AboutUsMobile() {
   }, []);
 
   return (
-    <section className="dotted block lg:hidden my-16">
-      <div className="bg-background relative px-6 gap-10 flex flex-col items-center justify-center">
+    <section className="dotted block lg:hidden my-6">
+      <div className="bg-background relative px-4 md:px-6 lg:px-10 gap-10 flex flex-col items-center justify-center">
         <div className="flex flex-col items-center gap-6">
           <h3 className="sec-one text-5xl font-kalmeh text-foreground">داستان آغاز</h3>
           <p className="sec-one text-justify bg-accent p-4 rounded-xl text-lg text-foreground/80">

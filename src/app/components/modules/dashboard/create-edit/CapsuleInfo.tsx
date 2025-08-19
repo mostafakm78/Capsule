@@ -41,7 +41,7 @@ export default function CapsuleInfo() {
   };
 
   return (
-    <div className="flex w-full p-8 h-full flex-col">
+    <div className="flex w-full md:p-8 p-4 h-full flex-col">
       <div className="flex flex-col gap-6">
         <div className="space-y-1">
           <h4 className="text-foreground/95 pr-5 relative text-xl after:content-[''] after:absolute after:w-2.5 after:h-2.5 after:bg-foreground/80 after:rounded-full after:right-0 after:top-1/2 after:-translate-y-1/2">اطلاعات</h4>
@@ -88,14 +88,14 @@ export default function CapsuleInfo() {
               {colors.map(({ id, colorCode }: dashboardCreateCapsuleColorOption) => (
                 <label onClick={() => dispatch(setColor(colorCode))} key={id} htmlFor={id} className="cursor-pointer relative">
                   <RadioGroupItem id={id} value={id} className="peer hidden" aria-label={id} />
-                  <div className={`${colorCode} ring ring-foreground w-10 h-10 rounded-full peer-checked:border-primary transition-all`} title={id} />
+                  <div className={`${colorCode} ring ring-foreground h-5 w-5 md:w-10 md:h-10 rounded-full peer-checked:border-primary transition-all`} title={id} />
                 </label>
               ))}
             </RadioGroup>
           </div>
         </div>
         <div className="w-full flex justify-center mt-8">
-          <Button disabled className="cursor-pointer w-1/3 py-6 text-lg">
+          <Button disabled className="cursor-pointer w-1/3">
             ثبت
           </Button>
         </div>

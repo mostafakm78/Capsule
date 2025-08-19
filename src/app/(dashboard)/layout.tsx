@@ -132,7 +132,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         </nav>
 
-        <main className="flex-1 w-full bg-background lg:p-10 md:p-6 p-3 py-10 lg:rounded-tr-4xl">{children}</main>
+        <main className="flex-1 min-w-0 w-full overflow-x-hidden sm:overflow-x-visible bg-background lg:p-10 md:p-6 p-3 py-10 lg:rounded-tr-4xl">{children}</main>
       </div>
     </div>
   );
