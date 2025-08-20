@@ -43,7 +43,7 @@ export default function CreateCapsulePage() {
         {/* Mobile Select */}
         <div className="lg:hidden flex w-full flex-col gap-4">
           <Select value={tab} onValueChange={(value: dashboardCreateCapsuleTab) => setTab(value)} dir="rtl">
-            <SelectTrigger className="w-full">
+            <SelectTrigger size='sm' className="w-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

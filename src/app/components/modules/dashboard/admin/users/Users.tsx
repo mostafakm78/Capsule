@@ -1,6 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { UsersModal } from './UsersModal';
+import Link from 'next/link';
+import { FaLongArrowAltLeft } from 'react-icons/fa';
 
 export default function Users() {
   return (
@@ -15,11 +17,12 @@ export default function Users() {
             <TableHead className="hidden md:table-cell">وضعیت کاربر</TableHead>
             <TableHead className="hidden md:table-cell">بن کردن</TableHead>
             <TableHead className="hidden md:table-cell">نقش کاربر</TableHead>
+            <TableHead className="hidden md:table-cell">کپسول‌های کاربر</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {Array.from({ length: 50 }).map((_, i) => (
-            <TableRow key={i}>
+            <TableRow className={i === 1 ? 'bg-red-100' : i === 6 ? 'bg-green-100' : ''} key={i}>
               <TableCell>{i + 1}</TableCell>
               <TableCell className="md:font-medium">
                 <span className="md:hidden">
@@ -36,6 +39,12 @@ export default function Users() {
               </TableCell>
               <TableCell className="hidden md:table-cell">
                 <Button className="cursor-pointer bg-sky-800 hover:bg-sky-600 text-white hover:text-background/80">ادمین</Button>
+              </TableCell>
+              <TableCell className="hidden md:table-cell">
+                <Link className="flex items-center gap-2 font-light text-base text-primary hover:text-foreground/80 duration-300" href="/dashboard/admin/users/1">
+                  دیدن
+                  <FaLongArrowAltLeft className="text-lg" />
+                </Link>
               </TableCell>
             </TableRow>
           ))}

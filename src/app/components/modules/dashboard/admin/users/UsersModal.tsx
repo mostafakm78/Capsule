@@ -1,16 +1,30 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
+import Link from 'next/link';
+import { FaLongArrowAltLeft } from 'react-icons/fa';
 export function UsersModal() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" className='py-1 px-1.5 text-sm'>مصطفی کمری</Button>
+        <Button variant="outline" className="py-1 px-1.5 text-sm">
+          مصطفی کمری
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>کاربر : مصطفی کمری</DialogTitle>
-          <DialogDescription>ایمیل : Mostafamf555@gmail.com</DialogDescription>
+          <DialogDescription asChild>
+            <div className="text-muted-foreground text-sm">
+              <div className="flex flex-col items-center justify-center gap-2 py-2">
+                <span>ایمیل : Mostafamf555@gmail.com</span>
+                <Link className="flex items-center gap-2 font-light text-base text-primary hover:text-foreground/80 duration-300" href="/dashboard/admin/users/1">
+                  دیدن
+                  <FaLongArrowAltLeft className="text-lg" />
+                </Link>
+              </div>
+            </div>
+          </DialogDescription>
         </DialogHeader>
         <Separator className="bg-foreground/20 w-full" />
         <div className="grid gap-1">

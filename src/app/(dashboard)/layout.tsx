@@ -14,13 +14,13 @@ import { IoSettingsSharp } from 'react-icons/io5';
 import { PiQuestionFill } from 'react-icons/pi';
 import { TbCategoryFilled } from 'react-icons/tb';
 import { ImExit } from 'react-icons/im';
-import { RiNotification4Line } from 'react-icons/ri';
 import { usePathname } from 'next/navigation';
 import { DashboardSidebar } from '../components/modules/dashboard/DashboardSidebar';
 import { LinkProps } from '@/lib/types';
 import { JSX, useEffect, useState } from 'react';
 import { AdminSidebar } from '../components/modules/dashboard/AdminSidebar';
 import { FaUsers } from 'react-icons/fa';
+import Notification from '../components/modules/dashboard/Notification';
 const bungee = Bungee({
   weight: '400',
 });
@@ -122,8 +122,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div className="lg:block hidden">
               <ThemeToggle />
             </div>
-            <div className="lg:text-3xl text-2xl cursor-pointer">
-              <RiNotification4Line />
+            <div className="lg:text-3xl flex items-center text-2xl cursor-pointer">
+              <Notification />
             </div>
             <Avatar className="h-10 w-10 ring-2 ring-secondary">
               <AvatarImage src="https://github.com/shadcn.png" />
