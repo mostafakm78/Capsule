@@ -12,6 +12,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/app/store/store';
 import { setEmail, setStep } from '@/app/store/authSlice';
 import { Separator } from '@/components/ui/separator';
+import { api } from '@/app/services/api';
+import { AxiosError } from 'axios';
+import { ApiError } from '@/lib/types';
 
 const formSchemaStepOne = z.object({
   email: z.email({
@@ -21,7 +24,7 @@ const formSchemaStepOne = z.object({
 
 type StepOneData = z.infer<typeof formSchemaStepOne>;
 
-export default function StepOneForm() {
+export default function StepOneForm({ anime }: { anime: string }) {
   const dispatch = useDispatch<AppDispatch>();
   const email = useSelector((state: RootState) => state.auth.email);
 
@@ -30,29 +33,37 @@ export default function StepOneForm() {
     defaultValues: { email },
   });
 
-  function onSubmit(values: StepOneData) {
-    dispatch(setEmail(values.email));
-    dispatch(setStep(2));
+  async function onSubmit(values: StepOneData) {
+    const res = await api.checkEmail(values.email);
+    if (res.message === 'Found') {
+      dispatch(setEmail(values.email));
+      dispatch(setStep(2));
+    } else if (res.message === 'notFound') {
+      dispatch(setEmail(values.email));
+      dispatch(setStep(3));
+    } else {
+      form.setError('email', { type: 'server', message: 'خطای نامشخص' });
+    }
   }
 
   return (
     <>
+      <h4 className="text-2xl text-foreground/80 self-start font-bold">ورود / ثبت نام</h4>
       <p className="text-base text-foreground/70 self-start">ایمیل خود را وارد کنید</p>
       <Separator className="bg-foreground/10 my-4" />
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 w-full">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 w-full">
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="space-y-1.5">
                 <FormLabel>
-                  ایمیل: <FormMessage className="text-red-500" />
+                  ایمیل: <FormMessage className="text-red-500 text-xs" />
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="your@gmail.com" {...field} />
+                  <Input placeholder="your@gmail.com" className={anime} {...field} />
                 </FormControl>
-                <FormDescription>ایمیل اکانت خود را وارد کنید</FormDescription>
               </FormItem>
             )}
           />
@@ -66,7 +77,7 @@ export default function StepOneForm() {
               میباشد
             </p>
           </div>
-          <Button className="w-full py-5 text-lg" type="submit">
+          <Button className="w-full py-5 text-lg cursor-pointer" type="submit">
             ادامه
           </Button>
         </form>

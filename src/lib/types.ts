@@ -14,3 +14,6 @@ export type dashboardCreateCapsuleColorOption = {
   id: string;
   colorCode: string;
 };
+
+export type ServerFieldError = { field: string; message: string };
+export type ApiError = { data?: ServerFieldError[] | string; message?: string };

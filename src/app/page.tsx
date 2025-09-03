@@ -6,12 +6,13 @@ const bungee = Bungee({
   weight: '400',
 });
 
-export default function Home() {
+export default  function Home() {
+
   return (
     <>
       <Header bungee={bungee} />
       <Main />
-      <Footer bungee={bungee}/>
+      <Footer bungee={bungee} />
     </>
   );
 }
