@@ -29,7 +29,7 @@ type StepTwoData = z.infer<typeof formSchemaStepTwo>;
 export default function StepThreeForm({ anime }: { anime: string }) {
   const [hideRepeat, setHideRepeat] = useState<boolean>(true);
   const dispatch = useDispatch<AppDispatch>();
-  const email = useSelector((state: RootState) => state.auth.email);
+  const email = useSelector((state: RootState) => state.auth.pendingEmail);
 
   const form = useForm<StepTwoData>({
     resolver: zodResolver(formSchemaStepTwo),
@@ -38,8 +38,16 @@ export default function StepThreeForm({ anime }: { anime: string }) {
 
   async function onSubmit(values: StepTwoData) {
     try {
-      const res = await api.signUp(values.email, values.password);
-      console.log('✅ موفق:', res);
+      if (values.email && values.password && values.passwordRepeat) {
+        if (values.passwordRepeat !== values.password) {
+          return form.setError('passwordRepeat', { type: 'client', message: 'تکرار پسورد باید با پسورد برابر باشد' });
+        }
+        const res = await api.signUp(values.email, values.password);
+        console.log(res);
+        if (res.status === 201) {
+          dispatch(setStep(1));
+        }
+      }
     } catch (err) {
       const error = err as AxiosError<ApiError>;
       const payload = error.response?.data.data;

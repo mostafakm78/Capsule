@@ -8,12 +8,13 @@ import { BsCapsule } from 'react-icons/bs';
 import { IoSettingsSharp } from 'react-icons/io5';
 import { ThemeToggle } from '../../shared/Theme';
 import { ImExit } from 'react-icons/im';
-import { FaUsers } from "react-icons/fa";
+import { FaUsers } from 'react-icons/fa';
 import { usePathname } from 'next/navigation';
 import { LinkProps } from '@/lib/types';
 import { JSX } from 'react';
 import { TbCategoryFilled } from 'react-icons/tb';
 import { Separator } from '@/components/ui/separator';
+import { LogoutModal } from './LogoutModal';
 
 const bungee = Bungee({
   weight: '400',
@@ -21,20 +22,17 @@ const bungee = Bungee({
 
 const sidebarLinks: (LinkProps & { icon: JSX.Element })[] = [
   { link: '/dashboard/admin', title: 'صفحه اصلی پنل', icon: <MdHomeFilled className="text-2xl" /> },
-  { link: '/dashboard/admin/users', title: 'کاربران سایت', icon: <FaUsers  className="text-2xl" /> },
+  { link: '/dashboard/admin/users', title: 'کاربران سایت', icon: <FaUsers className="text-2xl" /> },
   { link: '/dashboard/admin/capsules', title: 'کپسول‌های سایت', icon: <BsCapsule className="text-2xl" /> },
- { link: '/dashboard/admin/categories', title: 'دسته بندی ها', icon: <TbCategoryFilled  className="text-2xl" /> },
-   { link: '/dashboard/admin/setting', title: 'تنظیمات حساب', icon: <IoSettingsSharp className="text-2xl" /> },
+  { link: '/dashboard/admin/categories', title: 'دسته بندی ها', icon: <TbCategoryFilled className="text-2xl" /> },
+  { link: '/dashboard/admin/setting', title: 'تنظیمات حساب', icon: <IoSettingsSharp className="text-2xl" /> },
 ];
 
 export function AdminSidebar() {
   const pathName = usePathname();
 
   const linkClasses = (href: string) => {
-     const isActive =
-    href === '/dashboard/admin'
-      ? pathName === href
-      : pathName.startsWith(href);
+    const isActive = href === '/dashboard/admin' ? pathName === href : pathName.startsWith(href);
 
     return `flex items-center ${isActive ? 'bg-white dark:bg-slate-900 text-primary' : ''} md:text-lg text-base active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300`;
   };
@@ -54,7 +52,7 @@ export function AdminSidebar() {
             </SheetTitle>
           </SheetHeader>
           <div className="flex flex-col w-full py-4 px-10">
-            <Separator className='w-full bg-foreground/20 my-3'/>
+            <Separator className="w-full bg-foreground/20 my-3" />
             <div className="flex items-center justify-between">
               <span>تم سایت</span>
               <ThemeToggle />
@@ -70,7 +68,7 @@ export function AdminSidebar() {
             <div className="flex flex-col text-foreground/70 pt-5  gap-6">
               <div className="flex items-center text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300">
                 <ImExit className="text-2xl" />
-                <Link href="/">خروج</Link>
+                <LogoutModal />
               </div>
             </div>
           </div>

@@ -11,6 +11,8 @@ import HeaderLink from './HeaderLink';
 import { LinkProps } from '@/lib/types';
 import UserPopover from './UserPopover';
 import { useRef } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/store/store';
 
 gsap.registerPlugin(useGSAP);
 
@@ -28,6 +30,7 @@ const headerLinks: LinkProps[] = [
 export default function Header({ bungee }: Logo) {
   const pathname = usePathname();
   const scope = useRef<HTMLDivElement>(null);
+  const user = useSelector((state: RootState) => state.user);
 
   useGSAP(
     () => {
@@ -82,10 +85,7 @@ export default function Header({ bungee }: Logo) {
           <div className="theme-anim hidden lg:block">
             <ThemeToggle />
           </div>
-          <div className="nav-link-anim flex items-center">
-            {/* <LoginButton /> */}
-            <UserPopover />
-          </div>
+          <div className="nav-link-anim flex items-center">{user.email ? <UserPopover user={user}/> : <LoginButton />}</div>
         </div>
       </nav>
 

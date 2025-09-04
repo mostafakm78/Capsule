@@ -2,7 +2,7 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form';
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import z from 'zod';
@@ -10,11 +10,9 @@ import Link from 'next/link';
 import { FaCheck } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/app/store/store';
-import { setEmail, setStep } from '@/app/store/authSlice';
+import { setPendingEmail, setStep } from '@/app/store/authSlice';
 import { Separator } from '@/components/ui/separator';
 import { api } from '@/app/services/api';
-import { AxiosError } from 'axios';
-import { ApiError } from '@/lib/types';
 
 const formSchemaStepOne = z.object({
   email: z.email({
@@ -26,7 +24,7 @@ type StepOneData = z.infer<typeof formSchemaStepOne>;
 
 export default function StepOneForm({ anime }: { anime: string }) {
   const dispatch = useDispatch<AppDispatch>();
-  const email = useSelector((state: RootState) => state.auth.email);
+  const email = useSelector((state: RootState) => state.auth.pendingEmail);
 
   const form = useForm<StepOneData>({
     resolver: zodResolver(formSchemaStepOne),
@@ -36,10 +34,10 @@ export default function StepOneForm({ anime }: { anime: string }) {
   async function onSubmit(values: StepOneData) {
     const res = await api.checkEmail(values.email);
     if (res.message === 'Found') {
-      dispatch(setEmail(values.email));
+      dispatch(setPendingEmail(values.email));
       dispatch(setStep(2));
     } else if (res.message === 'notFound') {
-      dispatch(setEmail(values.email));
+      dispatch(setPendingEmail(values.email));
       dispatch(setStep(3));
     } else {
       form.setError('email', { type: 'server', message: 'خطای نامشخص' });

@@ -3,6 +3,20 @@ export type LinkProps = {
   title: string;
 };
 
+export interface User {
+  createdAt: string | null; // در JSON معمولاً تاریخ به‌صورت string میاد
+  name?: string | null;
+  email: string | null;
+  role: 'admin' | 'user' | null;
+  flag: 'none' | 'sus' | 'review' | 'violation' | null;
+  about?: string | null;
+  birthday?: string | null;
+  education?: string | null;
+  avatar?: string | null;
+  updatedAt: string | null;
+  id: string | null;
+}
+
 export type dashboardCreateCapsuleTab = 'info' | 'tags' | 'status';
 
 export type dashboardCreateCapsuleCategories = {

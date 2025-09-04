@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from './components/providers/Theme-provider';
 import { ReduxProvider } from './components/providers/Redux-Provider';
+import IsLoggedInClient from './services/isLoggedIn';
+
 
 export const metadata: Metadata = {
   title: 'Capsule',
@@ -17,7 +19,10 @@ export default function RootLayout({
     <html lang="fa" dir="rtl" suppressHydrationWarning>
       <body className="bg-background overflow-x-hidden">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <ReduxProvider>{children}</ReduxProvider>
+          <ReduxProvider>
+            <IsLoggedInClient />
+            {children}
+          </ReduxProvider>
         </ThemeProvider>
       </body>
     </html>

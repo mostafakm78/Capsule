@@ -21,6 +21,7 @@ import { JSX, useEffect, useState } from 'react';
 import { AdminSidebar } from '../components/modules/dashboard/AdminSidebar';
 import { FaUsers } from 'react-icons/fa';
 import Notification from '../components/modules/dashboard/Notification';
+import { LogoutModal } from '../components/modules/dashboard/LogoutModal';
 const bungee = Bungee({
   weight: '400',
 });
@@ -96,7 +97,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="flex flex-col text-foreground/70 pt-5 px-5 gap-6">
           <div className="flex items-center text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300">
             <ImExit className="text-2xl" />
-            <Link href="/">خروج</Link>
+            <LogoutModal />
           </div>
         </div>
       </aside>

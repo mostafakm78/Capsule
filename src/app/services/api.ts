@@ -2,12 +2,11 @@ import axios, { AxiosInstance } from 'axios';
 
 class Server {
   private api: AxiosInstance;
+
   constructor(csrfToken?: string) {
     this.api = axios.create({
       baseURL: 'http://localhost:8080',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       withCredentials: true,
     });
 
@@ -20,19 +19,15 @@ class Server {
 
   private async fetchCsrfToken() {
     try {
-      const res = await this.api.get('csrf-token');
+      const res = await this.api.get('/csrf-token');
       const token = res.data?.csrfToken;
-
-      if (token) {
-        this.api.defaults.headers['X-XSRF-TOKEN'] = token;
-        console.log('CSRF TOKEN set =>', token);
-      }
+      if (token) this.api.defaults.headers['X-XSRF-TOKEN'] = token;
     } catch (err) {
       console.error('Failed to fetch CSRF token', err);
     }
   }
 
-  async isLoggedIn() {
+  async getMe() {
     try {
       const res = await this.api.get('/me');
       return res.data;
@@ -42,58 +37,22 @@ class Server {
   }
 
   async checkEmail(email: string) {
-    const res = await this.api.post(
-      '/auth/check',
-      { email },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    return res.data;
+    return (await this.api.post('/auth/check', { email })).data;
   }
-
   async signUp(email: string, password: string) {
-    const res = await this.api.post(
-      '/auth/signup',
-      { email, password },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    return res.data;
+    return (await this.api.post('/auth/signup', { email, password })).data;
   }
-
   async loginWithPass(email: string, password: string) {
-    const res = await this.api.post(
-      '/auth/login',
-      {
-        email,
-        password,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    return res.data;
+    return (await this.api.post('/auth/login', { email, password })).data;
   }
-
   async sendOTPCode(email: string) {
-    const res = await this.api.post(
-      '/auth/otp/send',
-      { email },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    return res.data;
+    return (await this.api.post('/auth/otp/send', { email })).data;
+  }
+  async verifyOTPCode(email: string, otp: string) {
+    return (await this.api.post('/auth/otp/verify', { email, otp })).data;
+  }
+  async logout() {
+    return (await this.api.post('/auth/logout')).data;
   }
 }
 

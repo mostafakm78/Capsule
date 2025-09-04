@@ -14,6 +14,7 @@ import { usePathname } from 'next/navigation';
 import { LinkProps } from '@/lib/types';
 import { JSX } from 'react';
 import { Separator } from '@/components/ui/separator';
+import { LogoutModal } from './LogoutModal';
 
 const bungee = Bungee({
   weight: '400',
@@ -67,7 +68,7 @@ export function DashboardSidebar() {
             <div className="flex flex-col text-foreground/70 pt-5  gap-6">
               <div className="flex items-center text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300">
                 <ImExit className="text-2xl" />
-                <Link href="/">خروج</Link>
+                <LogoutModal />
               </div>
             </div>
           </div>
