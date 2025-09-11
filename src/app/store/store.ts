@@ -1,17 +1,19 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './authSlice';
-import capsuleSettingReducer from './capsuleSettingSlice';
+import authStepOne from './authStepOneSlice';
 import editOrcreate from './editOrcreateSlice';
 import userReducer from './userSlice';
 
-export const store = configureStore({
-  reducer: {
-    auth: authReducer,
-    capsuleSetting: capsuleSettingReducer,
-    editOrcreate: editOrcreate,
-    user: userReducer,
-  },
-});
+export const makeStore = (preloadedState?: unknown) =>
+  configureStore({
+    reducer: {
+      authStepOne: authStepOne,
+      editOrcreate: editOrcreate,
+      user: userReducer,
+    },
+    preloadedState,
+  });
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+// ===== انواع درست =====
+export type AppStore = ReturnType<typeof makeStore>;
+export type RootState = ReturnType<AppStore['getState']>;
+export type AppDispatch = AppStore['dispatch'];

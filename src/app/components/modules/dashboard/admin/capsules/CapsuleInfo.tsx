@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { MdOutlineCameraAlt } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
-import { setColor } from '@/app/store/capsuleSettingSlice';
+import { setColor } from '@/app/store/createCapsule';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

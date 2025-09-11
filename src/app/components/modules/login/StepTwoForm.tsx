@@ -10,16 +10,16 @@ import Link from 'next/link';
 import { FaCheck } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/app/store/store';
-import { setStep } from '@/app/store/authSlice';
 import { IoEye, IoEyeOff } from 'react-icons/io5';
 import { useState } from 'react';
 import { Separator } from '@/components/ui/separator';
-import { api } from '@/app/services/api';
-import { AxiosError } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { ApiError } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import { ClockLoader, PulseLoader } from 'react-spinners';
 import { usePersistedCountdown } from '@/app/hooks/useCountDown';
+import { setStep } from '@/app/store/authStepOneSlice';
+import callApi from '@/app/services/callApi';
 
 const formSchemaStepTwo = z.object({
   email: z.email(),
@@ -43,7 +43,7 @@ export default function StepTwoForm({ anime }: { anime: string }) {
   const [sendButton, setSendButton] = useState<'ورود' | 'ارسال کد'>('ورود');
   const [hide, setHide] = useState<boolean>(true);
   const dispatch = useDispatch<AppDispatch>();
-  const email = useSelector((state: RootState) => state.auth.pendingEmail);
+  const email = useSelector((state: RootState) => state.authStepOne.pendingEmail);
   const { left: remaining, start: startTimer } = usePersistedCountdown(timerKey(email));
   const router = useRouter();
   const mode = !otp ? 'loginPassword' : sendButton === 'ارسال کد' ? 'sendOtp' : 'loginOtp';
@@ -62,11 +62,16 @@ export default function StepTwoForm({ anime }: { anime: string }) {
         return;
       }
       try {
-        await api.loginWithPass(values.email, values.password);
-        router.push('/dashboard/panel');
+        const res = await callApi().post('/auth/login', values);
+        if (res.status === 200) {
+          router.push('/dashboard/panel');
+        }
       } catch (err) {
         const error = err as AxiosError<ApiError>;
         const payload = error.response?.data.data;
+        if (error.status === 401) {
+          form.setError('password', { type: 'server', message: 'ایمیل یا پسورد صحیح نمیباشد' });
+        }
         if (Array.isArray(payload)) {
           payload.forEach(({ field, message }) => {
             if (field === 'email' || field === 'password') {
@@ -84,8 +89,9 @@ export default function StepTwoForm({ anime }: { anime: string }) {
 
     if (sendButton === 'ارسال کد') {
       try {
-        const res = await api.sendOTPCode(values.email);
-        if (res.status === 200) {
+        const res = await callApi().post('/auth/otp/send', values);
+        const response = res as AxiosResponse;
+        if (response.status === 200) {
           startTimer(OTP_TIMER_SEC);
           setSendButton('ورود');
         }
@@ -103,8 +109,9 @@ export default function StepTwoForm({ anime }: { anime: string }) {
         return;
       }
       try {
-        const res = await api.verifyOTPCode(values.email, values.otp.trim());
-        if (res.status === 200) {
+        const res = await callApi().post('/auth/otp/verify', values);
+        const response = res as AxiosResponse;
+        if (response.status === 200) {
           router.push('/dashboard/panel');
         }
       } catch (err) {

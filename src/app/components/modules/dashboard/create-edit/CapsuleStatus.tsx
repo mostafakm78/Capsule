@@ -12,22 +12,22 @@ import Image from 'next/image';
 
 export default function CapsuleStatus() {
 
-  const initialData = useSelector((state: RootState) => state.editOrcreate.initialData);
+  const initialData = useSelector((state: RootState) => state.editOrcreate.capsule);
 
-  const [selected, setSelected] = useState<string>(initialData?.status || '');
+  const [selected, setSelected] = useState<string>('');
   const [privateType, setPrivateType] = useState<string>('');
-  const capsuleDate = useSelector((state: RootState) => state.capsuleSetting.capsuleDate);
+  const capsuleDate = useSelector((state: RootState) => state.editOrcreate.capsule);
 
-  const formattedDate =
-    capsuleDate && privateType === 'خصوصی زمان‌دار'
-      ? (() => {
-          const date = new Date(capsuleDate);
-          const { jy, jm, jd } = jalaali.toJalaali(date);
-          const months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+//   const formattedDate =
+//     capsuleDate && privateType === 'خصوصی زمان‌دار'
+//       ? (() => {
+//           const date = new Date(capsuleDate.access?.unlockAt);
+//           const { jy, jm, jd } = jalaali.toJalaali(date);
+//           const months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
 
-          return `${jd} ${months[jm - 1]} ${jy}`;
-        })()
-      : '';
+//           return `${jd} ${months[jm - 1]} ${jy}`;
+//         })()
+//       : '';
 
   return (
     <div className="flex w-full p-8 h-full flex-col">
@@ -93,9 +93,9 @@ export default function CapsuleStatus() {
           <div className="flex gap-2 w-full p-6 border border-foreground/20 rounded-lg">
             <div className="space-x-4">
               <span className="text-foreground/90 font-bold">نوع کپسول :</span>
-              <span className="text-foreground/70 font-light">
+              {/* <span className="text-foreground/70 font-light">
                 {selected} {selected === 'کپسول خصوصی' ? '/' : ''} {selected === 'کپسول خصوصی' ? privateType : ''} {privateType === 'خصوصی زمان‌دار' && formattedDate ? `/ زمان کپسول : ${formattedDate}` : ''}
-              </span>
+              </span> */}
             </div>
           </div>
 

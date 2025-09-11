@@ -11,8 +11,7 @@ import HeaderLink from './HeaderLink';
 import { LinkProps } from '@/lib/types';
 import UserPopover from './UserPopover';
 import { useRef } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/app/store/store';
+import { useAppSelector } from '@/app/hooks/hook';
 
 gsap.registerPlugin(useGSAP);
 
@@ -30,7 +29,7 @@ const headerLinks: LinkProps[] = [
 export default function Header({ bungee }: Logo) {
   const pathname = usePathname();
   const scope = useRef<HTMLDivElement>(null);
-  const user = useSelector((state: RootState) => state.user);
+  const { user } = useAppSelector((state) => state.user);
 
   useGSAP(
     () => {
@@ -54,7 +53,6 @@ export default function Header({ bungee }: Logo) {
         ease: 'power1.inOut',
       });
 
-      // نکته‌ی مهم: پاک کردن ترنسفورم‌ها پس از پایان اینترو
       tl.add(() => {
         gsap.set(['.header-main', '.brand-anim', '.nav-link-anim', '.theme-anim'], { clearProps: 'transform' });
       });
@@ -85,7 +83,7 @@ export default function Header({ bungee }: Logo) {
           <div className="theme-anim hidden lg:block">
             <ThemeToggle />
           </div>
-          <div className="nav-link-anim flex items-center">{user.email ? <UserPopover user={user}/> : <LoginButton />}</div>
+          <div className="nav-link-anim flex items-center">{user ? <UserPopover /> : <LoginButton />}</div>
         </div>
       </nav>
 

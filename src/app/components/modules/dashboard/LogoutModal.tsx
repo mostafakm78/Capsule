@@ -1,30 +1,27 @@
 'use client';
 
-import { api } from '@/app/services/api';
+import { useAppDispatch } from '@/app/hooks/hook';
+import callApi from '@/app/services/callApi';
 import { clearUser } from '@/app/store/userSlice';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogDescription, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
 
 export function LogoutModal() {
+  const dispatch = useAppDispatch();
   const router = useRouter();
-  const dispatch = useDispatch();
 
   const handleLogout = async () => {
     try {
-      const res = await api.logout();
-      if (res.status === 200) {
-        router.push('/');
-        dispatch(clearUser());
-      } else {
-        console.log(res);
-      }
-    } catch (err) {
-      const error = err as AxiosError;
-      console.log(error);
+      await callApi()
+        .post('/auth/logout', {})
+        .catch(() => {});
+    } finally {
+      dispatch(clearUser());
+      router.replace('/');
+      router.refresh();
     }
   };
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>

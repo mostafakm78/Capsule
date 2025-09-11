@@ -16,7 +16,7 @@ const bungee = Bungee({
 
 export default function LoginOrSignup() {
   const stepRef = useRef(null);
-  const step = useSelector((state: RootState) => state.auth.step);
+  const step = useSelector((state: RootState) => state.authStepOne.step);
 
   useLayoutEffect(() => {
     if (stepRef.current) {

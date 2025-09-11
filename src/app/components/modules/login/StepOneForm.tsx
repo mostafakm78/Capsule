@@ -8,11 +8,12 @@ import { Button } from '@/components/ui/button';
 import z from 'zod';
 import Link from 'next/link';
 import { FaCheck } from 'react-icons/fa';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/app/store/store';
-import { setPendingEmail, setStep } from '@/app/store/authSlice';
 import { Separator } from '@/components/ui/separator';
-import { api } from '@/app/services/api';
+import { setPendingEmail, setStep } from '@/app/store/authStepOneSlice';
+import callApi from '@/app/services/callApi';
+import { useAppDispatch, useAppSelector } from '@/app/hooks/hook';
+import { AxiosError } from 'axios';
+import { ApiError } from '@/lib/types';
 
 const formSchemaStepOne = z.object({
   email: z.email({
@@ -23,24 +24,39 @@ const formSchemaStepOne = z.object({
 type StepOneData = z.infer<typeof formSchemaStepOne>;
 
 export default function StepOneForm({ anime }: { anime: string }) {
-  const dispatch = useDispatch<AppDispatch>();
-  const email = useSelector((state: RootState) => state.auth.pendingEmail);
+  const dispatch = useAppDispatch();
+  const email = useAppSelector((state) => state.authStepOne.pendingEmail);
 
-  const form = useForm<StepOneData>({
+  const form = useForm({
     resolver: zodResolver(formSchemaStepOne),
     defaultValues: { email },
   });
 
   async function onSubmit(values: StepOneData) {
-    const res = await api.checkEmail(values.email);
-    if (res.message === 'Found') {
-      dispatch(setPendingEmail(values.email));
-      dispatch(setStep(2));
-    } else if (res.message === 'notFound') {
-      dispatch(setPendingEmail(values.email));
-      dispatch(setStep(3));
-    } else {
-      form.setError('email', { type: 'server', message: 'خطای نامشخص' });
+    try {
+      const res = await callApi().post('/auth/check', values);
+      if (res.data.message === 'Found') {
+        dispatch(setPendingEmail(values.email));
+        dispatch(setStep(2));
+      } else if (res.data.message === 'notFound') {
+        dispatch(setPendingEmail(values.email));
+        dispatch(setStep(3));
+      }
+    } catch (err) {
+      const error = err as AxiosError<ApiError>;
+      const payload = error.response?.data.data;
+      if (Array.isArray(payload)) {
+        payload.forEach(({ field, message }) => {
+          if (field === 'email') {
+            form.setError(field as keyof StepOneData, { type: 'server', message });
+          } else {
+            form.setError('root', { type: 'server', message });
+          }
+        });
+      } else {
+        form.setError('root', { type: 'server', message: 'خطای نامشخص رخ داد' });
+      }
+      return;
     }
   }
 

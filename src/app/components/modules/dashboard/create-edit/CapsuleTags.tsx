@@ -9,7 +9,6 @@ import { dashboardCreateCapsuleCategories } from '@/lib/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
 
-
 const categories: dashboardCreateCapsuleCategories[] = [
   { title: '🧠 دسته‌بندی‌های احساسی', items: ['خوشحال‌کننده', 'ناراحت‌کننده', 'هیجان‌انگیز', 'آرامش‌بخش', 'ترسناک', 'الهام‌بخش'] },
   { title: '📌 دسته‌بندی‌های موضوعی', items: ['خاطره شخصی', 'رویا', 'سفر', 'خانواده', 'دوستان', 'مدرسه / دانشگاه', 'عشق', 'کار', 'چالش‌ها'] },
@@ -17,8 +16,8 @@ const categories: dashboardCreateCapsuleCategories[] = [
 ];
 
 export default function CapsuleTags() {
-    const initialData = useSelector((state : RootState) => state.editOrcreate.initialData)
-  const [selected, setSelected] = useState<string>(initialData?.category || '');
+  const editOrcreate = useSelector((state: RootState) => state.editOrcreate.capsule);
+  const [selected, setSelected] = useState<string>(editOrcreate?.categoryItem || '');
 
   return (
     <div className="flex w-full p-8 h-full flex-col">

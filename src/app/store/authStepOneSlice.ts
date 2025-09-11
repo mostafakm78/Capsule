@@ -1,17 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface AuthState {
+interface authStepOneSlice {
   step: number;
   pendingEmail: string;
 }
 
-const initialState: AuthState = {
+const initialState: authStepOneSlice = {
   step: 1,
   pendingEmail: '',
 };
 
-const authSlice = createSlice({
-  name: 'auth',
+const authStepOneSlice = createSlice({
+  name: 'authStepOne',
   initialState,
   reducers: {
     setStep: (state, action: PayloadAction<number>) => {
@@ -23,5 +23,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { setStep, setPendingEmail } = authSlice.actions;
-export default authSlice.reducer;
+export const { setStep, setPendingEmail } = authStepOneSlice.actions;
+export default authStepOneSlice.reducer;

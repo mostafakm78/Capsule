@@ -1,10 +1,14 @@
+'use client';
+
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { FaLongArrowAltLeft } from 'react-icons/fa';
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
-import { LinkProps } from '@/lib/types';
+import { GetCapsulesResponse, LinkProps } from '@/lib/types';
 import { DashboardCategorySidebar } from './DashboardCategorySidebar';
+import { useEffect, useState } from 'react';
+import callApi from '@/app/services/callApi';
 
 const sortLinks: LinkProps[] = [
   { link: '/', title: 'همه کپسول ها' },
@@ -35,6 +39,24 @@ const filterLinks: LinkProps[] = [
 ];
 
 export default function UserCapsulesIndex() {
+  const [capsules, setCapsules] = useState<GetCapsulesResponse>();
+
+  useEffect(() => {
+    async function fetchCapsules() {
+      try {
+        const res = await callApi().get('/capsules');
+        if (res.status === 200) {
+          const capsules = res.data;
+          setCapsules(capsules);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchCapsules();
+  }, []);
+
   return (
     <section className="flex flex-col h-full gap-10">
       <div className="flex flex-col h-full justify-start gap-10">
@@ -74,126 +96,32 @@ export default function UserCapsulesIndex() {
           </div>
           <div className="lg:col-span-9 w-full min-h-screen place-self-start">
             <div className="grid lg:grid-cols-12 md:grid-cols-2 grid-cols-1 gap-y-10 gap-x-6">
-              <Card className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white dark:bg-slate-900 h-[350px] border-none shadow-sm">
-                <CardHeader>
-                  <CardTitle className="text-center text-xl  text-foreground">کپسول عمومی</CardTitle>
-                  <CardDescription className="text-center text-base text-foreground/80">
-                    <p>
-                      از کاربر : <span>مصطفی کمری</span>
-                    </p>
-                    <p>
-                      موضوع : <span>تصادف مرگبار</span>
-                    </p>
-                  </CardDescription>
-                </CardHeader>
-                <Separator className="bg-foreground/20" />
-                <CardContent>
-                  <p className="line-clamp-3 text-center">من یک خاطره بسیار جالب از یک تصادف دارم که خیلی شوخی شوخی داشت جدی میشد و داشتیم میمردیم!</p>
-                </CardContent>
-                <Separator className="bg-foreground/20" />
-                <CardFooter className="flex py-4 items-center justify-center">
-                  <Link className="flex bg-secondary py-1 px-2 rounded-md items-center justify-center gap-2 text-lg text-background" href="/dashboard/user-capsules/1">
-                    <span>دیدن/ویرایش کپسول</span>
-                    <FaLongArrowAltLeft className="text-2xl" />
-                  </Link>
-                </CardFooter>
-              </Card>
-              <Card className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white dark:bg-slate-900 h-[350px] border-none shadow-sm">
-                <CardHeader>
-                  <CardTitle className="text-center text-xl text-foreground">کپسول عمومی</CardTitle>
-                  <CardDescription className="text-center text-base text-foreground/80">
-                    <p>
-                      از کاربر : <span>مصطفی کمری</span>
-                    </p>
-                    <p>
-                      موضوع : <span>تصادف مرگبار</span>
-                    </p>
-                  </CardDescription>
-                </CardHeader>
-                <Separator className="bg-foreground/20" />
-                <CardContent>
-                  <p className="line-clamp-3 text-center">من یک خاطره بسیار جالب از یک تصادف دارم که خیلی شوخی شوخی داشت جدی میشد و داشتیم میمردیم!</p>
-                </CardContent>
-                <Separator className="bg-foreground/20" />
-                <CardFooter className="flex py-4 items-center justify-center">
-                  <Link className="flex bg-secondary py-1 px-2 rounded-md items-center justify-center gap-2 text-lg text-background" href="">
-                    <span>دیدن کپسول</span>
-                    <FaLongArrowAltLeft className="text-2xl" />
-                  </Link>
-                </CardFooter>
-              </Card>
-              <Card className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white dark:bg-slate-900 h-[350px] border-none shadow-sm">
-                <CardHeader>
-                  <CardTitle className="text-center text-xl text-foreground">کپسول عمومی</CardTitle>
-                  <CardDescription className="text-center text-base text-foreground/80">
-                    <p>
-                      از کاربر : <span>مصطفی کمری</span>
-                    </p>
-                    <p>
-                      موضوع : <span>تصادف مرگبار</span>
-                    </p>
-                  </CardDescription>
-                </CardHeader>
-                <Separator className="bg-foreground/20" />
-                <CardContent>
-                  <p className="line-clamp-3">من یک خاطره بسیار جالب از یک تصادف دارم که خیلی شوخی شوخی داشت جدی میشد و داشتیم میمردیم!</p>
-                </CardContent>
-                <Separator className="bg-foreground/20" />
-                <CardFooter className="flex py-4 items-center justify-center">
-                  <Link className="flex bg-secondary py-1 px-2 rounded-md items-center justify-center gap-2 text-lg text-background" href="">
-                    <span>دیدن کپسول</span>
-                    <FaLongArrowAltLeft className="text-2xl" />
-                  </Link>
-                </CardFooter>
-              </Card>
-              <Card className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white dark:bg-slate-900 h-[350px] border-none shadow-sm">
-                <CardHeader>
-                  <CardTitle className="text-center text-xl text-foreground">کپسول عمومی</CardTitle>
-                  <CardDescription className="text-center text-base text-foreground/80">
-                    <p>
-                      از کاربر : <span>مصطفی کمری</span>
-                    </p>
-                    <p>
-                      موضوع : <span>تصادف مرگبار</span>
-                    </p>
-                  </CardDescription>
-                </CardHeader>
-                <Separator className="bg-foreground/20" />
-                <CardContent>
-                  <p className="line-clamp-3">من یک خاطره بسیار جالب از یک تصادف دارم که خیلی شوخی شوخی داشت جدی میشد و داشتیم میمردیم!</p>
-                </CardContent>
-                <Separator className="bg-foreground/20" />
-                <CardFooter className="flex py-4 items-center justify-center">
-                  <Link className="flex bg-secondary py-1 px-2 rounded-md items-center justify-center gap-2 text-lg text-background" href="">
-                    <span>دیدن کپسول</span>
-                    <FaLongArrowAltLeft className="text-2xl" />
-                  </Link>
-                </CardFooter>
-              </Card>
-              <Card className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white dark:bg-slate-900 h-[350px] border-none shadow-sm">
-                <CardHeader>
-                  <CardTitle className="text-center text-xl text-foreground">کپسول عمومی</CardTitle>
-                  <CardDescription className="text-center text-base text-foreground/80">
-                    <p>
-                      از کاربر : <span>مصطفی کمری</span>
-                    </p>
-                    <p>
-                      موضوع : <span>تصادف مرگبار</span>
-                    </p>
-                  </CardDescription>
-                </CardHeader>
-                <Separator className="bg-foreground/20" />
-                <CardContent>
-                  <p className="line-clamp-3">من یک خاطره بسیار جالب از یک تصادف دارم که خیلی شوخی شوخی داشت جدی میشد و داشتیم میمردیم!</p>
-                </CardContent>
-                <Separator className="bg-foreground/20" />
-                <CardFooter className="flex py-4 items-center justify-center">
-                  <Link className="flex bg-secondary py-1 px-2 rounded-md items-center justify-center gap-2 text-lg text-background" href="">
-                    <span>دیدن کپسول</span>
-                    <FaLongArrowAltLeft className="text-2xl" />
-                  </Link>
-                </CardFooter>
-              </Card>
+              {capsules?.items.map((item) => (
+                <Card key={item._id} className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white justify-between dark:bg-slate-900 h-[350px] border-none shadow-sm">
+                  <CardHeader>
+                    <CardTitle className="text-center text-xl  text-foreground">{item.access.visibility === 'public' ? 'کپسول عمومی' : 'کپسول خصوصی'}</CardTitle>
+                    <CardDescription className="text-center text-base text-foreground/80">
+                      <p>
+                        از کاربر : <span>{item.owner.name ?? item.owner.email}</span>
+                      </p>
+                      <p>
+                        موضوع : <span>{item.title}</span>
+                      </p>
+                    </CardDescription>
+                  </CardHeader>
+                  <Separator className="bg-foreground/20" />
+                  <CardContent>
+                    <p className="line-clamp-3 text-center">{item.description}</p>
+                  </CardContent>
+                  <Separator className="bg-foreground/20" />
+                  <CardFooter className="flex py-4 items-center justify-center">
+                    <Link className="flex bg-secondary py-1 px-2 rounded-md items-center justify-center gap-2 text-lg text-background" href={`/dashboard/user-capsules/${item._id}`}>
+                      <span>دیدن/ویرایش کپسول</span>
+                      <FaLongArrowAltLeft className="text-2xl" />
+                    </Link>
+                  </CardFooter>
+                </Card>
+              ))}
             </div>
           </div>
         </div>

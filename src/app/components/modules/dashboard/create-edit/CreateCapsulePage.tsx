@@ -9,7 +9,9 @@ import { TabButton } from './TabButton';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { dashboardCreateCapsuleTab } from '@/lib/types';
+import { dashboardCreateCapsuleColorOption, dashboardCreateCapsuleTab } from '@/lib/types';
+// import callApi from '@/app/services/callApi';
+import { useAppSelector } from '@/app/hooks/hook';
 
 const CapsuleInfo = dynamic(() => import('./CapsuleInfo'));
 const CapsuleTags = dynamic(() => import('./CapsuleTags'));
@@ -21,15 +23,34 @@ const tabs: { id: dashboardCreateCapsuleTab; label: string; icon: ComponentType<
   { id: 'status', label: 'وضعیت انتشار کپسول', icon: GrStatusInfo, component: <CapsuleStatus /> },
 ];
 
-
 export default function CreateCapsulePage() {
   const [tab, setTab] = useState<dashboardCreateCapsuleTab>('info');
-  const colorCode = useSelector((state: RootState) => state.capsuleSetting.colorCode);
-  const mode = useSelector((state: RootState) => state.editOrcreate.mode);
+  const editOrcreate = useSelector((state: RootState) => state.editOrcreate);
+
+  const color = editOrcreate.capsule?.color
+  let colorCode;
+
+  if (!color || color === 'default') {
+    colorCode = 'bg-white dark:bg-slate-900';
+  } else if (color === 'blue') {
+    colorCode = 'bg-blue-600/15 dark:bg-blue-800/50';
+  } else if (color === 'green') {
+    colorCode = 'bg-green-600/15 dark:bg-green-800/50';
+  } else if (color === 'red') {
+    colorCode = 'bg-red-600/15 dark:bg-red-800/50';
+  } else if (color === 'yellow') {
+    colorCode = 'bg-yellow-500/15 dark:bg-yellow-700/50';
+  }
+
+  //   async function createCapsule() {
+  //     try {
+  //       const res = await callApi().post('/capsules');
+  //     } catch (error) {}
+  //   }
 
   return (
     <section className="flex flex-col h-full gap-10">
-      <span className='text-foreground text-xl pr-4 relative font-bold after:content-[""] after:h-2 after:w-2 after:rounded-full after:absolute after:bg-foreground after:right-0 after:top-1/2 after:-translate-y-1/2'>{mode === 'create' ? 'ساخت کپسول' : 'ویرایش کپسول'}</span>
+      <span className='text-foreground text-xl pr-4 relative font-bold after:content-[""] after:h-2 after:w-2 after:rounded-full after:absolute after:bg-foreground after:right-0 after:top-1/2 after:-translate-y-1/2'>{editOrcreate.mode === 'create' ? 'ساخت کپسول' : 'ویرایش کپسول'}</span>
       <div className="flex lg:flex-row flex-col h-full justify-start gap-10">
         {/* Desktop Tabs */}
         <div className="lg:flex hidden w-3/12 flex-col gap-4">
@@ -43,7 +64,7 @@ export default function CreateCapsulePage() {
         {/* Mobile Select */}
         <div className="lg:hidden flex w-full flex-col gap-4">
           <Select value={tab} onValueChange={(value: dashboardCreateCapsuleTab) => setTab(value)} dir="rtl">
-            <SelectTrigger size='sm' className="w-full">
+            <SelectTrigger size="sm" className="w-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

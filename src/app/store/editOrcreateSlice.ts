@@ -1,32 +1,15 @@
+import { Capsule } from '@/lib/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-
-export type CapsuleData = {
-  title: string;
-  description: string;
-  extra: string;
-  color: string;
-  image: string;
-  category: string;
-  status: string;
-};
 
 type editOrcreateCapsule = {
   mode: 'create' | 'edit';
-  initialData: CapsuleData | null
-}
+  id?: string;
+  capsule: Capsule | null;
+};
 
 const initialState: editOrcreateCapsule = {
   mode: 'create',
-  initialData: {
-    title: '',
-    description: '',
-    extra: '',
-    color: '',
-    image: '',
-    category: '',
-    status: '',
-  },
+  capsule: null,
 };
 
 const editOrcreateCapsuleSlice = createSlice({
@@ -36,11 +19,17 @@ const editOrcreateCapsuleSlice = createSlice({
     setMode: (state, action: PayloadAction<'create' | 'edit'>) => {
       state.mode = action.payload;
     },
-    setData: (state, action: PayloadAction<CapsuleData | null>) => {
-      state.initialData = action.payload;
+    setId: (state, action: PayloadAction<string>) => {
+      state.id = action.payload;
+    },
+    setCapsule: (state, action: PayloadAction<Capsule>) => {
+      state.capsule = action.payload;
+    },
+    resetCapsule() {
+      return initialState;
     },
   },
 });
 
-export const { setMode, setData } = editOrcreateCapsuleSlice.actions;
+export const { setMode, setId , setCapsule , resetCapsule } = editOrcreateCapsuleSlice.actions;
 export default editOrcreateCapsuleSlice.reducer;

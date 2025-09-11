@@ -6,7 +6,7 @@ import { DayPicker } from 'react-day-picker/persian';
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { useDispatch } from 'react-redux';
-import { setDateCapsule } from '@/app/store/capsuleSettingSlice';
+import { setCapsule } from '@/app/store/editOrcreateSlice';
 
 export function CalendarHijri() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -22,7 +22,11 @@ export function CalendarHijri() {
       onSelect={(selectedDate) => {
         if (selectedDate) {
           setDate(selectedDate);
-          dispatch(setDateCapsule(selectedDate.toISOString()));
+          dispatch(setCapsule({ access: {
+              unlockAt: selectedDate.toISOString(),
+              visibility: 'private',
+              lock: 'timed'
+          } }));
         }
       }}
       className="rounded-lg border shadow-sm"

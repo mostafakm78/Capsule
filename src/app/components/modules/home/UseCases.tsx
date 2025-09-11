@@ -101,7 +101,6 @@ export default function UseCases() {
     const rect = div.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    console.log(div.offsetTop);
 
     gsap.to(div, {
       duration: 0.3,

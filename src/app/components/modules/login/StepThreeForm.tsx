@@ -10,13 +10,13 @@ import Link from 'next/link';
 import { FaCheck } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/app/store/store';
-import { setStep } from '@/app/store/authSlice';
 import { IoEye, IoEyeOff } from 'react-icons/io5';
 import { useState } from 'react';
 import { Separator } from '@/components/ui/separator';
-import { api } from '@/app/services/api';
-import { AxiosError } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { ApiError } from '@/lib/types';
+import { setStep } from '@/app/store/authStepOneSlice';
+import callApi from '@/app/services/callApi';
 
 const formSchemaStepTwo = z.object({
   email: z.email(),
@@ -29,7 +29,7 @@ type StepTwoData = z.infer<typeof formSchemaStepTwo>;
 export default function StepThreeForm({ anime }: { anime: string }) {
   const [hideRepeat, setHideRepeat] = useState<boolean>(true);
   const dispatch = useDispatch<AppDispatch>();
-  const email = useSelector((state: RootState) => state.auth.pendingEmail);
+  const email = useSelector((state: RootState) => state.authStepOne.pendingEmail);
 
   const form = useForm<StepTwoData>({
     resolver: zodResolver(formSchemaStepTwo),
@@ -42,9 +42,9 @@ export default function StepThreeForm({ anime }: { anime: string }) {
         if (values.passwordRepeat !== values.password) {
           return form.setError('passwordRepeat', { type: 'client', message: 'تکرار پسورد باید با پسورد برابر باشد' });
         }
-        const res = await api.signUp(values.email, values.password);
-        console.log(res);
-        if (res.status === 201) {
+        const res = await callApi().post('/auth/signup', values);
+        const response = res as AxiosResponse;
+        if (response.status === 201) {
           dispatch(setStep(1));
         }
       }

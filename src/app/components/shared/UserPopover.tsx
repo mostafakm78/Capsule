@@ -1,16 +1,18 @@
+import { useAppSelector } from '@/app/hooks/hook';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Separator } from '@/components/ui/separator';
-import { User } from '@/lib/types';
 import Link from 'next/link';
 import { FaLongArrowAltLeft } from 'react-icons/fa';
 
-export default function UserPopover({ user }: { user: User }) {
+export default function UserPopover() {
+  const { user } = useAppSelector((state) => state.user);
+
   return (
     <Popover>
       <PopoverTrigger className="cursor-pointer text-foreground/70 data-[state=open]:text-secondary">
         <Avatar className="h-10 w-10 ring-2 ring-secondary">
-          <AvatarImage src={user.avatar ?? 'images/default.png'} />
+          <AvatarImage src={user?.avatar ?? '/images/default.png'} />
           <AvatarFallback>...</AvatarFallback>
         </Avatar>
       </PopoverTrigger>
@@ -18,12 +20,12 @@ export default function UserPopover({ user }: { user: User }) {
         <div className="flex items-center gap-3">
           <div>
             <Avatar className="h-12 w-12 ring-2 ring-secondary">
-              <AvatarImage src={user.avatar ?? 'images/default.png'} />
+              <AvatarImage src={user?.avatar ?? '/images/default.png'} />
               <AvatarFallback>...</AvatarFallback>
             </Avatar>
           </div>
           <div className="flex flex-col gap-1.5">
-            <span className={`font-bold text-foreground/70 line-clamp-1 ${user.name ? 'text-xl' : 'text-lg'}`}>{user.name ?? user.email}</span>
+            <span className={`font-bold text-base text-foreground/70 line-clamp-1`}>{user?.name ?? user?.email}</span>
             <Link className="text-primary flex items-center gap-2 hover:text-foreground/80 duration-300" href="/dashboard/panel">
               مشاهده پنل کاربری
               <FaLongArrowAltLeft />

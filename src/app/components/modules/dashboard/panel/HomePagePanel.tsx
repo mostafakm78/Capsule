@@ -5,22 +5,58 @@ import { BsCapsule } from 'react-icons/bs';
 import { IoPeopleSharp } from 'react-icons/io5';
 import { GrFormView } from 'react-icons/gr';
 import { IoWarningOutline } from 'react-icons/io5';
-import { FaLongArrowAltLeft, FaLongArrowAltRight } from 'react-icons/fa';
+import { FaLongArrowAltLeft } from 'react-icons/fa';
 import Link from 'next/link';
-import { useState } from 'react';
-
 import Image from 'next/image';
-import SliderHomePageDashboard from './SliderHomePaga';
-
-type SwiperApi = {
-  slidePrev: () => void;
-  slideNext: () => void;
-};
+import dynamic from 'next/dynamic';
+import { GetCapsulesResponse } from '@/lib/types';
+import { useAppSelector } from '@/app/hooks/hook';
+import { useEffect, useState } from 'react';
+import callApi from '@/app/services/callApi';
+import Loadings from '@/app/components/shared/loadings';
+const SliderHomePageDashboard = dynamic(() => import('./SliderHomePaga'), { ssr: false, loading: () => <div className="h-24 rounded-lg bg-foreground/5" /> });
 
 export default function HomePagePanel() {
-  const [swiperApi, setSwiperApi] = useState<SwiperApi | null>(null);
-  const [isBeginning, setIsBeginning] = useState<boolean>(true);
-  const [isEnd, setIsEnd] = useState<boolean>(false);
+  const { user } = useAppSelector((state) => state.user);
+  const [capsules, setCapsules] = useState<GetCapsulesResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    callApi()
+      .get('/capsules')
+      .then((res) => {
+        if (res.status === 200) setCapsules(res.data);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <Loadings />;
+
+  const publicCapsules = capsules?.items.filter((item) => item?.access?.visibility === 'public');
+
+  let userFlag = null;
+
+  if (user?.flag === 'none') {
+    userFlag = 'معمولی';
+  } else if (user?.flag === 'sus') {
+    userFlag = 'مشکوک';
+  } else if (user?.flag === 'review') {
+    userFlag = 'نیاز به بررسی';
+  } else if (user?.flag === 'violation') {
+    userFlag = 'محدود';
+  }
+
+  const lastSeen = user?.updatedAt;
+
+  const persianDate = lastSeen
+    ? new Date(lastSeen).toLocaleDateString('fa-IR', {
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      })
+    : '';
 
   return (
     <section className="flex flex-col justify-center h-full gap-10">
@@ -31,8 +67,8 @@ export default function HomePagePanel() {
           </div>
           <Separator orientation="vertical" className="bg-foreground/20" />
           <div className="flex flex-col items-start text-foreground/80 2xl:text-xl md:text-base text-sm justify-around">
-            <span className='font-medium'>کپسول های ساخته شده</span>
-            <span>52</span>
+            <span className="font-medium">کپسول های ساخته شده</span>
+            <span>{capsules?.items.length}</span>
           </div>
         </div>
         <div className="border-purple-500 dark:border-purple-500/60 flex xl:col-span-3 md:col-span-6 col-span-12 items-center gap-2 bg-white dark:bg-slate-900 border-2 rounded-lg py-4 px-2">
@@ -41,8 +77,8 @@ export default function HomePagePanel() {
           </div>
           <Separator orientation="vertical" className="bg-foreground/20" />
           <div className="flex flex-col items-start text-foreground/80 2xl:text-xl md:text-base text-sm justify-around">
-            <span className='font-medium'>کپسول های عمومی شما</span>
-            <span>15</span>
+            <span className="font-medium">کپسول های عمومی شما</span>
+            <span>{publicCapsules?.length}</span>
           </div>
         </div>
         <div className="border-rose-500 dark:border-rose-500/60 flex xl:col-span-3 md:col-span-6 col-span-12 items-center gap-2 bg-white dark:bg-slate-900 border-2 rounded-lg py-4 px-2">
@@ -51,8 +87,8 @@ export default function HomePagePanel() {
           </div>
           <Separator orientation="vertical" className="bg-foreground/20" />
           <div className="flex flex-col items-start text-foreground/80 2xl:text-xl md:text-base text-sm justify-around">
-            <span className='font-medium'>کپسول های بن شده</span>
-            <span>1</span>
+            <span className="font-medium">وضعیت کاربر</span>
+            <span>{userFlag}</span>
           </div>
         </div>
         <div className="border-yellow-500 dark:border-yellow-500/60 xl:col-span-3 md:col-span-6 col-span-12 flex items-center gap-2 bg-white dark:bg-slate-900 border-2 rounded-lg py-4 px-2">
@@ -61,27 +97,12 @@ export default function HomePagePanel() {
           </div>
           <Separator orientation="vertical" className="bg-foreground/20" />
           <div className="flex flex-col items-start text-foreground/80 2xl:text-xl md:text-base text-sm justify-around">
-            <span className='font-medium'>آخرین بازدید</span>
-            <span>دیروز</span>
+            <span className="font-medium">آخرین بازدید</span>
+            <span>{persianDate}</span>
           </div>
         </div>
       </div>
-      <div className="flex flex-col w-full p-4">
-        <div className="flex flex-col lg:px-0 px-2 lg:flex-row lg:items-center justify-between w-full">
-          <div className="flex items-center lg:justify-center justify-between gap-4">
-            <span className='text-foreground text-xl pr-4 relative font-bold after:content-[""] after:h-2 after:w-2 after:rounded-full after:absolute after:bg-foreground after:right-0 after:top-1/2 after:-translate-y-1/2'>آخرین کپسول های ساخته شده</span>
-            <div className="flex gap-1 items-center text-3xl">
-              <FaLongArrowAltRight onClick={() => swiperApi?.slidePrev()} className={`cursor-pointer transition-opacity duration-300 ${isBeginning ? 'opacity-40 pointer-events-none' : 'opacity-100'}`} />
-              <FaLongArrowAltLeft onClick={() => swiperApi?.slideNext()} className={`cursor-pointer transition-opacity duration-300 ${isEnd ? 'opacity-40 pointer-events-none' : 'opacity-100'}`} />
-            </div>
-          </div>
-          <Link className="flex group items-center gap-2 lg:mt-0 mt-6 text-base" href="/dashboard/user-capsules">
-            <span className="text-foreground/80 group-hover:text-primary/80 duration-300">مشاهده تمامی کپسول ها</span>
-            <FaLongArrowAltLeft className="text-2xl text-foreground group-hover:text-primary duration-300" />
-          </Link>
-        </div>
-        <SliderHomePageDashboard setSwiperApi={setSwiperApi} setIsBeginning={setIsBeginning} setIsEnd={setIsEnd}/>
-      </div>
+      <div className={`flex flex-col w-full ${capsules ? '' : 'flex flex-col w-full items-center justify-center min-h-[300px] p-4'} min-h-[300px] p-4`}>{capsules ? <SliderHomePageDashboard capsules={capsules} /> : <span className="text-2xl">شما هنوز کپسولی ندارین !</span>}</div>
       <div className="flex flex-col gap-4 p-4 px-6">
         <span className='text-foreground text-xl pr-4 relative font-bold after:content-[""] after:h-2 after:w-2 after:rounded-full after:absolute after:bg-foreground after:right-0 after:top-1/2 after:-translate-y-1/2'>کپسول جدید</span>
         <div className="flex gap-2 items-center py-4 px-2 border border-foreground/20 rounded-lg lg:w-2/3 w-full">
@@ -89,9 +110,9 @@ export default function HomePagePanel() {
           <div className="flex flex-col gap-1">
             <p className="lg:text-lg text-base font-bold text-foreground/80">شما میتونین از این قسمت یا از پنل سمت راست کپسول جدید بسازید.</p>
             <Link className="flex group items-center gap-2 lg:mt-0 mt-2 text-base" href="/dashboard/create-capsule">
-            <span className="text-foreground/80 group-hover:text-primary/80 duration-300">ساخت کپسول جدید</span>
-            <FaLongArrowAltLeft className="text-2xl text-foreground group-hover:text-primary duration-300" />
-          </Link>
+              <span className="text-foreground/80 group-hover:text-primary/80 duration-300">ساخت کپسول جدید</span>
+              <FaLongArrowAltLeft className="text-2xl text-foreground group-hover:text-primary duration-300" />
+            </Link>
           </div>
         </div>
       </div>

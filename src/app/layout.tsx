@@ -2,15 +2,18 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from './components/providers/Theme-provider';
 import { ReduxProvider } from './components/providers/Redux-Provider';
-import IsLoggedInClient from './services/isLoggedIn';
-
+import { Toaster } from '@/components/ui/sonner';
+import 'swiper/css';
+import ProgressBarLoading from './components/shared/Progressbar';
+import { UserHydrator } from './services/UserHydrator';
+// import { UserHydrator } from './services/UserHydrator';
 
 export const metadata: Metadata = {
   title: 'Capsule',
   description: 'created by mostafa kamari',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -20,8 +23,10 @@ export default function RootLayout({
       <body className="bg-background overflow-x-hidden">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ReduxProvider>
-            <IsLoggedInClient />
+            {/* <UserHydrator /> */}
+            <ProgressBarLoading />
             {children}
+            <Toaster />
           </ReduxProvider>
         </ThemeProvider>
       </body>
