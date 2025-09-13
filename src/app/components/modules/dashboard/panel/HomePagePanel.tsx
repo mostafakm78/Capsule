@@ -11,27 +11,15 @@ import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { GetCapsulesResponse } from '@/lib/types';
 import { useAppSelector } from '@/app/hooks/hook';
-import { useEffect, useState } from 'react';
-import callApi from '@/app/services/callApi';
 import Loadings from '@/app/components/shared/loadings';
 const SliderHomePageDashboard = dynamic(() => import('./SliderHomePaga'), { ssr: false, loading: () => <div className="h-24 rounded-lg bg-foreground/5" /> });
 
-export default function HomePagePanel() {
+export default function HomePagePanel({ capsules }: { capsules: GetCapsulesResponse }) {
   const { user } = useAppSelector((state) => state.user);
-  const [capsules, setCapsules] = useState<GetCapsulesResponse | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    callApi()
-      .get('/capsules')
-      .then((res) => {
-        if (res.status === 200) setCapsules(res.data);
-      })
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) return <Loadings />;
+  if (capsules === undefined) {
+    return <Loadings />;
+  }
 
   const publicCapsules = capsules?.items.filter((item) => item?.access?.visibility === 'public');
 

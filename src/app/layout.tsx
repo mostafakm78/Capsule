@@ -26,7 +26,9 @@ export default async function RootLayout({
             {/* <UserHydrator /> */}
             <ProgressBarLoading />
             {children}
-            <Toaster />
+            <Toaster
+              position="top-right"
+            />
           </ReduxProvider>
         </ThemeProvider>
       </body>

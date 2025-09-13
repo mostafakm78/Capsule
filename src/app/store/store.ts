@@ -10,10 +10,16 @@ export const makeStore = (preloadedState?: unknown) =>
       editOrcreate: editOrcreate,
       user: userReducer,
     },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: ['editOrcreate/setCapsule'],
+          ignoredPaths: ['editOrcreate.capsule.avatar'],
+        },
+      }),
     preloadedState,
   });
 
-// ===== انواع درست =====
 export type AppStore = ReturnType<typeof makeStore>;
 export type RootState = ReturnType<AppStore['getState']>;
 export type AppDispatch = AppStore['dispatch'];

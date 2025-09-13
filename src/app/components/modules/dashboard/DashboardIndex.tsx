@@ -48,8 +48,6 @@ export default function DashboardLayoutIndex({ children }: { children: React.Rea
   const pathName = usePathname();
   const { user } = useAppSelector((state) => state.user);
 
-  console.log('user =>' , user);
-
   useEffect(() => {
     const now = new Date();
     const { jy: year, jm: month, jd: day } = jalaali.toJalaali(now);

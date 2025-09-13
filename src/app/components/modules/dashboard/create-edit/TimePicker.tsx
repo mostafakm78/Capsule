@@ -1,5 +1,4 @@
 'use client';
-import * as React from 'react';
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { DayButton, getDefaultClassNames } from 'react-day-picker';
 import { DayPicker } from 'react-day-picker/persian';
@@ -7,12 +6,17 @@ import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { useDispatch } from 'react-redux';
 import { setCapsule } from '@/app/store/editOrcreateSlice';
+import { useAppSelector } from '@/app/hooks/hook';
+import { useEffect, useRef, useState } from 'react';
 
 export function CalendarHijri() {
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const capsule = useAppSelector((state) => state.editOrcreate);
   const dispatch = useDispatch();
 
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
 
   return (
     <Calendar
@@ -22,11 +26,12 @@ export function CalendarHijri() {
       onSelect={(selectedDate) => {
         if (selectedDate) {
           setDate(selectedDate);
-          dispatch(setCapsule({ access: {
-              unlockAt: selectedDate.toISOString(),
-              visibility: 'private',
-              lock: 'timed'
-          } }));
+          dispatch(
+            setCapsule({
+              ...capsule.capsule,
+              access: { ...capsule.capsule?.access, unlockAt: selectedDate.toISOString() },
+            })
+          );
         }
       }}
       className="rounded-lg border shadow-sm"
@@ -92,8 +97,8 @@ function Calendar({
 
 function CalendarDayButton({ className, day, modifiers, ...props }: React.ComponentProps<typeof DayButton>) {
   const defaultClassNames = getDefaultClassNames();
-  const ref = React.useRef<HTMLButtonElement>(null);
-  React.useEffect(() => {
+  const ref = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
     if (modifiers.focused) ref.current?.focus();
   }, [modifiers.focused]);
 

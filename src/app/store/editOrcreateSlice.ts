@@ -22,8 +22,8 @@ const editOrcreateCapsuleSlice = createSlice({
     setId: (state, action: PayloadAction<string>) => {
       state.id = action.payload;
     },
-    setCapsule: (state, action: PayloadAction<Capsule>) => {
-      state.capsule = action.payload;
+    setCapsule(state, action: PayloadAction<Partial<Capsule>>) {
+      state.capsule = { ...(state.capsule ?? {}), ...action.payload };
     },
     resetCapsule() {
       return initialState;
@@ -31,5 +31,5 @@ const editOrcreateCapsuleSlice = createSlice({
   },
 });
 
-export const { setMode, setId , setCapsule , resetCapsule } = editOrcreateCapsuleSlice.actions;
+export const { setMode, setId, setCapsule, resetCapsule } = editOrcreateCapsuleSlice.actions;
 export default editOrcreateCapsuleSlice.reducer;

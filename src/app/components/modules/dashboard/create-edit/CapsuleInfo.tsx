@@ -1,6 +1,7 @@
 'use client';
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks/hook';
+import useCustomToast from '@/app/hooks/useCustomToast';
 import { setCapsule } from '@/app/store/editOrcreateSlice';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,7 +10,7 @@ import { RadioGroup } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import { dashboardCreateCapsuleColorOption } from '@/lib/types';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MdOutlineCameraAlt } from 'react-icons/md';
 
 type Color = 'default' | 'red' | 'green' | 'blue' | 'yellow';
@@ -26,38 +27,60 @@ export default function CapsuleInfo() {
   const dispatch = useAppDispatch();
   const editOrcreate = useAppSelector((state) => state.editOrcreate);
   const capsule = editOrcreate.capsule;
+  const showToast = useCustomToast();
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [extra, setExtra] = useState('');
   const [selected, setSelected] = useState<Color>('default');
   const [preview, setPreview] = useState<string | null>(null);
+  const lastBlobUrl = useRef<string | null>(null);
 
   useEffect(() => {
     if (editOrcreate.mode === 'edit' && capsule) {
       setTitle(capsule.title || '');
       setDescription(capsule.description || '');
       setExtra(capsule.extra || '');
-      setSelected(capsule.color || 'default');
-      setPreview(capsule.avatar || null);
+      setSelected((capsule.color as Color) || 'default');
+      if (capsule.avatar) setPreview(capsule.avatar);
     }
+    return () => {
+      if (lastBlobUrl.current) URL.revokeObjectURL(lastBlobUrl.current);
+    };
   }, [capsule, editOrcreate.mode]);
 
-  const handleSubmit = () => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    if (lastBlobUrl.current) URL.revokeObjectURL(lastBlobUrl.current);
+    lastBlobUrl.current = url;
+    setPreview(url);
+
     dispatch(
       setCapsule({
+        ...capsule,
+        avatarFile: file,
+      })
+    );
+
+    e.target.value = '';
+  };
+
+  const handleSubmit = () => {
+    if (!title || !description) {
+      return showToast({ message: 'وارد کردن عنوان و توضیحات اجباری میباشد ❌', bg: 'bg-red-200' });
+    }
+    showToast('تنظیمات کپسول شما ثبت شد ✅');
+    dispatch(
+      setCapsule({
+        ...capsule,
         title,
         description,
         extra,
         color: selected,
-        avatar: preview,
       })
     );
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) setPreview(URL.createObjectURL(file));
   };
 
   return (
@@ -69,12 +92,17 @@ export default function CapsuleInfo() {
         </div>
 
         <Label className="flex flex-col items-start text-base text-foreground/80">
-          اسم کپسول
+          <span>
+            اسم کپسول<span className="text-red-500 text-lg">*</span>
+          </span>
           <Input type="text" placeholder="مثال : تولد برادرم" value={title} onChange={(e) => setTitle(e.target.value)} className="md:text-sm md:placeholder:text-sm" />
         </Label>
 
         <Label className="flex flex-col items-start text-base text-foreground/80">
-          توضیحات شما
+          <span>
+            توضیحات شما
+            <span className="text-red-500 text-lg">*</span>
+          </span>
           <Textarea placeholder="نوشته های شما برای ذخیره در کپسول" value={description} onChange={(e) => setDescription(e.target.value)} className="md:text-sm md:placeholder:text-sm w-full h-[200px]" />
         </Label>
 
@@ -114,7 +142,7 @@ export default function CapsuleInfo() {
                     key={id}
                     onClick={() => setSelected(id as Color)}
                     className={`
-                    ${colorCode} h-5 w-5 md:h-10 md:w-10 rounded-full ring ring-foregroun transition-all ${selected === id ? 'ring-4 ring-primary' : ''} cursor-pointer`}
+                    ${colorCode} h-8 w-8 md:h-10 md:w-10 rounded-full ring ring-foregroun transition-all ${selected === id ? 'ring-4 ring-primary' : ''} cursor-pointer`}
                     title={id}
                   />
                 ))}

@@ -9,9 +9,9 @@ import { TabButton } from './TabButton';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { dashboardCreateCapsuleColorOption, dashboardCreateCapsuleTab } from '@/lib/types';
-// import callApi from '@/app/services/callApi';
-import { useAppSelector } from '@/app/hooks/hook';
+import { dashboardCreateCapsuleTab } from '@/lib/types';
+import { Button } from '@/components/ui/button';
+import callApi from '@/app/services/callApi';
 
 const CapsuleInfo = dynamic(() => import('./CapsuleInfo'));
 const CapsuleTags = dynamic(() => import('./CapsuleTags'));
@@ -27,7 +27,7 @@ export default function CreateCapsulePage() {
   const [tab, setTab] = useState<dashboardCreateCapsuleTab>('info');
   const editOrcreate = useSelector((state: RootState) => state.editOrcreate);
 
-  const color = editOrcreate.capsule?.color
+  const color = editOrcreate.capsule?.color;
   let colorCode;
 
   if (!color || color === 'default') {
@@ -42,14 +42,19 @@ export default function CreateCapsulePage() {
     colorCode = 'bg-yellow-500/15 dark:bg-yellow-700/50';
   }
 
-  //   async function createCapsule() {
-  //     try {
-  //       const res = await callApi().post('/capsules');
-  //     } catch (error) {}
-  //   }
+  console.log(editOrcreate.capsule);
+
+  const handleSubmit = async () => {
+    if (editOrcreate.mode === 'edit') {
+      const capsuleId = editOrcreate.capsule?._id;
+      try {
+        const res = await callApi().patch(`/capsules/${capsuleId}`, {});
+      } catch (error) {}
+    }
+  };
 
   return (
-    <section className="flex flex-col h-full gap-10">
+    <section key={editOrcreate.mode} className="flex flex-col h-full gap-10">
       <span className='text-foreground text-xl pr-4 relative font-bold after:content-[""] after:h-2 after:w-2 after:rounded-full after:absolute after:bg-foreground after:right-0 after:top-1/2 after:-translate-y-1/2'>{editOrcreate.mode === 'create' ? 'ساخت کپسول' : 'ویرایش کپسول'}</span>
       <div className="flex lg:flex-row flex-col h-full justify-start gap-10">
         {/* Desktop Tabs */}
@@ -84,6 +89,12 @@ export default function CreateCapsulePage() {
 
         {/* Tab Content */}
         <div className={`h-full lg:w-9/12 w-full ${colorCode} rounded-lg shadow-md shadow-black/5`}>{tabs.find((t) => t.id === tab)?.component}</div>
+      </div>
+
+      <div className="w-full flex justify-center mt-8">
+        <Button onClick={handleSubmit} className="cursor-pointer w-1/3 py-6 text-lg">
+          ساخت کپسول
+        </Button>
       </div>
     </section>
   );

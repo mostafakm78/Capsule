@@ -8,33 +8,19 @@ export type Lock = 'none' | 'timed';
 
 // ========= Capsule =========
 export interface Access {
-  visibility: Visibility;
-  lock: Lock;
+  visibility?: Visibility;
+  lock?: Lock;
   unlockAt?: string | null;
 }
 
 export interface CategoryItem {
-  createdAt: string;
-  group: string;
-  isActive: boolean;
-  key: string;
-  order: number;
-  title: string;
-  updatedAt: string;
-  _id: string;
+  createdAt?: string;
+  group?: string;
+  title?: string;
+  updatedAt?: string;
+  _id?: string;
 }
 
-export interface CreateCapsule {
-  title?: string | null;
-  description?: string | null;
-  access?: Access;
-  categoryItem?: string | null;
-  createdAt?: string; // ISO string
-  updatedAt?: string; // ISO string
-  color?: 'default' | 'red' | 'green' | 'blue' | 'yellow';
-  avatar?: string | null;
-  extra?: string | null;
-}
 
 export interface Capsule {
   _id?: string;
@@ -42,11 +28,12 @@ export interface Capsule {
   title?: string | null;
   description?: string | null;
   access?: Access;
-  categoryItem?: string | null;
+  categoryItem?: CategoryItem;
   createdAt?: string; // ISO string
   updatedAt?: string; // ISO string
   color?: 'default' | 'red' | 'green' | 'blue' | 'yellow';
   avatar?: string | null;
+  avatarFile?: File | null;
   extra?: string | null;
 }
 
