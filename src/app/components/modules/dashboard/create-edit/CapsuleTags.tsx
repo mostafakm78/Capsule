@@ -12,6 +12,8 @@ import { useAppDispatch } from '@/app/hooks/hook';
 import { setCapsule } from '@/app/store/editOrcreateSlice';
 import { PulseLoader } from 'react-spinners';
 import useCustomToast from '@/app/hooks/useCustomToast';
+import IsTimePassed from './IsTimePassed';
+import checkUnlockAt from '@/app/hooks/checkUnlockAt';
 
 // const categories: dashboardCreateCapsuleCategories[] = [
 //   { title: '🧠 دسته‌بندی‌های احساسی', items: ['خوشحال‌کننده', 'ناراحت‌کننده', 'هیجان‌انگیز', 'آرامش‌بخش', 'ترسناک', 'الهام‌بخش'] },
@@ -36,18 +38,16 @@ type GroupView = { id: string; title: string; items: { id: string; title: string
 
 export default function CapsuleTags() {
   const dispatch = useAppDispatch();
-  const editOrcreate = useSelector((state: RootState) => state.editOrcreate);
-  const capsule = editOrcreate.capsule;
+  const {capsule , mode} = useSelector((state: RootState) => state.editOrcreate);
   const showToast = useCustomToast();
   const [selected, setSelected] = useState<string>(capsule?.categoryItem?._id || '');
   const [categories, setCategories] = useState<CategoryItems[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (editOrcreate.mode === 'edit' && capsule) {
-      setSelected(capsule.categoryItem?._id || '');
-    }
-  }, [editOrcreate, capsule]);
+    if (!capsule) return;
+    setSelected(capsule.categoryItem?._id || '');
+  }, [mode, capsule]);
 
   useEffect(() => {
     (async () => {
@@ -86,6 +86,14 @@ export default function CapsuleTags() {
       })
     );
   };
+
+  let isTimedPassed = false;
+    if (capsule?.access?.unlockAt) {
+      isTimedPassed = checkUnlockAt(capsule.access.unlockAt);
+      if (isTimedPassed === true) {
+        return <IsTimePassed time={capsule.access.unlockAt} />;
+      }
+    }
 
   return (
     <div className="flex w-full p-8 h-full flex-col">

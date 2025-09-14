@@ -13,27 +13,28 @@ import { useAppDispatch } from '@/app/hooks/hook';
 import { setCapsule } from '@/app/store/editOrcreateSlice';
 import { Lock, Visibility } from '@/lib/types';
 import useCustomToast from '@/app/hooks/useCustomToast';
+import IsTimePassed from './IsTimePassed';
+import checkUnlockAt from '@/app/hooks/checkUnlockAt';
 
 export default function CapsuleStatus() {
   const dispatch = useAppDispatch();
-  const capsule = useSelector((state: RootState) => state.editOrcreate);
+  const { capsule } = useSelector((state: RootState) => state.editOrcreate);
   const [selected, setSelected] = useState<Visibility | ''>('');
   const [privateType, setPrivateType] = useState<Lock | ''>('');
   const showToast = useCustomToast();
 
   useEffect(() => {
-    if (capsule.mode === 'edit' && capsule.capsule) {
-      const v = capsule.capsule.access?.visibility as Visibility | undefined;
-      const l = capsule.capsule.access?.lock as Lock | undefined;
-      setSelected(v ?? '');
-      setPrivateType(v === 'private' ? l ?? '' : '');
-    }
+    if (!capsule) return;
+    const v = capsule.access?.visibility as Visibility | undefined;
+    const l = capsule.access?.lock as Lock | undefined;
+    setSelected(v ?? '');
+    setPrivateType(v === 'private' ? l ?? '' : '');
   }, [capsule]);
 
   const formattedDate =
-    capsule?.capsule?.access?.unlockAt && privateType === 'timed'
+    capsule?.access?.unlockAt && privateType === 'timed'
       ? (() => {
-          const date = new Date(capsule.capsule.access?.unlockAt);
+          const date = new Date(capsule.access?.unlockAt);
           const { jy, jm, jd } = jalaali.toJalaali(date);
           const months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
 
@@ -58,16 +59,24 @@ export default function CapsuleStatus() {
     if (selected === 'private' && !privateType) {
       return showToast({ message: 'وارد کردن حالت کپسول خصوصی اجباری میباشد ❌', bg: 'bg-red-200' });
     }
-    if (selected === 'private' && privateType && !capsule.capsule?.access?.unlockAt) {
+    if (selected === 'private' && privateType && !capsule?.access?.unlockAt) {
       return showToast({ message: 'وارد کردن زمان کپسول در کپسول خصوصی زمان دار اجباری میباشد ❌', bg: 'bg-red-200' });
     }
     showToast('تنظیمات کپسول شما ثبت شد ✅');
     dispatch(
       setCapsule({
-        ...capsule.capsule,
+        ...capsule,
       })
     );
   };
+
+  let isTimedPassed = false;
+  if (capsule?.access?.unlockAt) {
+    isTimedPassed = checkUnlockAt(capsule.access.unlockAt);
+    if (isTimedPassed === true) {
+      return <IsTimePassed time={capsule.access.unlockAt} />;
+    }
+  }
 
   return (
     <div className="flex w-full p-8 h-full flex-col">
@@ -89,16 +98,16 @@ export default function CapsuleStatus() {
             onValueChange={(val: Visibility) => {
               setSelected(val);
               // اگر public شد، حالت خصوصی رو پاک کن
-              const nextAccess = val === 'public' ? { visibility: 'public' as const, lock: 'none' as const, unlockAt: undefined } : { visibility: 'private' as const, lock: (capsule.capsule?.access?.lock ?? 'none') as Lock, unlockAt: capsule.capsule?.access?.unlockAt };
+              const nextAccess = val === 'public' ? { visibility: 'public' as const, lock: 'none' as const, unlockAt: undefined } : { visibility: 'private' as const, lock: (capsule?.access?.lock ?? 'none') as Lock, unlockAt: capsule?.access?.unlockAt };
 
               // reset زیرمجموعه وقتی سوئیچ می‌کنیم
               setPrivateType(val === 'private' ? (nextAccess.lock as Lock) : '');
 
               dispatch(
                 setCapsule({
-                  ...capsule.capsule,
+                  ...capsule,
                   access: {
-                    ...(capsule.capsule?.access ?? {}),
+                    ...(capsule?.access ?? {}),
                     ...nextAccess,
                   },
                 })
@@ -129,9 +138,9 @@ export default function CapsuleStatus() {
                 setPrivateType(val);
                 dispatch(
                   setCapsule({
-                    ...capsule.capsule,
+                    ...capsule,
                     access: {
-                      ...(capsule.capsule?.access ?? {}),
+                      ...(capsule?.access ?? {}),
                       visibility: 'private',
                       lock: val,
                       ...(val === 'none' ? { unlockAt: undefined } : {}),

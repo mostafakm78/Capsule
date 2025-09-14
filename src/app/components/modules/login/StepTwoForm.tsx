@@ -232,7 +232,7 @@ export default function StepTwoForm({ anime }: { anime: string }) {
                   <span dir="ltr" className="mt-1 tabular-nums">
                     {toMMSS(remaining)}
                   </span>
-                  <ClockLoader size={25} speedMultiplier={sendButton === 'ورود' ? 1 : 0} />
+                  <ClockLoader size={25} speedMultiplier={sendButton === 'ورود' ? 0.3 : 0} />
                 </>
               )}
             </div>

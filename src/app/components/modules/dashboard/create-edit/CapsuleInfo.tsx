@@ -1,5 +1,6 @@
 'use client';
 
+import checkUnlockAt from '@/app/hooks/checkUnlockAt';
 import { useAppDispatch, useAppSelector } from '@/app/hooks/hook';
 import useCustomToast from '@/app/hooks/useCustomToast';
 import { setCapsule } from '@/app/store/editOrcreateSlice';
@@ -12,6 +13,7 @@ import { dashboardCreateCapsuleColorOption } from '@/lib/types';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { MdOutlineCameraAlt } from 'react-icons/md';
+import IsTimePassed from './IsTimePassed';
 
 type Color = 'default' | 'red' | 'green' | 'blue' | 'yellow';
 
@@ -23,46 +25,54 @@ const colors: dashboardCreateCapsuleColorOption[] = [
   { id: 'yellow', colorCode: 'bg-yellow-500/15 dark:bg-yellow-700/50' },
 ];
 
-export default function CapsuleInfo() {
+type Props = {
+  onFileSelected?: (file: File | null) => void;
+};
+
+export default function CapsuleInfo({ onFileSelected }: Props) {
   const dispatch = useAppDispatch();
-  const editOrcreate = useAppSelector((state) => state.editOrcreate);
-  const capsule = editOrcreate.capsule;
+  const { mode, capsule } = useAppSelector((state) => state.editOrcreate);
   const showToast = useCustomToast();
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [extra, setExtra] = useState('');
   const [selected, setSelected] = useState<Color>('default');
+
   const [preview, setPreview] = useState<string | null>(null);
   const lastBlobUrl = useRef<string | null>(null);
 
   useEffect(() => {
-    if (editOrcreate.mode === 'edit' && capsule) {
-      setTitle(capsule.title || '');
-      setDescription(capsule.description || '');
-      setExtra(capsule.extra || '');
-      setSelected((capsule.color as Color) || 'default');
-      if (capsule.avatar) setPreview(capsule.avatar);
+    if (!capsule) return;
+    setTitle(capsule.title || '');
+    setDescription(capsule.description || '');
+    setExtra(capsule.extra || '');
+    setSelected((capsule.color as Color) || 'default');
+
+    if (capsule.image && !preview?.startsWith('blob:')) {
+      setPreview(`http://localhost:8080/images/${capsule.image}`);
     }
+  }, [mode, capsule]);
+
+  useEffect(() => {
     return () => {
-      if (lastBlobUrl.current) URL.revokeObjectURL(lastBlobUrl.current);
+      if (lastBlobUrl.current) {
+        URL.revokeObjectURL(lastBlobUrl.current);
+        lastBlobUrl.current = null;
+      }
+
+      onFileSelected?.(null);
     };
-  }, [capsule, editOrcreate.mode]);
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const url = URL.createObjectURL(file);
-    if (lastBlobUrl.current) URL.revokeObjectURL(lastBlobUrl.current);
-    lastBlobUrl.current = url;
-    setPreview(url);
 
-    dispatch(
-      setCapsule({
-        ...capsule,
-        avatarFile: file,
-      })
-    );
+    onFileSelected?.(file);
+
+    const url = URL.createObjectURL(file);
+    setPreview(url);
 
     e.target.value = '';
   };
@@ -71,7 +81,6 @@ export default function CapsuleInfo() {
     if (!title || !description) {
       return showToast({ message: 'وارد کردن عنوان و توضیحات اجباری میباشد ❌', bg: 'bg-red-200' });
     }
-    showToast('تنظیمات کپسول شما ثبت شد ✅');
     dispatch(
       setCapsule({
         ...capsule,
@@ -81,7 +90,16 @@ export default function CapsuleInfo() {
         color: selected,
       })
     );
+    showToast('تنظیمات کپسول شما ثبت شد ✅');
   };
+
+  let isTimedPassed = false;
+  if (capsule?.access?.unlockAt) {
+    isTimedPassed = checkUnlockAt(capsule.access.unlockAt);
+    if (isTimedPassed === true) {
+      return <IsTimePassed time={capsule.access.unlockAt} />;
+    }
+  }
 
   return (
     <div className="flex w-full md:p-8 p-4 h-full flex-col">
@@ -100,23 +118,40 @@ export default function CapsuleInfo() {
 
         <Label className="flex flex-col items-start text-base text-foreground/80">
           <span>
-            توضیحات شما
-            <span className="text-red-500 text-lg">*</span>
+            توضیحات شما<span className="text-red-500 text-lg">*</span>
           </span>
           <Textarea placeholder="نوشته های شما برای ذخیره در کپسول" value={description} onChange={(e) => setDescription(e.target.value)} className="md:text-sm md:placeholder:text-sm w-full h-[200px]" />
         </Label>
 
         <div className="flex flex-col gap-2">
-          <span className="text-base text-foreground/80 font-medium">عکس</span>
+          <span className="text-base text-foreground/80 font-medium">
+            <span className="flex items-center gap-3">
+              عکس<span className="text-red-500 text-xs">حداکثر 5Mb</span>
+            </span>
+          </span>
+
           <Label className={`relative flex flex-col bg-background h-[200px] items-center justify-center border border-primary cursor-pointer ${preview ? 'p-0' : 'p-4'} rounded-lg text-base text-foreground/80 overflow-hidden`}>
             <span className={`text-lg ${preview ? 'hidden' : ''}`}>انتخاب عکس</span>
             <MdOutlineCameraAlt className={`text-4xl ${preview ? 'hidden' : ''}`} />
+
             {preview && (
               <div className="relative w-full h-full">
-                <Image src={preview} alt="Preview" fill className="object-cover rounded-lg" />
+                <Image
+                  src={preview}
+                  alt="Preview"
+                  fill
+                  className="object-cover rounded-lg"
+                  onLoad={() => {
+                    if (lastBlobUrl.current && lastBlobUrl.current !== preview) {
+                      URL.revokeObjectURL(lastBlobUrl.current);
+                    }
+                    lastBlobUrl.current = preview.startsWith('blob:') ? preview : null;
+                  }}
+                  unoptimized
+                />
               </div>
             )}
-            <Input onChange={handleFileChange} type="file" className="hidden" />
+            <Input onChange={handleFileChange} type="file" name="avatar" accept="image/*" className="hidden" />
           </Label>
         </div>
 
@@ -128,21 +163,21 @@ export default function CapsuleInfo() {
         <div className="flex flex-col items-center gap-2">
           <span className="text-foreground/80 self-start text-base font-medium">رنگ پس زمینه کپسول شما</span>
           <p className="text-sm self-start text-foreground/70">شما میتونین برای نمایش کپسول خودتون چه در پنل خصوصی خودتون و چه در بخش عمومی از رنگ های زیر انتخاب کنین.</p>
+
           <div className="mt-4">
-            <RadioGroup
-              value={selected}
-              onValueChange={(value: Color) => {
-                setSelected(value);
-              }}
-              className="flex gap-4"
-            >
+            <RadioGroup value={selected} onValueChange={(value: Color) => setSelected(value)} className="flex gap-4">
               <div className="mt-4 flex gap-4">
                 {colors.map(({ id, colorCode }) => (
                   <div
                     key={id}
                     onClick={() => setSelected(id as Color)}
                     className={`
-                    ${colorCode} h-8 w-8 md:h-10 md:w-10 rounded-full ring ring-foregroun transition-all ${selected === id ? 'ring-4 ring-primary' : ''} cursor-pointer`}
+                      ${colorCode}
+                      h-8 w-8 md:h-10 md:w-10 rounded-full
+                      transition-all
+                      ${selected === id ? 'ring-4 ring-primary' : 'ring ring-foreground/30'}
+                      cursor-pointer
+                    `}
                     title={id}
                   />
                 ))}
@@ -152,7 +187,7 @@ export default function CapsuleInfo() {
         </div>
 
         <div className="w-full flex justify-center mt-8">
-          <Button onClick={handleSubmit} disabled={!title && !description && !extra && !selected && !preview} className="cursor-pointer w-1/3 py-6 text-lg">
+          <Button onClick={handleSubmit} disabled={!title || !description} className="cursor-pointer w-1/3 py-6 text-lg">
             ثبت
           </Button>
         </div>

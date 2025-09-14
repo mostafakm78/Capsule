@@ -21,7 +21,6 @@ export interface CategoryItem {
   _id?: string;
 }
 
-
 export interface Capsule {
   _id?: string;
   owner?: UserSafe;
@@ -29,10 +28,11 @@ export interface Capsule {
   description?: string | null;
   access?: Access;
   categoryItem?: CategoryItem;
+  newCategoryItem?: string | null;
   createdAt?: string; // ISO string
   updatedAt?: string; // ISO string
   color?: 'default' | 'red' | 'green' | 'blue' | 'yellow';
-  avatar?: string | null;
+  image?: string | null;
   avatarFile?: File | null;
   extra?: string | null;
 }

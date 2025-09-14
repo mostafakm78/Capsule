@@ -4,18 +4,29 @@ import { PiSubtitlesFill } from 'react-icons/pi';
 import { FaImage } from 'react-icons/fa6';
 import { GrStatusInfo } from 'react-icons/gr';
 import dynamic from 'next/dynamic';
-import { ComponentType, JSX, useState } from 'react';
+import { ComponentType, JSX, useRef, useState } from 'react';
 import { TabButton } from './TabButton';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { dashboardCreateCapsuleTab } from '@/lib/types';
+import { ApiError, dashboardCreateCapsuleTab, Lock, Visibility } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import callApi from '@/app/services/callApi';
+import useCustomToast from '@/app/hooks/useCustomToast';
+import { AxiosError } from 'axios';
+import checkUnlockAt from '@/app/hooks/checkUnlockAt';
 
 const CapsuleInfo = dynamic(() => import('./CapsuleInfo'));
 const CapsuleTags = dynamic(() => import('./CapsuleTags'));
 const CapsuleStatus = dynamic(() => import('./CapsuleStatus'));
+
+type AccessPayload = {
+  visibility: Visibility;
+  lock: Lock;
+  unlockAt?: string;
+};
+
+const isDate = (v: unknown): v is Date => v instanceof Date;
 
 const tabs: { id: dashboardCreateCapsuleTab; label: string; icon: ComponentType<{ className?: string }>; component: JSX.Element }[] = [
   { id: 'info', label: 'اطلاعات کپسول', icon: PiSubtitlesFill, component: <CapsuleInfo /> },
@@ -25,9 +36,20 @@ const tabs: { id: dashboardCreateCapsuleTab; label: string; icon: ComponentType<
 
 export default function CreateCapsulePage() {
   const [tab, setTab] = useState<dashboardCreateCapsuleTab>('info');
-  const editOrcreate = useSelector((state: RootState) => state.editOrcreate);
+  const { capsule, mode } = useSelector((state: RootState) => state.editOrcreate);
+  const showToast = useCustomToast();
 
-  const color = editOrcreate.capsule?.color;
+  let isTimedPassed = false;
+  if (capsule?.access?.unlockAt) {
+    isTimedPassed = checkUnlockAt(capsule.access.unlockAt);
+  }
+
+  const fileRef = useRef<File | null>(null);
+  const onFileSelected = (file: File | null) => {
+    fileRef.current = file;
+  };
+
+  const color = capsule?.color;
   let colorCode;
 
   if (!color || color === 'default') {
@@ -42,20 +64,95 @@ export default function CreateCapsulePage() {
     colorCode = 'bg-yellow-500/15 dark:bg-yellow-700/50';
   }
 
-  console.log(editOrcreate.capsule);
-
   const handleSubmit = async () => {
-    if (editOrcreate.mode === 'edit') {
-      const capsuleId = editOrcreate.capsule?._id;
-      try {
-        const res = await callApi().patch(`/capsules/${capsuleId}`, {});
-      } catch (error) {}
+    const fd = new FormData();
+
+    const appendIf = (key: string, val: unknown) => {
+      if (val === undefined || val === null) return;
+
+      if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
+        fd.append(key, String(val));
+        return;
+      }
+
+      if (val instanceof Date) {
+        fd.append(key, val.toISOString());
+        return;
+      }
+
+      if (val instanceof File || val instanceof Blob) {
+        fd.append(key, val);
+        return;
+      }
+
+      fd.append(key, JSON.stringify(val));
+    };
+    const categoryItem = capsule?.categoryItem?._id;
+
+    appendIf('title', capsule?.title);
+    appendIf('description', capsule?.description);
+    appendIf('extra', capsule?.extra);
+    appendIf('color', capsule?.color);
+    appendIf('categoryItem', categoryItem);
+
+    const file = fileRef.current;
+
+    if (file) {
+      fd.append('image', file);
+    }
+
+    const lock = capsule?.access?.lock as Lock | undefined;
+    const isTimed = lock === 'timed';
+
+    const rawUnlockAt = capsule?.access?.unlockAt as unknown;
+    const unlockAt: string | undefined = isTimed ? (isDate(rawUnlockAt) ? rawUnlockAt.toISOString() : (typeof rawUnlockAt === 'string' && rawUnlockAt) || undefined) : undefined;
+
+    const accessPayload: AccessPayload = {
+      visibility: (capsule?.access?.visibility as Visibility) ?? 'public',
+      lock: lock ?? 'none',
+      ...(unlockAt ? { unlockAt } : {}),
+    };
+
+    fd.append('access', JSON.stringify(accessPayload));
+
+    try {
+      if (mode === 'edit' && capsule?._id) {
+        const res = await callApi().patch(`/capsules/${capsule._id}`, fd);
+        if (res.status === 200) {
+          return showToast({ message: 'کپسول شما با موفقیت بروزرسانی شد ✅', bg: 'bg-green-300' });
+        }
+      } else {
+        const res = await callApi().post('/capsules', fd);
+        if (res.status === 201) {
+          return showToast({ message: 'کپسول شما با موفقیت ساخته شد ✅', bg: 'bg-green-300' });
+        }
+      }
+    } catch (error) {
+      const err = error as AxiosError<ApiError>;
+      const payload = err.response?.data.data;
+      console.log(err);
+      if (err.response?.data.message === 'File too large') {
+        return showToast({ message: 'حجم فایل وارد شده زیاد است ❌', bg: 'bg-red-200' });
+      }
+      if (err.response?.status === 500) {
+        return showToast({ message: 'وارد کردن فیلد عنوان ، توضیحات ، دسته‌بندی و نوع کپسول اجباری میباشد ❌', bg: 'bg-red-200' });
+      } else if (err.response?.status === 422) {
+        if (Array.isArray(payload)) {
+          payload.forEach(({ message }) => {
+            return showToast({ message: message, bg: 'bg-red-200' });
+          });
+        }
+      } else if (err.response?.status === 415) {
+        return showToast({ message: err.response.data.message });
+      } else {
+        return showToast({ message: 'خطایی در ثبت کپسول شما پیش آمده لطفا کمی بعد تلاش کنید' });
+      }
     }
   };
 
   return (
-    <section key={editOrcreate.mode} className="flex flex-col h-full gap-10">
-      <span className='text-foreground text-xl pr-4 relative font-bold after:content-[""] after:h-2 after:w-2 after:rounded-full after:absolute after:bg-foreground after:right-0 after:top-1/2 after:-translate-y-1/2'>{editOrcreate.mode === 'create' ? 'ساخت کپسول' : 'ویرایش کپسول'}</span>
+    <section key={mode} className="flex flex-col h-full gap-10">
+      <span className='text-foreground text-xl pr-4 relative font-bold after:content-[""] after:h-2 after:w-2 after:rounded-full after:absolute after:bg-foreground after:right-0 after:top-1/2 after:-translate-y-1/2'>{mode === 'create' ? 'ساخت کپسول' : 'ویرایش کپسول'}</span>
       <div className="flex lg:flex-row flex-col h-full justify-start gap-10">
         {/* Desktop Tabs */}
         <div className="lg:flex hidden w-3/12 flex-col gap-4">
@@ -88,12 +185,12 @@ export default function CreateCapsulePage() {
         </div>
 
         {/* Tab Content */}
-        <div className={`h-full lg:w-9/12 w-full ${colorCode} rounded-lg shadow-md shadow-black/5`}>{tabs.find((t) => t.id === tab)?.component}</div>
+        <div className={`h-full lg:w-9/12 w-full ${colorCode} rounded-lg shadow-md shadow-black/5`}>{tab === 'info' ? <CapsuleInfo onFileSelected={onFileSelected} /> : tab === 'tags' ? <CapsuleTags /> : <CapsuleStatus />}</div>
       </div>
 
       <div className="w-full flex justify-center mt-8">
-        <Button onClick={handleSubmit} className="cursor-pointer w-1/3 py-6 text-lg">
-          ساخت کپسول
+        <Button onClick={handleSubmit} disabled={isTimedPassed} className="cursor-pointer w-1/3 py-6 text-lg">
+          {mode === 'edit' ? 'ویرایش کپسول' : 'ساخت کپسول'}
         </Button>
       </div>
     </section>

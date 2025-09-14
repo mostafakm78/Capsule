@@ -14,16 +14,20 @@ const notify = (err?: unknown) => {
   waiters = [];
 };
 
+function isBrowserFormData(d: unknown): d is FormData {
+  if (typeof FormData !== 'undefined' && d instanceof FormData) return true;
+  return !!d && typeof d === 'object' && typeof (d as FormData).append === 'function' && String(d) === '[object FormData]';
+}
+
 const callApi = (opts: Options = {}) => {
   const common = {
-    baseURL:'http://localhost:8080',
+    baseURL: 'http://localhost:8080',
     withCredentials: true as const,
   };
 
   const api = axios.create({
     ...common,
     headers: {
-      'Content-Type': 'application/json',
       ...(opts.cookieHeader ? { Cookie: opts.cookieHeader } : {}),
     },
     xsrfCookieName: 'XSRF-TOKEN',
@@ -41,8 +45,7 @@ const callApi = (opts: Options = {}) => {
     try {
       const res = await bootstrap.get('/csrf-token');
       csrfToken = res.data?.csrfToken ?? csrfToken;
-    } catch {
-    }
+    } catch {}
     return csrfToken;
   };
 
@@ -53,6 +56,16 @@ const callApi = (opts: Options = {}) => {
     }
     const headers = (config.headers = AxiosHeaders.from(config.headers));
     if (csrfToken) headers.set('X-XSRF-TOKEN', csrfToken);
+    const sendingFormData = isBrowserFormData(config.data);
+
+    if (sendingFormData) {
+      headers.delete('Content-Type');
+      headers.delete('content-type');
+    } else {
+      if (!headers.has('Content-Type')) {
+        headers.set('Content-Type', 'application/json');
+      }
+    }
     return config;
   });
 
