@@ -18,40 +18,105 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { TbZoomQuestion } from 'react-icons/tb';
 
 export default function UserCapsulesIndex() {
-  const params = useSearchParams();
+  const searchParams = useSearchParams();
   const router = useRouter();
   const [capsules, setCapsules] = useState<GetCapsulesResponse>();
   const [loading, setLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>('');
 
-  useEffect(() => {
-    setLoading(true);
+  const currentPage = Number(searchParams.get('page') || 1);
 
-    async function fetchCapsules() {
-      let res;
+  const pushWithParams = (mutator: (p: URLSearchParams) => void) => {
+    const params = new URLSearchParams(searchParams.toString());
+    mutator(params);
+    const qs = params.toString();
+    router.push(qs ? `/dashboard/user-capsules?${qs}` : `/dashboard/user-capsules`);
+  };
+
+  const buildPageList = (total: number, curr: number): (number | '...')[] => {
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+
+    const res: (number | '...')[] = [];
+    const add = (v: number | '...') => {
+      if (res[res.length - 1] !== v) res.push(v);
+    };
+
+    add(1);
+    if (curr > 4) add('...');
+    for (let p = Math.max(2, curr - 1); p <= Math.min(total - 1, curr + 1); p++) add(p);
+    if (curr < total - 3) add('...');
+    add(total);
+    return res;
+  };
+
+  const goToPage = (p: number) => {
+    if (!capsules) return;
+    const totalPages = capsules.pagination.pages;
+    const target = Math.min(Math.max(1, p), totalPages);
+    pushWithParams((params) => {
+      params.set('page', String(target));
+    });
+  };
+
+  const goNext = () => goToPage(currentPage + 1);
+  const goPrev = () => goToPage(currentPage - 1);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
       try {
-        if (search.trim() !== '' || params) {
-          res = await callApi().get(`/capsules?${params}`);
-        } else {
-          res = await callApi().get(`/capsules`);
-        }
-        if (res.status === 200) {
-          const capsules = res.data;
-          setSearch('');
-          setCapsules(capsules);
-          setLoading(false);
+        const params = new URLSearchParams(searchParams.toString());
+        if (!params.get('page')) params.set('page', '1');
+
+        const res = await callApi().get(`/capsules?${params.toString()}`);
+        if (!cancelled && res.status === 200) {
+          setCapsules(res.data);
         }
       } catch (error) {
         console.error(error);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [searchParams]);
+
+  const performSearchAction = () => {
+    const q = search.trim();
+
+    if (q.length > 0) {
+      pushWithParams((params) => {
+        params.set('q', q);
+        params.set('page', '1');
+      });
+      setSearch('');
+      return;
     }
 
-    fetchCapsules();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params, router]);
+    if (searchParams.get('q')) {
+      pushWithParams((params) => {
+        params.delete('q');
+        params.set('page', '1');
+      });
+      setSearch('');
+      return;
+    }
+  };
 
+  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (!e.nativeEvent.isComposing && e.key === 'Enter') {
+      performSearchAction();
+    }
+  };
+
+  const getButtonLabel = () => {
+    if (search.trim().length > 0) return 'جستجو';
+    if (searchParams.get('q')) return 'پاک کردن';
+    return 'جستجو';
+  };
 
   if (loading)
     return (
@@ -61,34 +126,23 @@ export default function UserCapsulesIndex() {
       </div>
     );
 
-  const handleSearch = () => {
-    if (search.trim() !== '') {
-      router.push(`/dashboard/user-capsules?q=${search}`);
-    } else if (search.trim() === '') {
-      router.push(`/dashboard/user-capsules`);
-    }
-  };
-
-  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
-    if (!e.nativeEvent.isComposing && e.key === 'Enter' && search.trim() !== '') {
-      router.push(`/dashboard/user-capsules?q=${search}`);
-    }
-  };
-
   return (
-    <section className="flex flex-col h-full gap-10">
+    <section className="flex flex-col min-h-screen h-full gap-10">
       <div className="flex flex-col h-full min-h-screen justify-start gap-10">
+        {/* هدر و جستجو */}
         <div className="flex lg:flex-row flex-col justify-between lg:items-center gap-4">
           <span className='text-foreground text-xl pr-4 relative font-bold after:content-[""] after:h-2 after:w-2 after:rounded-full after:absolute after:bg-foreground  after:right-0 after:top-1/2 after:-translate-y-1/2'>کپسول های شما</span>
           <div className="lg:w-2/3 relative flex gap-1 items-center">
-            <Button onClick={handleSearch} className="cursor-pointer">
-              {params.size !== 0 ? 'پاک کردن' : 'جستجو'}
+            <Button onClick={performSearchAction} className="cursor-pointer">
+              {getButtonLabel()}
             </Button>
-            <Input value={search} onKeyDown={(e) => handleKeyDown(e)} onChange={(e) => setSearch(e.target.value)} className="bg-white dark:bg-slate-900" type="text" placeholder="کپسول مورد نظر خودت رو جستجو کن" />
-            <IoIosSearch onClick={handleSearch} className="text-3xl cursor-pointer hover:animate-caret-blink absolute left-0 ml-3 text-foreground/70" />
+            <Input value={search} onKeyDown={handleKeyDown} onChange={(e) => setSearch(e.target.value)} className="bg-white dark:bg-slate-900" type="text" placeholder="کپسول مورد نظر خودت رو جستجو کن" />
+            <IoIosSearch onClick={performSearchAction} className="text-3xl cursor-pointer hover:animate-caret-blink absolute left-0 ml-3 text-foreground/70" />
           </div>
         </div>
-        {capsules && capsules?.items.length <= 0 ? (
+
+        {/* نتایج */}
+        {capsules && capsules.items.length <= 0 ? (
           <div className="flex flex-col items-center justify-center w-full h-full text-lg md:text-2xl text-foreground/50 gap-2">
             <TbZoomQuestion className="text-7xl" />
             <span>متاسفانه نتیجه‌ای برای جستجوی شما پیدا نشد</span>
@@ -103,7 +157,11 @@ export default function UserCapsulesIndex() {
                 <CardHeader>
                   <CardTitle className="text-center text-xl flex items-center justify-center gap-2 text-foreground">
                     {item?.access?.visibility === 'public' ? 'کپسول عمومی' : 'کپسول خصوصی'}
-                    {item.access?.unlockAt && <span className="text-2xl text-secondary">{item.access?.unlockAt ? <MdOutlineAccessTime /> : null}</span>}
+                    {item.access?.unlockAt && (
+                      <span className="text-2xl text-secondary">
+                        <MdOutlineAccessTime />
+                      </span>
+                    )}
                   </CardTitle>
                   <CardDescription className="text-center">
                     <p className="text-foreground font-medium">
@@ -129,31 +187,40 @@ export default function UserCapsulesIndex() {
             ))}
           </div>
         )}
-        <div className="self-center mt-auto">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationNext className="bg-primary dark:hover:text-foreground text-background hover:bg-foreground hover:text-background" href="#" />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem className="space-x-1">
-                <PaginationLink className="bg-primary dark:hover:text-foreground text-background hover:bg-foreground hover:text-background" href="#">
-                  1
-                </PaginationLink>
-                <PaginationLink className="bg-primary dark:hover:text-foreground text-background hover:bg-foreground hover:text-background" href="#">
-                  2
-                </PaginationLink>
-              </PaginationItem>
 
-              <PaginationItem>
-                <PaginationPrevious className="bg-primary dark:hover:text-foreground text-background hover:bg-foreground hover:text-background" href="#" />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
+        {/* Pagination */}
+        {capsules && capsules.pagination.pages > 1 && (
+          <div className="self-center mt-auto">
+            <Pagination dir="rtl">
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious onClick={goPrev} className="bg-primary text-background hover:bg-foreground hover:text-background disabled:opacity-50" href="#" />
+                </PaginationItem>
+
+                {buildPageList(capsules.pagination.pages, currentPage).map((p, idx) =>
+                  p === '...' ? (
+                    <PaginationItem key={`dots-${idx}`}>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  ) : (
+                    <PaginationItem key={p}>
+                      <PaginationLink onClick={() => goToPage(p)} aria-current={p === currentPage ? 'page' : undefined} className={`${p === currentPage ? 'bg-foreground text-background' : 'bg-primary text-background hover:bg-foreground hover:text-background'}`} href="#">
+                        {p}
+                      </PaginationLink>
+                    </PaginationItem>
+                  )
+                )}
+
+                <PaginationItem>
+                  <PaginationNext onClick={goNext} className="bg-primary text-background hover:bg-foreground hover:text-background disabled:opacity-50" href="#" />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
       </div>
+
+      {/* فیلترها (sidebar شناور) */}
       <div className="fixed flex items-center justify-center text-3xl text-foreground/80 bg-primary shadow-xl ring ring-background w-12 h-12 rounded-full left-10 bottom-10 cursor-pointer hover:text-background/80">
         <DashboardCategorySidebar />
       </div>

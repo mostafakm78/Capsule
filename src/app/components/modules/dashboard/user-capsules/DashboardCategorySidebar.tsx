@@ -6,9 +6,9 @@ import { IoFilterSharp } from 'react-icons/io5';
 import { Bungee } from 'next/font/google';
 import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
-import { usePathname, useRouter } from 'next/navigation';
+import { ReadonlyURLSearchParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { CategoryItem, LinkProps } from '@/lib/types';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import callApi from '@/app/services/callApi';
 import { Button } from '@/components/ui/button';
@@ -20,9 +20,9 @@ const bungee = Bungee({
 });
 
 const sortLinks: LinkProps[] = [
-  { link: '/', title: 'همه کپسول ها' },
-  { link: '/', title: 'جدید ترین' },
-  { link: '/', title: 'قدیمی ترین' },
+  { link: '/dashboard/user-capsules', title: 'همه کپسول ها' },
+  { link: `/dashboard/user-capsules?sort=newest`, title: 'جدید ترین' },
+  { link: `/dashboard/user-capsules?sort=oldest`, title: 'قدیمی ترین' },
 ];
 
 const capsuleType = [
@@ -32,55 +32,95 @@ const capsuleType = [
 
 type CpType = (typeof capsuleType)[number]['value'] | '';
 
+function parseCategoriesFromParams(sp: ReadonlyURLSearchParams): string[] {
+  const multi = sp.getAll('categoryItem');
+  const single = sp.get('categoryItem') || '';
+  const fromComma = single
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  const values = (multi.length ? multi : fromComma).map(String);
+  return Array.from(new Set(values));
+}
+
 export function DashboardCategorySidebar() {
   const router = useRouter();
   const pathName = usePathname();
+  const searchParams = useSearchParams();
+
   const [categoryItem, setCategoryItem] = useState<CategoryItem[] | null>(null);
   const [selectCategories, setSelectCategories] = useState<string[]>([]);
   const [CpType, setCpType] = useState<CpType>('');
 
-
   useEffect(() => {
-    async function getCategories() {
+    (async () => {
       try {
         const res = await callApi().get('/capsules/categories');
-        if (res.status === 200) {
-          setCategoryItem(res.data.categoryItems);
-        }
+        if (res.status === 200) setCategoryItem(res.data.categoryItems);
       } catch (error) {
         console.error(error);
       }
-    }
-
-    getCategories();
+    })();
   }, []);
 
+  const lastHrefRef = useRef<string>('');
+  useEffect(() => {
+    const hrefNow = `${pathName}?${searchParams.toString()}`;
+    if (lastHrefRef.current === hrefNow) return;
+    lastHrefRef.current = hrefNow;
+
+    setSelectCategories(parseCategoriesFromParams(searchParams));
+
+    const vis = searchParams.get('visibility');
+    setCpType(vis === 'public' || vis === 'private' ? vis : '');
+  }, [pathName, searchParams]);
+
   function toggleCategory(id: string, checked: boolean) {
-    setSelectCategories((prev) => (checked ? [...new Set([...prev, id])] : prev.filter((x) => x !== id)));
+    const idStr = String(id);
+    setSelectCategories((prev) => (checked ? Array.from(new Set([...prev, idStr])) : prev.filter((x) => x !== idStr)));
   }
 
+  const pushWithParams = (mutator: (p: URLSearchParams) => void) => {
+    const params = new URLSearchParams(searchParams.toString());
+    mutator(params);
+    const qs = params.toString();
+    router.push(qs ? `/dashboard/user-capsules?${qs}` : '/dashboard/user-capsules');
+  };
+
   const handleCategoryItem = () => {
-    if (selectCategories.length !== 0) {
-      router.push(`/dashboard/user-capsules?categoryItem=${selectCategories}`);
+    if (selectCategories.length === 0) {
+      router.push('/dashboard/user-capsules');
+      return;
     }
+    pushWithParams((params) => {
+      params.delete('categoryItem');
+
+      selectCategories.forEach((id) => params.append('categoryItem', id));
+    });
   };
 
   const handleCpType = () => {
-    if (CpType === 'private' || CpType === 'public') {
-      router.push(`/dashboard/user-capsules?visibility=${CpType}`);
-    }
+    if (CpType !== 'public' && CpType !== 'private') return;
+    pushWithParams((params) => {
+      params.set('visibility', CpType);
+    });
   };
 
   const linkClasses = (href: string) => {
-    const isActive = href === '/' ? pathName === '/' : pathName.startsWith(href);
+    const isSamePath = pathName === '/dashboard/user-capsules';
+    const hrefQuery = href.split('?')[1] || '';
+    const hrefSort = new URLSearchParams(hrefQuery).get('sort');
+    const currentSort = searchParams.get('sort');
+    const isActive = isSamePath && (hrefSort ? currentSort === hrefSort : !currentSort);
     return `
-      text-foreground/90 pr-4 py-1 text-base
+      text-foreground/90 pr-6 py-1 text-base
       relative hover:text-primary duration-300
       after:content-[''] after:bg-foreground/70 after:absolute
-      after:right-0 after:h-2 after:w-2 after:rounded-full
+      after:right-2 after:h-2 after:w-2 after:rounded-full
       after:top-1/2 after:-translate-y-1/2
       hover:after:bg-primary after:duration-300
-      ${isActive ? 'bg-primary text-background' : ''}
+      ${isActive ? 'bg-primary rounded-md text-background' : ''}
     `;
   };
 
@@ -105,10 +145,10 @@ export function DashboardCategorySidebar() {
             <div>
               <h6 className="text-xl font-semibold">مرتب سازی بر اساس</h6>
               <Separator className="w-full bg-foreground/20 my-4" />
-              <div className="flex flex-col gap-2 max-h-[250px] overflow-y-auto">
-                {sortLinks.map((linkItem, i) => (
-                  <Link key={i} href={linkItem.link} className={linkClasses(linkItem.link)}>
-                    {linkItem.title}
+              <div className="flex flex-col gap-2">
+                {sortLinks.map((item, i) => (
+                  <Link key={i} href={item.link} className={linkClasses(item.link)}>
+                    {item.title}
                   </Link>
                 ))}
               </div>
@@ -129,7 +169,7 @@ export function DashboardCategorySidebar() {
                         className={`
                         flex items-center gap-3 cursor-pointer rounded-md px-2 py-1${checked ? 'bg-primary/10' : 'hover:bg-foreground/5'}`}
                       >
-                        <Checkbox id={`cat-${item._id}`} checked={checked} onCheckedChange={(val) => toggleCategory(item._id, Boolean(val))} />
+                        <Checkbox id={`cat-${item._id}`} className="cursor-pointer" checked={checked} onCheckedChange={(val) => toggleCategory(item._id, Boolean(val))} />
                         <span className="text-sm">{item.title}</span>
                       </label>
                     );

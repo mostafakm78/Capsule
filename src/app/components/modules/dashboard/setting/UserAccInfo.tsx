@@ -8,9 +8,11 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { MdOutlineCameraAlt } from 'react-icons/md';
 import BirthDateInputs from './BirthDateInput';
+import { useAppSelector } from '@/app/hooks/hook';
 
 export default function UserAccInfo() {
   const [preview, setPreview] = useState<string | null>(null);
+  const { user } = useAppSelector((state) => state.user);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -29,11 +31,11 @@ export default function UserAccInfo() {
         <div className="lg:w-1/2 w-full flex flex-col gap-4">
           <Label className="flex flex-col items-start text-base text-foreground/80">
             نام و نام‌خانوادگی شما
-            <Input type="text" placeholder="نام کامل شما" className="md:text-sm md:placeholder:text-sm" />
+            <Input type="text" defaultValue={user?.name ?? ''} placeholder="نام کامل شما" className="md:text-sm md:placeholder:text-sm" />
           </Label>
           <Label className="flex flex-col items-start text-base text-foreground/80">
             ایمیل شما
-            <Input type="text" placeholder="google@gmail.com" className="md:text-sm md:placeholder:text-sm" />
+            <Input type="text" defaultValue={user?.email ?? ''} placeholder="google@gmail.com" className="md:text-sm md:placeholder:text-sm" />
           </Label>
         </div>
         <div className="flex flex-col items-center gap-2 w-1/2">
@@ -51,26 +53,26 @@ export default function UserAccInfo() {
         </div>
       </div>
       <div className="space-y-1">
-            <h4 className="text-foreground/95 pr-5 relative text-xl after:content-[''] after:absolute after:w-2.5 after:h-2.5 after:bg-foreground/80 after:rounded-full after:right-0 after:top-1/2 after:-translate-y-1/2">اطلاعات فردی</h4>
-          </div>
-          <div className="flex flex-col w-full items-center gap-10">
-            <div className="flex lg:flex-row flex-col w-full gap-10">
-              <Label className="flex lg:w-1/2 w-full flex-col items-start text-base text-foreground/80">
-                تاریخ تولد
-                <BirthDateInputs />
-              </Label>
-              <Label className="flex lg:w-1/2 w-full flex-col items-start text-base text-foreground/80">
-                تحصیلات
-                <Input type="text" placeholder="تحصیلات شما" className="md:text-sm md:placeholder:text-sm" />
-              </Label>
-            </div>
-            <Label className="flex w-full flex-col lg:items-center items-start text-base text-foreground/80">
-              درباره من
-              <Textarea placeholder="توضیحی مختصر درباره خودتون و علاقه‌مندی هاتون" className="md:text-sm md:placeholder:text-sm lg:w-8/12 w-full h-[200px]" />
-            </Label>
-          </div>
-      <div className='self-center'>
-        <Button className='cursor-pointer'>ثبت تغییرات</Button>
+        <h4 className="text-foreground/95 pr-5 relative text-xl after:content-[''] after:absolute after:w-2.5 after:h-2.5 after:bg-foreground/80 after:rounded-full after:right-0 after:top-1/2 after:-translate-y-1/2">اطلاعات فردی</h4>
+      </div>
+      <div className="flex flex-col w-full items-center gap-10">
+        <div className="flex lg:flex-row flex-col w-full gap-10">
+          <Label className="flex lg:w-1/2 w-full flex-col items-start text-base text-foreground/80">
+            تاریخ تولد
+            <BirthDateInputs />
+          </Label>
+          <Label className="flex lg:w-1/2 w-full flex-col items-start text-base text-foreground/80">
+            تحصیلات
+            <Input type="text" placeholder="تحصیلات شما" className="md:text-sm md:placeholder:text-sm" />
+          </Label>
+        </div>
+        <Label className="flex w-full flex-col lg:items-center items-start text-base text-foreground/80">
+          درباره من
+          <Textarea placeholder="توضیحی مختصر درباره خودتون و علاقه‌مندی هاتون" className="md:text-sm md:placeholder:text-sm lg:w-8/12 w-full h-[200px]" />
+        </Label>
+      </div>
+      <div className="self-center">
+        <Button className="cursor-pointer">ثبت تغییرات</Button>
       </div>
     </>
   );
