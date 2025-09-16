@@ -4,7 +4,7 @@ import { PiSubtitlesFill } from 'react-icons/pi';
 import { FaImage } from 'react-icons/fa6';
 import { GrStatusInfo } from 'react-icons/gr';
 import dynamic from 'next/dynamic';
-import { ComponentType, JSX, useRef, useState } from 'react';
+import { ComponentType, JSX, useCallback, useEffect, useRef, useState } from 'react';
 import { TabButton } from './TabButton';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
@@ -15,6 +15,9 @@ import callApi from '@/app/services/callApi';
 import useCustomToast from '@/app/hooks/useCustomToast';
 import { AxiosError } from 'axios';
 import checkUnlockAt from '@/app/hooks/checkUnlockAt';
+import { DeleteCpModal } from './DeleteCpModal';
+import { useRouter } from 'next/navigation';
+import { PulseLoader } from 'react-spinners';
 
 const CapsuleInfo = dynamic(() => import('./CapsuleInfo'));
 const CapsuleTags = dynamic(() => import('./CapsuleTags'));
@@ -35,9 +38,18 @@ const tabs: { id: dashboardCreateCapsuleTab; label: string; icon: ComponentType<
 ];
 
 export default function CreateCapsulePage() {
+  const router = useRouter();
   const [tab, setTab] = useState<dashboardCreateCapsuleTab>('info');
+  const [loading, setLoading] = useState<boolean>(true);
   const { capsule, mode } = useSelector((state: RootState) => state.editOrcreate);
   const showToast = useCustomToast();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   let isTimedPassed = false;
   if (capsule?.access?.unlockAt) {
@@ -45,9 +57,9 @@ export default function CreateCapsulePage() {
   }
 
   const fileRef = useRef<File | null>(null);
-  const onFileSelected = (file: File | null) => {
+  const onFileSelected = useCallback((file: File | null) => {
     fileRef.current = file;
-  };
+  }, []);
 
   const color = capsule?.color;
   let colorCode;
@@ -94,8 +106,10 @@ export default function CreateCapsulePage() {
     appendIf('extra', capsule?.extra);
     appendIf('color', capsule?.color);
     appendIf('categoryItem', categoryItem);
+    if (capsule?.removeImage === true) appendIf('removeImage', capsule.removeImage);
 
     const file = fileRef.current;
+    console.log(file);
 
     if (file) {
       fd.append('image', file);
@@ -119,12 +133,16 @@ export default function CreateCapsulePage() {
       if (mode === 'edit' && capsule?._id) {
         const res = await callApi().patch(`/capsules/${capsule._id}`, fd);
         if (res.status === 200) {
-          return showToast({ message: 'کپسول شما با موفقیت بروزرسانی شد ✅', bg: 'bg-green-300' });
+          showToast({ message: 'کپسول شما با موفقیت بروزرسانی شد ✅', bg: 'bg-green-300' });
+          router.push('/dashboard/user-capsules');
+          return;
         }
       } else {
         const res = await callApi().post('/capsules', fd);
         if (res.status === 201) {
-          return showToast({ message: 'کپسول شما با موفقیت ساخته شد ✅', bg: 'bg-green-300' });
+          showToast({ message: 'کپسول شما با موفقیت ساخته شد ✅', bg: 'bg-green-300' });
+          router.push('/dashboard/user-capsules');
+          return;
         }
       }
     } catch (error) {
@@ -150,8 +168,20 @@ export default function CreateCapsulePage() {
     }
   };
 
+  useEffect(() => {
+    fileRef.current = null;
+  }, [capsule?._id]);
+
+  if (loading)
+    return (
+      <div className="flex items-center justify-center gap-2 h-full">
+        <span>درحال بارگزاری</span>
+        <PulseLoader size={7} />
+      </div>
+    );
+
   return (
-    <section key={mode} className="flex flex-col h-full gap-10">
+    <section key={mode && capsule?._id} className="flex flex-col h-full gap-10">
       <span className='text-foreground text-xl pr-4 relative font-bold after:content-[""] after:h-2 after:w-2 after:rounded-full after:absolute after:bg-foreground after:right-0 after:top-1/2 after:-translate-y-1/2'>{mode === 'create' ? 'ساخت کپسول' : 'ویرایش کپسول'}</span>
       <div className="flex lg:flex-row flex-col h-full justify-start gap-10">
         {/* Desktop Tabs */}
@@ -188,8 +218,9 @@ export default function CreateCapsulePage() {
         <div className={`h-full lg:w-9/12 w-full ${colorCode} rounded-lg shadow-md shadow-black/5`}>{tab === 'info' ? <CapsuleInfo onFileSelected={onFileSelected} /> : tab === 'tags' ? <CapsuleTags /> : <CapsuleStatus />}</div>
       </div>
 
-      <div className="w-full flex justify-center mt-8">
-        <Button onClick={handleSubmit} disabled={isTimedPassed} className="cursor-pointer w-1/3 py-6 text-lg">
+      <div className="w-full flex justify-center mt-8 gap-4">
+        <DeleteCpModal />
+        <Button onClick={handleSubmit} disabled={isTimedPassed} className="cursor-pointer md:w-1/4 py-6 text-lg">
           {mode === 'edit' ? 'ویرایش کپسول' : 'ساخت کپسول'}
         </Button>
       </div>

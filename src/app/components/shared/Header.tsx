@@ -10,8 +10,10 @@ import LoginButton from './LoginButton';
 import HeaderLink from './HeaderLink';
 import { LinkProps } from '@/lib/types';
 import UserPopover from './UserPopover';
-import { useRef } from 'react';
-import { useAppSelector } from '@/app/hooks/hook';
+import { useEffect, useRef } from 'react';
+import { useAppDispatch, useAppSelector } from '@/app/hooks/hook';
+import Loadings from './loadings';
+import { fetchMe } from '@/app/store/userThunk';
 
 gsap.registerPlugin(useGSAP);
 
@@ -28,8 +30,17 @@ const headerLinks: LinkProps[] = [
 
 export default function Header({ bungee }: Logo) {
   const pathname = usePathname();
+  const dispatch = useAppDispatch();
   const scope = useRef<HTMLDivElement>(null);
-  const { user } = useAppSelector((state) => state.user);
+  const { user, loading } = useAppSelector((state) => state.user);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        await dispatch(fetchMe()).unwrap();
+      } catch {}
+    })();
+  }, [dispatch]);
 
   useGSAP(
     () => {
@@ -61,6 +72,9 @@ export default function Header({ bungee }: Logo) {
     },
     { scope }
   );
+
+  if (loading) return <Loadings />;
+  if (!user) return null;
 
   return (
     <header

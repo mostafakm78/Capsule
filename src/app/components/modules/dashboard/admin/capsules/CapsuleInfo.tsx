@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { MdOutlineCameraAlt } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
-import { setColor } from '@/app/store/createCapsule';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -65,12 +64,12 @@ export default function CapsuleInfo() {
             onValueChange={(value: string) => {
               setSelected(value);
               const colorCode = colors.find((c) => c.id === value)?.colorCode;
-              if (colorCode) dispatch(setColor(colorCode));
+            //   if (colorCode) dispatch(setColo(colorCode));
             }}
             className="flex gap-4"
           >
             {colors.map(({ id, colorCode }: dashboardCreateCapsuleColorOption) => (
-              <label onClick={() => dispatch(setColor(colorCode))} key={id} htmlFor={id} className="cursor-pointer relative">
+              <label  key={id} htmlFor={id} className="cursor-pointer relative">
                 <RadioGroupItem id={id} value={id} className="peer hidden" aria-label={id} />
                 <div className={`${colorCode} ring ring-foreground h-5 w-5 md:w-10 md:h-10 rounded-full peer-checked:border-primary transition-all`} title={id} />
               </label>

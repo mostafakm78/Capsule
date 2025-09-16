@@ -38,7 +38,7 @@ type GroupView = { id: string; title: string; items: { id: string; title: string
 
 export default function CapsuleTags() {
   const dispatch = useAppDispatch();
-  const {capsule , mode} = useSelector((state: RootState) => state.editOrcreate);
+  const { capsule, mode } = useSelector((state: RootState) => state.editOrcreate);
   const showToast = useCustomToast();
   const [selected, setSelected] = useState<string>(capsule?.categoryItem?._id || '');
   const [categories, setCategories] = useState<CategoryItems[] | null>(null);
@@ -88,12 +88,12 @@ export default function CapsuleTags() {
   };
 
   let isTimedPassed = false;
-    if (capsule?.access?.unlockAt) {
-      isTimedPassed = checkUnlockAt(capsule.access.unlockAt);
-      if (isTimedPassed === true) {
-        return <IsTimePassed time={capsule.access.unlockAt} />;
-      }
+  if (capsule?.access?.unlockAt && capsule.createdAt) {
+    isTimedPassed = checkUnlockAt(capsule.access.unlockAt);
+    if (isTimedPassed === true) {
+      return <IsTimePassed time={capsule.access.unlockAt} createdAt={capsule.createdAt} />;
     }
+  }
 
   return (
     <div className="flex w-full p-8 h-full flex-col">

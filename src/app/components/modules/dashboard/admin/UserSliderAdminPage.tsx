@@ -16,15 +16,7 @@ interface CardProps {
 export default function UserSliderAdmin({ setSwiperApi, setIsBeginning, setIsEnd }: CardProps) {
   return (
     <div
-      className="w-full lg:px-4 mx-auto
-                max-w-[250px]
-                sm:max-w-[250px]
-                md:max-w-[730px]
-                lg:max-w-[730px]
-                xl:max-w-4xl
-                2xl:max-w-7xl
-                overflow-x-hidden"
-    >
+      className="w-full lg:px-4 mx-auto max-w-[250px] sm:max-w-[250px] md:max-w-[730px] lg:max-w-[730px] xl:max-w-4xl 2xl:max-w-7xl overflow-x-hidden">
       <Swiper
         dir="rtl"
         onSwiper={(swiper) => {

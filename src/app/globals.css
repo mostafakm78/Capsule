@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+@import 'swiper/css';
+
 
 @font-face {
   font-family: Vazirmatn;

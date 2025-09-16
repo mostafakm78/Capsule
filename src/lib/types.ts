@@ -18,7 +18,7 @@ export interface CategoryItem {
   group?: string;
   title?: string;
   updatedAt?: string;
-  _id?: string;
+  _id: string;
 }
 
 export interface Capsule {
@@ -35,6 +35,7 @@ export interface Capsule {
   image?: string | null;
   avatarFile?: File | null;
   extra?: string | null;
+  removeImage?: boolean | '';
 }
 
 // ========= User (Safe) =========

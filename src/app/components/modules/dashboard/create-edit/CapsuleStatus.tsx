@@ -71,10 +71,10 @@ export default function CapsuleStatus() {
   };
 
   let isTimedPassed = false;
-  if (capsule?.access?.unlockAt) {
+  if (capsule?.access?.unlockAt && capsule.createdAt) {
     isTimedPassed = checkUnlockAt(capsule.access.unlockAt);
     if (isTimedPassed === true) {
-      return <IsTimePassed time={capsule.access.unlockAt} />;
+      return <IsTimePassed time={capsule.access.unlockAt} createdAt={capsule.createdAt} />;
     }
   }
 

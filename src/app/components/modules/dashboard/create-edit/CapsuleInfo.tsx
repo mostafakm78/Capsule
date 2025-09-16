@@ -14,6 +14,7 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { MdOutlineCameraAlt } from 'react-icons/md';
 import IsTimePassed from './IsTimePassed';
+import { IoClose } from 'react-icons/io5';
 
 type Color = 'default' | 'red' | 'green' | 'blue' | 'yellow';
 
@@ -38,21 +39,27 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
   const [description, setDescription] = useState('');
   const [extra, setExtra] = useState('');
   const [selected, setSelected] = useState<Color>('default');
-
+  const [rmvImage, setRmvImage] = useState<boolean>(false);
   const [preview, setPreview] = useState<string | null>(null);
   const lastBlobUrl = useRef<string | null>(null);
 
   useEffect(() => {
     if (!capsule) return;
-    setTitle(capsule.title || '');
-    setDescription(capsule.description || '');
-    setExtra(capsule.extra || '');
-    setSelected((capsule.color as Color) || 'default');
+    if (capsule) {
+      setTitle(capsule.title || '');
+      setDescription(capsule.description || '');
+      setExtra(capsule.extra || '');
+      setSelected((capsule?.color as Color) || 'default');
 
-    if (capsule.image && !preview?.startsWith('blob:')) {
-      setPreview(`http://localhost:8080/images/${capsule.image}`);
+      if (rmvImage) {
+        setPreview(null);
+      } else if (capsule.image) {
+        setPreview(`http://localhost:8080/images/${capsule.image}`);
+      } else {
+        setPreview(null);
+      }
     }
-  }, [mode, capsule]);
+  }, [mode, capsule, rmvImage]);
 
   useEffect(() => {
     return () => {
@@ -60,15 +67,14 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
         URL.revokeObjectURL(lastBlobUrl.current);
         lastBlobUrl.current = null;
       }
-
-      onFileSelected?.(null);
     };
-  }, []);
+  }, [onFileSelected]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setRmvImage(false);
     onFileSelected?.(file);
 
     const url = URL.createObjectURL(file);
@@ -88,16 +94,17 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
         description,
         extra,
         color: selected,
+        removeImage: mode === 'edit' && rmvImage ? true : false,
       })
     );
     showToast('تنظیمات کپسول شما ثبت شد ✅');
   };
 
   let isTimedPassed = false;
-  if (capsule?.access?.unlockAt) {
+  if (capsule?.access?.unlockAt && capsule.createdAt) {
     isTimedPassed = checkUnlockAt(capsule.access.unlockAt);
     if (isTimedPassed === true) {
-      return <IsTimePassed time={capsule.access.unlockAt} />;
+      return <IsTimePassed time={capsule.access.unlockAt} createdAt={capsule.createdAt} />;
     }
   }
 
@@ -125,8 +132,29 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
 
         <div className="flex flex-col gap-2">
           <span className="text-base text-foreground/80 font-medium">
-            <span className="flex items-center gap-3">
-              عکس<span className="text-red-500 text-xs">حداکثر 5Mb</span>
+            <span className="flex items-center justify-between px-1">
+              <div className="flex items-center gap-3">
+                عکس<span className="text-red-500 text-xs underline underline-offset-2">حداکثر 5Mb</span>
+              </div>
+              {preview && (
+                <span
+                  onClick={() => {
+                    setRmvImage(true);
+                    setPreview(null);
+
+                    if (lastBlobUrl.current) {
+                      URL.revokeObjectURL(lastBlobUrl.current);
+                      lastBlobUrl.current = null;
+                    }
+
+                    onFileSelected?.(null);
+                  }}
+                  className="flex items-center text-xs cursor-pointer hover:scale-105 duration-300 bg-red-200 rounded-lg p-1"
+                >
+                  حذف عکس
+                  <IoClose className="text-base" />
+                </span>
+              )}
             </span>
           </span>
 

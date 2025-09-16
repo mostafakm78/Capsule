@@ -23,7 +23,7 @@ const editOrcreateCapsuleSlice = createSlice({
       state.id = action.payload;
     },
     setCapsule(state, action: PayloadAction<Partial<Capsule>>) {
-      state.capsule = { ...(state.capsule ?? {}), ...action.payload };
+      state.capsule = action.payload;
     },
     resetCapsule() {
       return initialState;

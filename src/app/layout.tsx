@@ -3,10 +3,7 @@ import './globals.css';
 import { ThemeProvider } from './components/providers/Theme-provider';
 import { ReduxProvider } from './components/providers/Redux-Provider';
 import { Toaster } from '@/components/ui/sonner';
-import 'swiper/css';
 import ProgressBarLoading from './components/shared/Progressbar';
-import { UserHydrator } from './services/UserHydrator';
-// import { UserHydrator } from './services/UserHydrator';
 
 export const metadata: Metadata = {
   title: 'Capsule',

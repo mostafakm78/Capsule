@@ -13,10 +13,14 @@ import dynamic from 'next/dynamic';
 import { GetCapsulesResponse } from '@/lib/types';
 import { useAppSelector } from '@/app/hooks/hook';
 import Loadings from '@/app/components/shared/loadings';
-import { useEffect, useState } from 'react';
-const SliderHomePageDashboard = dynamic(() => import('./SliderHomePaga'), { ssr: false, loading: () => <div className="h-24 rounded-lg bg-foreground/5" /> });
+import { useState } from 'react';
+const SliderHomePageDashboard = dynamic(() => import('./SliderHomePaga'), { ssr: false });
 
-export default function HomePagePanel({ capsules }: { capsules: GetCapsulesResponse }) {
+type Props = {
+  capsules: GetCapsulesResponse;
+};
+
+export default function HomePagePanel({ capsules }: Props) {
   const { user } = useAppSelector((state) => state.user);
   const [userAlert, setuserAlert] = useState<string[]>(['name', 'flag', 'avatar']);
 
@@ -53,7 +57,7 @@ export default function HomePagePanel({ capsules }: { capsules: GetCapsulesRespo
     return <Loadings />;
   }
 
-  const publicCapsules = capsules?.items.filter((item) => item?.access?.visibility === 'public');
+  const publicCapsules = capsules.items.filter((item) => item?.access?.visibility === 'public');
 
   let userFlag = null;
 
@@ -79,7 +83,7 @@ export default function HomePagePanel({ capsules }: { capsules: GetCapsulesRespo
     : '';
 
   return (
-    <section className="flex flex-col justify-center h-full gap-10">
+    <section className="flex flex-col justify-center h-full gap-10 overflow-hidden">
       {alerts.some((alert) => alert.show && userAlert.includes(alert.id)) && (
         <div className="p-1 space-y-2 md:p-4">
           {alerts.map(
@@ -144,7 +148,9 @@ export default function HomePagePanel({ capsules }: { capsules: GetCapsulesRespo
           </div>
         </div>
       </div>
-      <div className={`flex flex-col w-full ${capsules ? '' : 'flex flex-col w-full items-center justify-center min-h-[300px] p-4'} min-h-[300px] p-4`}>{capsules ? <SliderHomePageDashboard capsules={capsules} /> : <span className="text-2xl">شما هنوز کپسولی ندارین !</span>}</div>
+      <div className={`flex flex-col w-full ${capsules ? '' : 'flex flex-col w-full items-center justify-center min-h-[300px] p-4'} min-h-[300px] p-4 overflow-visible`}>
+        {capsules ? <SliderHomePageDashboard capsules={capsules.items} /> : <span className="text-2xl">شما هنوز کپسولی ندارین !</span>}
+      </div>
       <div className="flex flex-col gap-4 p-4 px-6">
         <span className='text-foreground text-xl pr-4 relative font-bold after:content-[""] after:h-2 after:w-2 after:rounded-full after:absolute after:bg-foreground after:right-0 after:top-1/2 after:-translate-y-1/2'>کپسول جدید</span>
         <div className="flex gap-2 items-center py-4 px-2 border border-foreground/20 rounded-lg lg:w-2/3 w-full">
