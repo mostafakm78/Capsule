@@ -13,7 +13,7 @@ export default function HeaderLink({ text, link }: HeaderLinkProps) {
 
   if (link === '/' && pathName === '/') {
     activeLink = 'font-medium';
-  } else if (link === '/capsules' && pathName === '/capsules') {
+  } else if (link === '/capsules' && pathName.startsWith('/capsules')) {
     activeLink = 'font-medium';
   } else if (link === '/about-us' && pathName === '/about-us') {
     activeLink = 'font-medium';

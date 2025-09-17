@@ -35,9 +35,9 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
   const { mode, capsule } = useAppSelector((state) => state.editOrcreate);
   const showToast = useCustomToast();
 
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [extra, setExtra] = useState('');
+  const [title, setTitle] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [extra, setExtra] = useState<string>('');
   const [selected, setSelected] = useState<Color>('default');
   const [rmvImage, setRmvImage] = useState<boolean>(false);
   const [preview, setPreview] = useState<string | null>(null);
@@ -149,7 +149,7 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
 
                     onFileSelected?.(null);
                   }}
-                  className="flex items-center text-xs cursor-pointer hover:scale-105 duration-300 bg-red-200 rounded-lg p-1"
+                  className="flex items-center text-xs cursor-pointer hover:scale-105 duration-300 bg-red-400 text-background rounded-lg p-1"
                 >
                   حذف عکس
                   <IoClose className="text-base" />

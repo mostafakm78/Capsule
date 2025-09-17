@@ -64,7 +64,7 @@ export default function StepTwoForm({ anime }: { anime: string }) {
       try {
         const res = await callApi().post('/auth/login', values);
         if (res.status === 200) {
-          router.push('/dashboard/panel');
+          router.push('/');
         }
       } catch (err) {
         const error = err as AxiosError<ApiError>;
@@ -112,7 +112,7 @@ export default function StepTwoForm({ anime }: { anime: string }) {
         const res = await callApi().post('/auth/otp/verify', values);
         const response = res as AxiosResponse;
         if (response.status === 200) {
-          router.push('/dashboard/panel');
+          router.push('/');
         }
       } catch (err) {
         const error = err as AxiosError<ApiError>;

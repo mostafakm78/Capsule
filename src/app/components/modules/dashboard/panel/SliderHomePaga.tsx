@@ -36,8 +36,9 @@ export default function SliderHomePageDashboard({ capsules }: Props) {
           <FaLongArrowAltLeft className="text-2xl text-foreground group-hover:text-primary duration-300" />
         </Link>
       </div>
-      <div className="relative overflow-visible w-full lg:px-4 mx-auto max-w-[400px] md:max-w-[730px] lg:max-w-[730px] xl:max-w-5xl 2xl:max-w-6xl min-h-[400px]">
-        {capsules.length && (
+      <div className="relative overflow-visible w-full lg:px-4 mx-auto max-w-[400px] md:max-w-[430px] lg:max-w-[530px] xl:max-w-4xl 2xl:max-w-5xl min-h-[400px]">
+        {capsules.length <= 0 && <div></div>}
+        {capsules.length > 0 && (
           <Swiper
             dir="rtl"
             slidesPerView="auto"

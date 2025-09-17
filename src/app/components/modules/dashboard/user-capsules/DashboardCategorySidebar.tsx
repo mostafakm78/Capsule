@@ -20,7 +20,6 @@ const bungee = Bungee({
 });
 
 const sortLinks: LinkProps[] = [
-  { link: '/dashboard/user-capsules', title: 'همه کپسول ها' },
   { link: `/dashboard/user-capsules?sort=newest`, title: 'جدید ترین' },
   { link: `/dashboard/user-capsules?sort=oldest`, title: 'قدیمی ترین' },
 ];

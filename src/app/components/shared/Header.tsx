@@ -74,7 +74,6 @@ export default function Header({ bungee }: Logo) {
   );
 
   if (loading) return <Loadings />;
-  if (!user) return null;
 
   return (
     <header

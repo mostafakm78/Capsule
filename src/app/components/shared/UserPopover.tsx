@@ -12,7 +12,7 @@ export default function UserPopover() {
     <Popover>
       <PopoverTrigger className="cursor-pointer text-foreground/70 data-[state=open]:text-secondary">
         <Avatar className="h-10 w-10 ring-2 ring-secondary">
-          <AvatarImage src={user?.avatar ?? '/images/default.png'} />
+          <AvatarImage src={user?.avatar ? `http://localhost:8080/images/${user.avatar}` : '/images/default.png'} />
           <AvatarFallback>...</AvatarFallback>
         </Avatar>
       </PopoverTrigger>
@@ -20,13 +20,13 @@ export default function UserPopover() {
         <div className="flex items-center gap-3">
           <div>
             <Avatar className="h-12 w-12 ring-2 ring-secondary">
-              <AvatarImage src={user?.avatar ?? '/images/default.png'} />
+              <AvatarImage src={user?.avatar ? `http://localhost:8080/images/${user.avatar}` : '/images/default.png'} />
               <AvatarFallback>...</AvatarFallback>
             </Avatar>
           </div>
           <div className="flex flex-col gap-1.5">
             <span className={`font-bold text-base text-foreground/70 line-clamp-1`}>{user?.name ?? user?.email}</span>
-            <Link className="text-primary flex items-center gap-2 hover:text-foreground/80 duration-300" href="/dashboard/panel" target='_top'>
+            <Link className="text-primary flex items-center gap-2 hover:text-foreground/80 duration-300" href="/dashboard/panel" target="_top">
               مشاهده پنل کاربری
               <FaLongArrowAltLeft />
             </Link>

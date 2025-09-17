@@ -80,7 +80,7 @@ export default function CreateCapsulePage() {
     const fd = new FormData();
 
     const appendIf = (key: string, val: unknown) => {
-      if (val === undefined || val === null) return;
+      if (val === undefined || val === null || val === '') return;
 
       if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
         fd.append(key, String(val));
@@ -109,7 +109,6 @@ export default function CreateCapsulePage() {
     if (capsule?.removeImage === true) appendIf('removeImage', capsule.removeImage);
 
     const file = fileRef.current;
-    console.log(file);
 
     if (file) {
       fd.append('image', file);

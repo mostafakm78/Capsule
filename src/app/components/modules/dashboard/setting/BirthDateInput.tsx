@@ -1,79 +1,117 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import * as jalaali from 'jalaali-js';
 
-// تابع برای بررسی کبیسه بودن
-const isLeapYear = (year: number) => {
-  const mod = year % 33;
-  return [1, 5, 9, 13, 17, 22, 26, 30].includes(mod);
-};
+const PERSIAN_DIGITS = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
 
-// تعداد روزهای هر ماه شمسی
-const daysInMonth = (month: number, year: number) => {
-  if (month <= 6) return 31;
-  if (month <= 11) return 30;
-  return isLeapYear(year) ? 30 : 29;
-};
+const toPersianDigits = (input: string) => input.replace(/\d/g, (d) => PERSIAN_DIGITS[Number(d)]);
+const toEnglishDigits = (input: string) => input.replace(/[۰-۹]/g, (d) => String(PERSIAN_DIGITS.indexOf(d)));
 
-export default function BirthDateInputs() {
+const daysInMonth = (month: number, year: number) => jalaali.jalaaliMonthLength(year, month);
+
+interface Props {
+  birthday: string | Date | '';
+  setBirthday: (val: string) => void; // prop کامپوننت پدر
+}
+
+export default function BirthDateInputs({ birthday, setBirthday }: Props) {
   const [day, setDay] = useState('');
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
 
-  // فقط عدد بگیره
-  const onlyNumbers = (value: string) => value.replace(/\D/g, '');
+  const MIN_YEAR = 1250;
+  const MAX_YEAR = 1404;
+
+  // تبدیل prop به state داخلی
+  useEffect(() => {
+    if (!birthday) {
+      setDay('');
+      setMonth('');
+      setYear('');
+      return;
+    }
+
+    try {
+      let dt: Date;
+      if (birthday instanceof Date) dt = birthday;
+      else dt = new Date(birthday);
+
+      if (!isNaN(dt.getTime())) {
+        const { jy, jm, jd } = jalaali.toJalaali(dt);
+        setYear(String(jy));
+        setMonth(String(jm));
+        setDay(String(jd));
+      }
+    } catch {
+      setDay('');
+      setMonth('');
+      setYear('');
+    }
+  }, [birthday]);
+
+  const onlyNumbers = (val: string) => toEnglishDigits(val).replace(/\D/g, '');
+
+  const updateBirthday = (d: number, m: number, y: number) => {
+    try {
+      const { gy, gm, gd } = jalaali.toGregorian(y, m, d);
+      const isoWithZ = new Date(Date.UTC(gy, gm - 1, gd)).toISOString().replace('.000', '');
+      setBirthday(isoWithZ); // آپدیت فقط کامپوننت پدر
+    } catch (err) {
+      console.error('convert jalaali->gregorian failed', err);
+    }
+  };
 
   const handleDayChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = Number(onlyNumbers(e.target.value));
+    const v = onlyNumbers(e.target.value).slice(0, 2);
+    let val = Number(v || 0);
     if (month && year) {
       const maxDays = daysInMonth(Number(month), Number(year));
-      if (value > maxDays) value = maxDays;
+      if (val > maxDays) val = maxDays;
     }
-    if (value < 1) value = 1;
-    setDay(value ? value.toString() : '');
+    if (val < 1) val = 1;
+    setDay(val ? val.toString() : '');
+    if (val && month && year) updateBirthday(val, Number(month), Number(year));
   };
 
   const handleMonthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = Number(onlyNumbers(e.target.value));
-    if (value < 1) value = 1;
-    if (value > 12) value = 12;
-    setMonth(value ? value.toString() : '');
-
-    if (day && year) {
-      const maxDays = daysInMonth(value, Number(year));
-      if (Number(day) > maxDays) {
-        setDay(maxDays.toString());
-      }
+    const v = onlyNumbers(e.target.value).slice(0, 2);
+    let val = Number(v || 0);
+    if (val < 1) val = 1;
+    if (val > 12) val = 12;
+    setMonth(val ? val.toString() : '');
+    if (day && val && year) {
+      const maxDays = daysInMonth(val, Number(year));
+      if (Number(day) > maxDays) setDay(maxDays.toString());
+      updateBirthday(Number(day), val, Number(year));
     }
   };
 
   const handleYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = Number(onlyNumbers(e.target.value));
-    if (value < 1250) value = 1320;
-    if (value > 1404) value = 1404;
-    setYear(value ? value.toString() : '');
-
-    if (day && month) {
-      const maxDays = daysInMonth(Number(month), value);
-      if (Number(day) > maxDays) {
-        setDay(maxDays.toString());
+    const v = onlyNumbers(e.target.value).slice(0, 4);
+    setYear(v);
+    if (v.length === 4 && day && month) {
+      const y = Number(v);
+      if (y >= MIN_YEAR && y <= MAX_YEAR) {
+        const maxDays = daysInMonth(Number(month), y);
+        if (Number(day) > maxDays) setDay(maxDays.toString());
+        updateBirthday(Number(day), Number(month), y);
       }
     }
   };
 
+  const handleYearBlur = () => {
+    if (!year) return;
+    const y = Number(year);
+    if (isNaN(y) || y < MIN_YEAR || y > MAX_YEAR) setYear('');
+  };
+
   return (
     <div className="flex w-full items-center justify-center gap-2 border border-primary rounded-lg p-2">
-      <input
-        type="text"
-        inputMode="numeric"
-        value={day}
-        onChange={handleDayChange}
-        placeholder="روز"
-        className="w-full text-center bg-transparent outline-none"
-      />
+      <input type="text" inputMode="numeric" value={day ? toPersianDigits(day) : ''} onChange={handleDayChange} placeholder="روز" className="w-full text-center bg-transparent outline-none" />
       <span>/</span>
-      <input type="text" inputMode="numeric" value={month} onChange={handleMonthChange} placeholder="ماه" className="w-full text-center bg-transparent outline-none" />
+      <input type="text" inputMode="numeric" value={month ? toPersianDigits(month) : ''} onChange={handleMonthChange} placeholder="ماه" className="w-full text-center bg-transparent outline-none" />
       <span>/</span>
-      <input type="text" inputMode="numeric" value={year} onChange={handleYearChange} placeholder="سال" className="w-full text-center bg-transparent outline-none" />
+      <input type="text" inputMode="numeric" value={year ? toPersianDigits(year) : ''} onChange={handleYearChange} onBlur={handleYearBlur} placeholder="سال" className="w-full text-center bg-transparent outline-none" />
     </div>
   );
 }

@@ -193,9 +193,11 @@ export default function UserCapsulesIndex() {
           <div className="self-center mt-auto">
             <Pagination dir="rtl">
               <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious onClick={goPrev} className="bg-primary text-background hover:bg-foreground hover:text-background disabled:opacity-50" href="#" />
-                </PaginationItem>
+                {currentPage !== 1 && (
+                  <PaginationItem>
+                    <PaginationPrevious onClick={goPrev} className="bg-primary text-background hover:bg-foreground hover:text-background disabled:opacity-50" href="#" />
+                  </PaginationItem>
+                )}
 
                 {buildPageList(capsules.pagination.pages, currentPage).map((p, idx) =>
                   p === '...' ? (
@@ -211,9 +213,11 @@ export default function UserCapsulesIndex() {
                   )
                 )}
 
-                <PaginationItem>
-                  <PaginationNext onClick={goNext} className="bg-primary text-background hover:bg-foreground hover:text-background disabled:opacity-50" href="#" />
-                </PaginationItem>
+                {currentPage !== capsules.pagination.pages && (
+                  <PaginationItem>
+                    <PaginationNext onClick={goNext} className="bg-primary text-background hover:bg-foreground hover:text-background disabled:opacity-50" href="#" />
+                  </PaginationItem>
+                )}
               </PaginationContent>
             </Pagination>
           </div>

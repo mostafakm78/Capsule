@@ -40,16 +40,28 @@ export interface Capsule {
 
 // ========= User (Safe) =========
 export interface UserSafe {
-  _id: string;
-  email: string;
-  role: 'user' | 'admin';
-  isBanned: boolean;
-  flag: 'none' | 'sus' | 'review' | 'violation';
+  _id?: string;
+  email?: string;
+  role?: 'user' | 'admin';
+  isBanned?: boolean;
+  flag?: 'none' | 'sus' | 'review' | 'violation';
   name?: string;
   avatar?: string;
-  bio?: string;
+  about?: string;
+  education?: string;
+  birthday?: string | Date;
+  removeImage?: boolean | '';
   createdAt?: string; // ISO
   updatedAt?: string; // ISO
+}
+
+export interface NotificationType {
+  _id: string;
+  title: string;
+  text: string;
+  type: 'message' | 'alert' | 'news' | 'system';
+  createdAt: string;
+  updatedAt: string;
 }
 
 // ========= Pagination =========
