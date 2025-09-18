@@ -7,7 +7,7 @@ import { ThemeToggle } from '@/app/components/shared/Theme';
 import Image from 'next/image';
 import { Bungee } from 'next/font/google';
 import Link from 'next/link';
-import { MdHomeFilled } from 'react-icons/md';
+import { MdAdminPanelSettings, MdHomeFilled } from 'react-icons/md';
 import { HiMiniSquaresPlus } from 'react-icons/hi2';
 import { BsCapsule } from 'react-icons/bs';
 import { IoSettingsSharp } from 'react-icons/io5';
@@ -19,7 +19,7 @@ import { DashboardSidebar } from './DashboardSidebar';
 import { LinkProps } from '@/lib/types';
 import { JSX, useEffect, useState } from 'react';
 import { AdminSidebar } from './AdminSidebar';
-import { FaUsers } from 'react-icons/fa';
+import { FaUser, FaUsers } from 'react-icons/fa';
 import Notification from './Notification';
 import { LogoutModal } from './LogoutModal';
 import { useAppSelector } from '@/app/hooks/hook';
@@ -33,6 +33,7 @@ const dashboardLinks: (LinkProps & { icon: JSX.Element })[] = [
   { link: '/dashboard/user-capsules', title: 'کپسول های شما', icon: <BsCapsule className="text-2xl" /> },
   { link: '/dashboard/setting', title: 'تنظیمات حساب', icon: <IoSettingsSharp className="text-2xl" /> },
   { link: '/dashboard/guide', title: 'راهنما', icon: <PiQuestionFill className="text-2xl" /> },
+  { link: '/dashboard/admin', title: 'پنل ادمین', icon: <MdAdminPanelSettings className="text-2xl" /> },
 ];
 
 const adminLinks: (LinkProps & { icon: JSX.Element })[] = [
@@ -40,7 +41,7 @@ const adminLinks: (LinkProps & { icon: JSX.Element })[] = [
   { link: '/dashboard/admin/users', title: 'کاربران سایت', icon: <FaUsers className="text-2xl" /> },
   { link: '/dashboard/admin/capsules', title: 'کپسول‌های سایت', icon: <BsCapsule className="text-2xl" /> },
   { link: '/dashboard/admin/categories', title: 'دسته بندی ها', icon: <TbCategoryFilled className="text-2xl" /> },
-  { link: '/dashboard/admin/setting', title: 'تنظیمات حساب', icon: <IoSettingsSharp className="text-2xl" /> },
+  { link: '/dashboard/panel', title: 'پنل کاربری', icon: <FaUser className="text-2xl" /> },
 ];
 
 export default function DashboardLayoutIndex({ children }: { children: React.ReactNode }) {
@@ -83,13 +84,16 @@ export default function DashboardLayoutIndex({ children }: { children: React.Rea
         <div className="flex flex-col text-foreground/85 py-18 px-5 gap-6">
           {!admin &&
             user?.email &&
-            user?.role === 'user' &&
-            dashboardLinks.map((links, i) => (
-              <div key={i} className={linkClasses(links.link)}>
-                {links.icon}
-                <Link href={links.link}>{links.title}</Link>
-              </div>
-            ))}
+            dashboardLinks.map((links, i) => {
+              const isLast = i === dashboardLinks.length - 1;
+              if (isLast && user.role !== 'admin') return null;
+              return (
+                <div key={i} className={linkClasses(links.link)}>
+                  {links.icon}
+                  <Link href={links.link}>{links.title}</Link>
+                </div>
+              );
+            })}
           {admin &&
             user?.email &&
             user?.role === 'admin' &&
@@ -113,7 +117,7 @@ export default function DashboardLayoutIndex({ children }: { children: React.Rea
           <div className="flex h-full lg:gap-3 gap-1 items-center">
             <div className="flex gap-2 h-full items-center justify-center">
               <div className="bg-foreground text-xl p-2 text-background rounded-lg lg:hidden block">
-                {!admin && user?.email && user?.role === 'user' && <DashboardSidebar />}
+                {!admin && user?.email && <DashboardSidebar />}
                 {admin && user?.email && user?.role === 'admin' && <AdminSidebar />}
               </div>
               <div className="flex lg:flex-row flex-col h-full lg:items-center xl:gap-3 lg:gap-1 items-start">

@@ -23,21 +23,21 @@ export default function SliderHomePageDashboard({ capsules }: Props) {
 
   return (
     <>
-      <div className="flex items-center md:flex-row flex-col justify-between md:gap-4 gap-1">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col lg:px-0 px-2 lg:flex-row lg:items-center justify-between w-full">
+        <div className="flex items-center lg:justify-center justify-between gap-4">
           <span className='text-foreground text-xl pr-4 relative font-bold after:content-[""] after:h-2 after:w-2 after:rounded-full after:absolute after:bg-foreground after:right-0 after:top-1/2 after:-translate-y-1/2'>آخرین کپسول های ساخته شده</span>
           <div className="flex gap-1 items-center text-3xl">
             <FaLongArrowAltRight onClick={() => swiper?.slidePrev()} className={`cursor-pointer transition-opacity duration-300 ${isBeginning ? 'opacity-40 pointer-events-none' : 'opacity-100'}`} />
             <FaLongArrowAltLeft onClick={() => swiper?.slideNext()} className={`cursor-pointer transition-opacity duration-300 ${isEnd ? 'opacity-40 pointer-events-none' : 'opacity-100'}`} />
           </div>
         </div>
-        <Link className="flex group items-center gap-2 lg:mt-0 mt-6 text-base" href="/dashboard/user-capsules">
+        <Link className="flex group items-center gap-2 lg:mt-0 mt-6 text-base" href="/dashboard/admin/capsules">
           <span className="text-foreground/80 group-hover:text-primary/80 duration-300">مشاهده تمامی کپسول ها</span>
           <FaLongArrowAltLeft className="text-2xl text-foreground group-hover:text-primary duration-300" />
         </Link>
       </div>
       <div className="relative overflow-visible w-full lg:px-4 mx-auto max-w-[400px] md:max-w-[430px] lg:max-w-[530px] xl:max-w-4xl 2xl:max-w-5xl min-h-[400px]">
-        {capsules.length <= 0 && <div></div>}
+        {capsules.length <= 0 && <div className="flex items-center w-full h-full justify-center text-2xl lg:text-3xl text-foreground/80">شما هنوز کپسولی نساختین!</div>}
         {capsules.length > 0 && (
           <Swiper
             dir="rtl"

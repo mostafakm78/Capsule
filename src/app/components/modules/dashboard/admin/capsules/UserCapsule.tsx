@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import CapsuleInfo from './CapsuleInfo';
 
 export default function SingleUserCapsuleAdminIndex() {
-  const color_Code = useSelector((state: RootState) => state.capsuleSetting.colorCode);
+//   const color_Code = useSelector((state: RootState) => state.capsuleSetting.colorCode);
 
   return (
     <section className="flex flex-col h-full gap-10">
@@ -20,7 +20,7 @@ export default function SingleUserCapsuleAdminIndex() {
             </Avatar>
           </div>
         </div>
-        <div className={`flex flex-col gap-6 md:p-8 p-3 ${color_Code} rounded-lg justify-center w-full`}>
+        <div className={`flex flex-col gap-6 md:p-8 p-3  rounded-lg justify-center w-full`}>
           <CapsuleInfo />
         </div>
       </div>

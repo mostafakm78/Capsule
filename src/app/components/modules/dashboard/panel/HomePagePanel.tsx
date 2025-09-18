@@ -90,7 +90,7 @@ export default function HomePagePanel({ capsules }: Props) {
             (alert) =>
               alert.show &&
               userAlert.includes(alert.id) && (
-                <Alert key={alert.id} className="bg-red-100 dark:bg-slate-900 flex justify-between items-center">
+                <Alert key={alert.id} className="bg-red-100 dark:bg-red-900/40 flex justify-between items-center">
                   <div className="flex items-center gap-4">
                     <IoAlert className="text-xl" />
                     <div>

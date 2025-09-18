@@ -30,6 +30,12 @@ export default function UserPopover() {
               مشاهده پنل کاربری
               <FaLongArrowAltLeft />
             </Link>
+            {user?.role === 'admin' && (
+              <Link className="text-primary flex items-center gap-2 hover:text-foreground/80 duration-300" href="/dashboard/admin" target="_top">
+                مشاهده پنل ادمین
+                <FaLongArrowAltLeft />
+              </Link>
+            )}
           </div>
         </div>
         <Separator className="w-full bg-foreground/20 my-4" />

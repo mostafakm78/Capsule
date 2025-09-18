@@ -116,8 +116,8 @@ export default function CapsuleInfo() {
         ))}
       </RadioGroup>
       <div className="w-full flex justify-center my-8 gap-2">
-        <Button className="cursor-pointer md:w-1/3 w-2/4">ثبت</Button>
-        <Button className="cursor-pointer md:w-1/3 w-2/4 bg-red-400 hover:bg-red-300">حذف کپسول</Button>
+        <Button className="cursor-pointer md:w-1/3 w-2/4 py-6 text-lg bg-red-400 hover:bg-red-300">حذف کپسول</Button>
+        <Button className="cursor-pointer md:w-1/3 w-2/4 py-6 text-lg">ثبت</Button>
       </div>
     </>
   );
