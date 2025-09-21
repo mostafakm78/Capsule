@@ -3,7 +3,6 @@
 import { Separator } from '@/components/ui/separator';
 import { BsCapsule } from 'react-icons/bs';
 import { IoPeopleSharp } from 'react-icons/io5';
-import { IoWarningOutline } from 'react-icons/io5';
 import { PiUsersBold } from 'react-icons/pi';
 import { IoToday } from 'react-icons/io5';
 import { IoBan } from 'react-icons/io5';
@@ -14,13 +13,12 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import CapsuleSliderAdmin from './CapsuleSliderAdminPage';
 import UserSliderAdmin from './UserSliderAdminPage';
-import { UsersChart } from './UsersChart';
-import { CapsulesChart } from './CapsulesChart';
 import { IconType } from 'react-icons/lib';
 import callApi from '@/app/services/callApi';
 import { Capsule, UserSafe } from '@/lib/types';
 import Loadings from '@/app/components/shared/loadings';
-
+import { CapsulesChart } from './CapsulesChart';
+import { UsersChart } from './UsersChart';
 
 type statsProps = {
   title: string;
@@ -107,13 +105,6 @@ export default function AdminPanelIndex() {
       icon: IoToday,
     },
     {
-      title: 'کپسول های بن شده',
-      value: 1,
-      border: 'border-rose-500 dark:border-rose-500/60',
-      bg: 'bg-rose-500',
-      icon: IoWarningOutline,
-    },
-    {
       title: 'کاربرای بن شده',
       value: userBanned.length,
       border: 'border-pink-500 dark:border-pink-500/60',
@@ -141,8 +132,8 @@ export default function AdminPanelIndex() {
         ))}
       </div>
       <div className="flex flex-col px-1 sm:px-2 md:px-4 lg:flex-row w-full items-center gap-6">
-        <UsersChart />
-        <CapsulesChart />
+        <CapsulesChart capsules={capsules} />
+        <UsersChart users={users}/>
       </div>
       <div className="flex flex-col w-full p-1 sm:p-2 md:p-4">
         <CapsuleSliderAdmin capsules={capsules} />

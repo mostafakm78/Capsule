@@ -1,68 +1,120 @@
 'use client';
 
-import { TrendingUp } from 'lucide-react';
-import { CartesianGrid, Line, LineChart, XAxis } from 'recharts';
+import { Label, Pie, PieChart } from 'recharts';
+import { toJalaali } from 'jalaali-js';
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-
-export const description = 'A multiple line chart';
-
-const chartData = [
-  { month: 'فروردین', desktop: 686, mobile: 80 },
-  { month: 'اردیبهشت', desktop: 305, mobile: 200 },
-  { month: 'خرداد', desktop: 237, mobile: 120 },
-  { month: 'تیر', desktop: 73, mobile: 590 },
-  { month: 'مرداد', desktop: 509, mobile: 130 },
-  { month: 'شهریور', desktop: 214, mobile: 340 },
-];
+import { Capsule } from '@/lib/types';
+import { useMemo } from 'react';
 
 const chartConfig = {
-  desktop: {
-    label: 'دسکتاپ',
-    color: 'var(--chart-1)',
+  visitors: {
+    label: 'تعداد',
   },
-  mobile: {
-    label: 'موبایل',
-    color: 'var(--chart-2)',
+  public: {
+    label: 'کپسول عمومی',
+    color: '#7F55B1',
+  },
+  private: {
+    label: 'کپسول خصوصی',
+    color: '#F49BAB',
+  },
+  timed: {
+    label: 'کپسول خصوصی زمان‌دار',
+    color: '#FFE1E0',
   },
 } satisfies ChartConfig;
 
-export function CapsulesChart() {
+type Props = {
+  capsules: Capsule[];
+};
+
+export function CapsulesChart({ capsules }: Props) {
+  const thisMonthCapsules = useMemo(() => {
+    const now = new Date();
+    const { jy: thisJy, jm: thisJm } = toJalaali(now);
+
+    return capsules.filter((cap) => {
+      const d = new Date(cap.createdAt as string);
+      if (isNaN(d.getTime())) return false;
+      const { jy, jm } = toJalaali(d);
+      return jy === thisJy && jm === thisJm;
+    });
+  }, [capsules]);
+
+  const totalThisMonth = useMemo(() => thisMonthCapsules.length, [thisMonthCapsules]);
+
+  const totalPublicThisMonth = useMemo(
+    () =>
+      thisMonthCapsules.filter((capsule) => {
+        return capsule.access?.visibility === 'public';
+      }),
+    [thisMonthCapsules]
+  );
+
+  const totalPrivateThisMonth = useMemo(
+    () =>
+      thisMonthCapsules.filter((capsule) => {
+        return capsule.access?.visibility === 'private' && capsule.access.lock === 'none';
+      }),
+    [thisMonthCapsules]
+  );
+
+  const totalTimedThisMonth = useMemo(
+    () =>
+      thisMonthCapsules.filter((capsule) => {
+        return capsule.access?.visibility === 'private' && capsule.access.lock === 'timed';
+      }),
+    [thisMonthCapsules]
+  );
+
+  const chartData = [
+    { browser: 'کپسول عمومی', visitors: totalPublicThisMonth.length, fill: '#7F55B1' },
+    { browser: 'کپسول خصوصی', visitors: totalPrivateThisMonth.length, fill: '#F49BAB' },
+    { browser: 'کپسول خصوصی زمان‌دار', visitors: totalTimedThisMonth.length, fill: '#FFE1E0' },
+  ];
+
   return (
-    <Card className="w-full h-full border-none shadow-none bg-white dark:bg-slate-900">
-      <CardHeader>
-        <CardTitle>نمودار کاربرای سایت</CardTitle>
-        <CardDescription>مرداد - شهریور 1404</CardDescription>
+    <Card className="flex flex-col w-full h-full border-none shadow-none bg-white dark:bg-slate-900">
+      <CardHeader className="items-center pb-0">
+        <CardTitle>کپسول‌های این ماه</CardTitle>
+        <CardDescription>
+          {(() => {
+            const gDate = new Date();
+            const jDate = toJalaali(gDate);
+            const months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+            return `${months[jDate.jm - 1]} ${jDate.jy}`;
+          })()}
+        </CardDescription>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <LineChart
-            accessibilityLayer
-            data={chartData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
-          >
-            <CartesianGrid stroke="color-mix(in oklch, var(--foreground) 20%, transparent)" vertical={false} />
-            <XAxis dataKey="month" tickLine={true} axisLine={true} tickMargin={10} tickFormatter={(value) => value.slice(0 , 3)} />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-            <Line dataKey="desktop" type="monotone" stroke="var(--color-desktop)" strokeWidth={2} dot={true} />
-            <Line dataKey="mobile" type="monotone" stroke="var(--color-mobile)" strokeWidth={2} dot={true} />
-          </LineChart>
+      <CardContent className="flex-1 pb-0">
+        <ChartContainer config={chartConfig} className="mx-auto max-h-[300px]">
+          <PieChart>
+            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+            <Pie data={chartData} dataKey="visitors" nameKey="browser" innerRadius={85} strokeWidth={5}>
+              <Label
+                content={({ viewBox }) => {
+                  if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
+                    return (
+                      <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
+                        <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-3xl font-bold">
+                          {totalThisMonth.toLocaleString()}
+                        </tspan>
+                        <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-foreground lg:text-lg text-base">
+                          کپسول‌های این ماه
+                        </tspan>
+                      </text>
+                    );
+                  }
+                }}
+              />
+            </Pie>
+          </PieChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter>
-        <div className="flex w-full items-center justify-center gap-2 text-sm">
-          <div className="grid gap-2">
-            <div className="flex items-center justify-center gap-2 leading-none font-medium">
-              <TrendingUp className="h-4 w-4" />
-              5 درصد افزایش کاربران
-            </div>
-            <div className="text-muted-foreground flex items-center gap-2 leading-none">Showing تمام کاربران در 1 ماه گذشته</div>
-          </div>
-        </div>
+      <CardFooter className="flex-col gap-2 text-sm">
+        <div className="text- leading-none">نمایش کپسول های ساخته شده در 1 ماه اخیر</div>
       </CardFooter>
     </Card>
   );
