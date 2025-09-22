@@ -88,6 +88,13 @@ export interface GetCapsulesResponse {
   filters: CapsuleFilters;
 }
 
+export interface GetUsersResponse {
+  items: UserSafe[];
+  pagination: Pagination;
+  sort: 'newest' | 'oldest';
+  filters: string;
+}
+
 export type dashboardCreateCapsuleTab = 'info' | 'tags' | 'status';
 
 export type dashboardCreateCapsuleCategories = {

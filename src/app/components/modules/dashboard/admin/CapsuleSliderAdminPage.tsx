@@ -85,7 +85,7 @@ export default function CapsuleSliderAdmin({ capsules }: Props) {
                     <CardHeader>
                       <div className="absolute -top-[8%] left-1/2 -translate-x-1/2">
                         <Avatar className="h-12 w-12 ring-2 ring-secondary">
-                          <AvatarImage src={capsule.owner?.avatar ? `http://localhost:8080/images/${capsule.owner.avatar}` : '/images/default.png'} />
+                          <AvatarImage className='object-cover' src={capsule.owner?.avatar ? `http://localhost:8080/images/${capsule.owner.avatar}` : '/images/default.png'} />
                           <AvatarFallback>...</AvatarFallback>
                         </Avatar>
                       </div>

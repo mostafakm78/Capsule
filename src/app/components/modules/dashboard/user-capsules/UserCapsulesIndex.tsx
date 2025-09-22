@@ -30,7 +30,7 @@ export default function UserCapsulesIndex() {
     const params = new URLSearchParams(searchParams.toString());
     mutator(params);
     const qs = params.toString();
-    router.push(qs ? `/dashboard/user-capsules?${qs}` : `/dashboard/user-capsules`);
+    router.push(qs ? `/dashboard/user-capsules?${qs}` : `/dashboard/admin/capsules`);
   };
 
   const buildPageList = (total: number, curr: number): (number | '...')[] => {

@@ -81,7 +81,7 @@ export default function UserSliderAdmin({ users }: Props) {
                   <Link href="" className="flex flex-col bg-white dark:bg-slate-900 rounded-lg items-center justify-center gap-6 h-[200px] border-none">
                     <div>
                       <Avatar className="h-20 w-20 ring-2 ring-secondary">
-                        <AvatarImage src={user?.avatar ? `http://localhost:8080/images/${user.avatar}` : '/images/default.png'} />
+                        <AvatarImage className='object-cover' src={user?.avatar ? `http://localhost:8080/images/${user.avatar}` : '/images/default.png'} />
                         <AvatarFallback>...</AvatarFallback>
                       </Avatar>
                     </div>

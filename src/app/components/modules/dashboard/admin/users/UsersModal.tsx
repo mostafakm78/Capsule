@@ -3,7 +3,15 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import { FaLongArrowAltLeft } from 'react-icons/fa';
-export function UsersModal() {
+import { UserBannedModal } from './UserBannedModal';
+import { UserSafe } from '@/lib/types';
+import { UserFlagModal } from './UserFlagModal';
+
+type Props = {
+  user: UserSafe;
+};
+
+export function UsersModal({ user }: Props) {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -30,11 +38,11 @@ export function UsersModal() {
         <div className="grid gap-1">
           <div className="w-full flex flex-col items-center justify-center gap-1">
             <span className="text-lg">وضعیت کاربر</span>
-            <Button className="w-full bg-emerald-800 text-white hover:text-background/80 cursor-pointer hover:bg-emerald-600">طبیعی</Button>
+            <UserFlagModal user={user} />
           </div>
           <div className="w-full flex flex-col items-center justify-center gap-1">
-            <span className="text-lg">بن کردن</span>
-            <Button className="w-full bg-red-800 text-white hover:text-background/80 cursor-pointer hover:bg-red-600">بن</Button>
+            <span className="text-lg">وضعیت بن</span>
+            <UserBannedModal user={user} />
           </div>
           <div className="w-full flex flex-col items-center justify-center gap-1">
             <span className="text-lg">نقش کاربر</span>

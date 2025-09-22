@@ -11,7 +11,7 @@ export default function SingleUserAdminIndex() {
           <span className='text-foreground pr-4 text-xl relative font-bold after:content-[""] after:h-2 after:w-2 after:rounded-full after:absolute after:bg-foreground after:right-0 after:top-1/2 after:-translate-y-1/2'>کاربر : مصطفی کمری</span>
           <div>
             <Avatar className="md:h-20 md:w-20 w-15 h-15 ring-2 ring-secondary">
-              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarImage className='object-cover' src="https://github.com/shadcn.png" />
               <AvatarFallback>CP</AvatarFallback>
             </Avatar>
           </div>

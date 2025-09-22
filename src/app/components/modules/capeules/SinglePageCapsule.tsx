@@ -8,7 +8,7 @@ export default function SinglePageCapsule() {
       <div className="lg:px-10 px-4 flex gap-16 flex-col lg:w-[90%] w-full justify-center items-center">
         <div className="mt-4 flex items-center gap-2">
           <Avatar className="h-15 w-15 ring-2 ring-secondary">
-            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarImage className='object-cover' src="https://github.com/shadcn.png" />
             <AvatarFallback>CP</AvatarFallback>
           </Avatar>
           <div className="flex flex-col justify-center">

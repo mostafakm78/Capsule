@@ -12,7 +12,7 @@ export default function UserPopover() {
     <Popover>
       <PopoverTrigger className="cursor-pointer text-foreground/70 data-[state=open]:text-secondary">
         <Avatar className="h-10 w-10 ring-2 ring-secondary">
-          <AvatarImage src={user?.avatar ? `http://localhost:8080/images/${user.avatar}` : '/images/default.png'} />
+          <AvatarImage className='object-cover' src={user?.avatar ? `http://localhost:8080/images/${user.avatar}` : '/images/default.png'} />
           <AvatarFallback>...</AvatarFallback>
         </Avatar>
       </PopoverTrigger>
@@ -20,7 +20,7 @@ export default function UserPopover() {
         <div className="flex items-center gap-3">
           <div>
             <Avatar className="h-12 w-12 ring-2 ring-secondary">
-              <AvatarImage src={user?.avatar ? `http://localhost:8080/images/${user.avatar}` : '/images/default.png'} />
+              <AvatarImage className='object-cover' src={user?.avatar ? `http://localhost:8080/images/${user.avatar}` : '/images/default.png'} />
               <AvatarFallback>...</AvatarFallback>
             </Avatar>
           </div>

@@ -137,7 +137,7 @@ export default function DashboardLayoutIndex({ children }: { children: React.Rea
               <Notification />
             </div>
             <Avatar className="h-10 w-10 ring-2 ring-secondary">
-              <AvatarImage src={user?.avatar ? `http://localhost:8080/images/${user.avatar}` : '/images/default.png'} />
+              <AvatarImage className='object-cover' src={user?.avatar ? `http://localhost:8080/images/${user.avatar}` : '/images/default.png'} />
               <AvatarFallback>...</AvatarFallback>
             </Avatar>
           </div>
