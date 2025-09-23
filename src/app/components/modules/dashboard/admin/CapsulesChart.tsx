@@ -89,29 +89,39 @@ export function CapsulesChart({ capsules }: Props) {
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
-        <ChartContainer config={chartConfig} className="mx-auto max-h-[300px]">
-          <PieChart>
-            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-            <Pie data={chartData} dataKey="visitors" nameKey="browser" innerRadius={85} strokeWidth={5}>
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
-                    return (
-                      <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
-                        <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-3xl font-bold">
-                          {totalThisMonth.toLocaleString()}
-                        </tspan>
-                        <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-foreground lg:text-lg text-base">
-                          کپسول‌های این ماه
-                        </tspan>
-                      </text>
-                    );
-                  }
-                }}
-              />
-            </Pie>
-          </PieChart>
-        </ChartContainer>
+        {totalThisMonth > 0 ? (
+          <ChartContainer config={chartConfig} className="mx-auto max-h-[300px]">
+            <PieChart>
+              <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+              <Pie data={chartData} dataKey="visitors" nameKey="browser" innerRadius={85} strokeWidth={5}>
+                <Label
+                  content={({ viewBox }) => {
+                    if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
+                      return (
+                        <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
+                          <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-3xl font-bold">
+                            {totalThisMonth.toLocaleString()}
+                          </tspan>
+                          <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-foreground lg:text-lg text-base">
+                            کپسول‌های این ماه
+                          </tspan>
+                        </text>
+                      );
+                    }
+                    return null;
+                  }}
+                />
+              </Pie>
+            </PieChart>
+          </ChartContainer>
+        ) : (
+          <div className="flex items-center justify-center h-[300px]">
+            <div className="text-center">
+              <div className="text-3xl font-bold">0</div>
+              <div className="lg:text-lg text-base mt-1">هنوز کپسولی در این ماه ساخته نشده</div>
+            </div>
+          </div>
+        )}
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
         <div className="text- leading-none">نمایش کپسول های ساخته شده در 1 ماه اخیر</div>

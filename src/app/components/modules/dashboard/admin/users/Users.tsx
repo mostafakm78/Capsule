@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { IoIosSearch } from 'react-icons/io';
 import { UserBannedModal } from './UserBannedModal';
 import { UserFlagModal } from './UserFlagModal';
+import { UserTypeModal } from './UserTypeModal';
 
 type Sort = 'new' | 'old';
 type Flag = 'all' | 'sus' | 'review' | 'violation' | 'none';
@@ -272,7 +273,7 @@ export default function Users() {
           </TableHeader>
           <TableBody>
             {users?.items.map((user, i) => (
-              <TableRow className={`${user.flag === 'sus' ? 'bg-orange-400' : user.flag === 'review' ? 'bg-orange-700' : user.flag === 'violation' ? 'bg-red-500' : ''}`} key={user._id}>
+              <TableRow className={`${user.flag === 'sus' ? 'bg-orange-500/30' : user.flag === 'review' ? 'bg-orange-500/30' : user.flag === 'violation' ? 'bg-red-500/30' : ''}`} key={user._id}>
                 <TableCell>{i + 1}</TableCell>
                 <TableCell className="md:font-medium">
                   <span className="md:hidden">
@@ -288,7 +289,7 @@ export default function Users() {
                   <UserBannedModal user={user} />
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
-                  <Button className="cursor-pointer bg-sky-800 hover:bg-sky-600 text-white hover:text-background/80">ادمین</Button>
+                  <UserTypeModal user={user} />
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
                   <Link className="flex items-center gap-2 font-light text-base text-primary hover:text-foreground/80 duration-300" href={`/dashboard/admin/users/${user._id}`}>

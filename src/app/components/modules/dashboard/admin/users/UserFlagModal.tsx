@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { UserSafe } from '@/lib/types';
 import { useEffect, useState } from 'react';
 
-type Props = { user: UserSafe };
+type Props = { user: UserSafe | undefined};
 type Flag = 'none' | 'sus' | 'violation' | 'review';
 
 export function UserFlagModal({ user }: Props) {
@@ -18,10 +18,10 @@ export function UserFlagModal({ user }: Props) {
   const showToast = useCustomToast();
 
   useEffect(() => {
-    const f = (user.flag as Flag) ?? 'none';
+    const f = (user?.flag as Flag) ?? 'none';
     setFlag(f);
     setDraftFlag(f);
-  }, [user._id, user.flag]);
+  }, [user?._id, user?.flag]);
 
   const handleOpenChange = (o: boolean) => {
     setOpen(o);
@@ -32,7 +32,7 @@ export function UserFlagModal({ user }: Props) {
     if (draftFlag === flag) return;
     try {
       setSaving(true);
-      const res = await callApi().patch(`/admin/users/${user._id}`, { flag: draftFlag });
+      const res = await callApi().patch(`/admin/users/${user?._id}`, { flag: draftFlag });
       if (res.status === 200) {
         setFlag(draftFlag);
         showToast({ message: 'وضعیت کاربر با موفقیت تغییر یافت ✅', bg: 'bg-green-200' });
@@ -54,13 +54,13 @@ export function UserFlagModal({ user }: Props) {
   return (
     <AlertDialog open={open} onOpenChange={handleOpenChange}>
       <AlertDialogTrigger asChild>
-        <span className={`cursor-pointer ${pillBg} p-2 rounded-md border border-foreground/50 w-full text-center`}>{pillText}</span>
+        <span className={`cursor-pointer ${pillBg} p-2 rounded-md w-full text-center`}>{pillText}</span>
       </AlertDialogTrigger>
 
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="flex lg:flex-row flex-col justify-between items-center gap-3">
-            <span>تغییر وضعیت کاربر: {user.name ?? user.email}</span>
+            <span>تغییر وضعیت کاربر: {user?.name ?? user?.email}</span>
 
             <Select dir="rtl" value={draftFlag} onValueChange={(v) => setDraftFlag(v as Flag)}>
               <SelectTrigger className="w-[220px]">

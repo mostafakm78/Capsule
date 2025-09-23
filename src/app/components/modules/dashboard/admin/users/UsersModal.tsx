@@ -6,6 +6,7 @@ import { FaLongArrowAltLeft } from 'react-icons/fa';
 import { UserBannedModal } from './UserBannedModal';
 import { UserSafe } from '@/lib/types';
 import { UserFlagModal } from './UserFlagModal';
+import { UserTypeModal } from './UserTypeModal';
 
 type Props = {
   user: UserSafe;
@@ -26,7 +27,7 @@ export function UsersModal({ user }: Props) {
             <div className="text-muted-foreground text-sm">
               <div className="flex flex-col items-center justify-center gap-2 py-2">
                 <span>ایمیل : Mostafamf555@gmail.com</span>
-                <Link className="flex items-center gap-2 font-light text-base text-primary hover:text-foreground/80 duration-300" href="/dashboard/admin/users/1">
+                <Link className="flex items-center gap-2 font-light text-base text-primary hover:text-foreground/80 duration-300" href={`/dashboard/admin/users/${user._id}`}>
                   دیدن
                   <FaLongArrowAltLeft className="text-lg" />
                 </Link>
@@ -46,7 +47,7 @@ export function UsersModal({ user }: Props) {
           </div>
           <div className="w-full flex flex-col items-center justify-center gap-1">
             <span className="text-lg">نقش کاربر</span>
-            <Button className="w-full cursor-pointer bg-sky-800 hover:bg-sky-600 text-white hover:text-background/80">ادمین</Button>
+            <UserTypeModal user={user} />
           </div>
         </div>
         <Separator className="bg-foreground/20 w-full" />

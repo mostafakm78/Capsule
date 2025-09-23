@@ -30,7 +30,7 @@ export default function UserCapsulesIndex() {
     const params = new URLSearchParams(searchParams.toString());
     mutator(params);
     const qs = params.toString();
-    router.push(qs ? `/dashboard/user-capsules?${qs}` : `/dashboard/admin/capsules`);
+    router.push(qs ? `/dashboard/user-capsules?${qs}` : `/dashboard/user-capsules`);
   };
 
   const buildPageList = (total: number, curr: number): (number | '...')[] => {
@@ -152,7 +152,7 @@ export default function UserCapsulesIndex() {
             {capsules?.items.map((item) => (
               <Card
                 key={item._id}
-                className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white justify-between border-none dark:bg-slate-900 h-[380px] w-full shadow-sm after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:w-[calc(100%+15px)] after:h-[calc(100%+15px)] after:border-[3px] after:border-transparent after:duration-300 hover:after:border-secondary/50 dark:after:border-secondary/50 after:rounded-2xl after:pointer-events-none"
+                className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white justify-between border-none dark:bg-slate-900 h-[380px] w-full shadow-sm after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:w-[calc(100%+15px)] after:h-[calc(100%+15px)] after:border-[3px] after:border-transparent after:duration-300 hover:after:border-secondary/50 after:rounded-2xl after:pointer-events-none"
               >
                 <CardHeader>
                   <CardTitle className="text-center text-xl flex items-center justify-center gap-2 text-foreground">

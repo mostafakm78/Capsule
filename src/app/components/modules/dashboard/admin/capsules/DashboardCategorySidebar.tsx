@@ -27,6 +27,7 @@ const sortLinks: LinkProps[] = [
 const capsuleType = [
   { title: 'عمومی', value: 'public' },
   { title: 'خصوصی', value: 'private' },
+  { title: 'همه', value: 'all' },
 ] as const;
 
 type CpType = (typeof capsuleType)[number]['value'] | '';
@@ -100,9 +101,13 @@ export function DashboardCategorySidebar() {
   };
 
   const handleCpType = () => {
-    if (CpType !== 'public' && CpType !== 'private') return;
     pushWithParams((params) => {
-      params.set('visibility', CpType);
+      if (CpType === 'all' || CpType === '' || CpType == null) {
+        params.delete('visibility');
+      } else {
+        params.set('visibility', CpType);
+      }
+      params.set('page', '1');
     });
   };
 

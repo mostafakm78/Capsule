@@ -19,10 +19,9 @@ const bungee = Bungee({
   weight: '400',
 });
 
-const sortLinks: LinkProps[] = [
-  { link: `/dashboard/user-capsules?sort=newest`, title: 'جدید ترین' },
-  { link: `/dashboard/user-capsules?sort=oldest`, title: 'قدیمی ترین' },
-];
+type Props = {
+  userId: string | undefined;
+};
 
 const capsuleType = [
   { title: 'عمومی', value: 'public' },
@@ -44,7 +43,7 @@ function parseCategoriesFromParams(sp: ReadonlyURLSearchParams): string[] {
   return Array.from(new Set(values));
 }
 
-export function DashboardCategorySidebar() {
+export function DashboardCategorySidebar({ userId }: Props) {
   const router = useRouter();
   const pathName = usePathname();
   const searchParams = useSearchParams();
@@ -52,6 +51,11 @@ export function DashboardCategorySidebar() {
   const [categoryItem, setCategoryItem] = useState<CategoryItem[] | null>(null);
   const [selectCategories, setSelectCategories] = useState<string[]>([]);
   const [CpType, setCpType] = useState<CpType>('');
+
+  const sortLinks: LinkProps[] = [
+    { link: `/dashboard/admin/users/${userId}?sort=newest`, title: 'جدید ترین' },
+    { link: `/dashboard/admin/users/${userId}?sort=oldest`, title: 'قدیمی ترین' },
+  ];
 
   useEffect(() => {
     (async () => {
@@ -85,12 +89,12 @@ export function DashboardCategorySidebar() {
     const params = new URLSearchParams(searchParams.toString());
     mutator(params);
     const qs = params.toString();
-    router.push(qs ? `/dashboard/user-capsules?${qs}` : '/dashboard/user-capsules');
+    router.push(qs ? `/dashboard/admin/users/${userId}?${qs}` : `/dashboard/admin/users/${userId}`);
   };
 
   const handleCategoryItem = () => {
     if (selectCategories.length === 0) {
-      router.push('/dashboard/user-capsules');
+      router.push(`/dashboard/admin/users/${userId}`);
       return;
     }
     pushWithParams((params) => {
@@ -112,7 +116,7 @@ export function DashboardCategorySidebar() {
   };
 
   const linkClasses = (href: string) => {
-    const isSamePath = pathName === '/dashboard/user-capsules';
+    const isSamePath = pathName === `/dashboard/admin/users/${userId}`;
     const hrefQuery = href.split('?')[1] || '';
     const hrefSort = new URLSearchParams(hrefQuery).get('sort');
     const currentSort = searchParams.get('sort');
