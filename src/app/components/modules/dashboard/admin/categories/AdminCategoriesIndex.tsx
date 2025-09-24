@@ -72,7 +72,7 @@ export default function AdminCategoriesIndex() {
             </Label>
           </div>
           <div className="w-full flex justify-center mt-8">
-            <Button disabled className="cursor-pointer w-1/3">
+            <Button disabled className="cursor-pointer w-1/3 py-6 text-lg">
               ثبت
             </Button>
           </div>

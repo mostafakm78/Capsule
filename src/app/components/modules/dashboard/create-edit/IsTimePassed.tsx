@@ -77,7 +77,7 @@ export default function IsTimePassed({ time, createdAt }: { time: string; create
 
   return (
     <div className="flex flex-col gap-3 items-center justify-center h-full">
-      <ClockLoader size={40} speedMultiplier={0.3} />
+      <ClockLoader size={40} speedMultiplier={0.3} color='oklch(0.75 0.19 270)'/>
 
       <span className="text-lg font-kalmeh md:text-xl">{invalid ? 'تاریخ نامعتبر' : hasPassed ? 'زمان باز شدن رسیده!' : 'زمان باز شدن کپسول نرسیده!'}</span>
 

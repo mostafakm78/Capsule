@@ -15,6 +15,8 @@ import { usePathname } from 'next/navigation';
 import { LinkProps } from '@/lib/types';
 import { JSX } from 'react';
 import { Separator } from '@/components/ui/separator';
+import { Input } from '@/components/ui/input';
+import { IoIosSearch } from 'react-icons/io';
 
 const bungee = Bungee({
   weight: '400',
@@ -54,16 +56,24 @@ export function Sidebar() {
           </SheetHeader>
 
           {/* تنظیمات تم */}
-          <div className="flex flex-col w-full py-4 px-10">
-            <Separator className='w-full bg-foreground/20 my-3'/>
+          <div className="flex flex-col w-full py-4 sm:px-10 px-4">
+            <Separator className="w-full bg-foreground/20 my-3" />
             <div className="flex items-center justify-between">
               <span>تم سایت</span>
               <ThemeToggle />
             </div>
           </div>
 
+          <div className="flex flex-col w-full py-4 sm:px-10 px-4">
+            <Separator className="w-full bg-foreground/20 my-3" />
+            <div className="flex w-full relative md:hidden justify-center items-center">
+              <Input className="bg-white dark:bg-slate-900" type="text" placeholder="کپسول رو سرچ کن" />
+              <IoIosSearch className="text-3xl cursor-pointer hover:animate-caret-blink absolute left-0 ml-3 text-foreground/70" />
+            </div>
+          </div>
+
           {/* لینک‌ها */}
-          <div className="flex flex-col text-lg w-full py-4 gap-4 px-10">
+          <div className="flex flex-col text-lg w-full py-4 gap-4 sm:px-10 px-4">
             <div className="border-t border-foreground/20 py-3"></div>
             {sidebarLinks.map((linkItem, i) => (
               <Link key={i} href={linkItem.link} className={linkClasses(linkItem.link)}>

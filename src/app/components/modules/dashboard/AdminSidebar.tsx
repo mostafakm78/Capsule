@@ -8,7 +8,7 @@ import { BsCapsule } from 'react-icons/bs';
 import { IoSettingsSharp } from 'react-icons/io5';
 import { ThemeToggle } from '../../shared/Theme';
 import { ImExit } from 'react-icons/im';
-import { FaUsers } from 'react-icons/fa';
+import { FaUser, FaUsers } from 'react-icons/fa';
 import { usePathname } from 'next/navigation';
 import { LinkProps } from '@/lib/types';
 import { JSX } from 'react';
@@ -26,6 +26,7 @@ const sidebarLinks: (LinkProps & { icon: JSX.Element })[] = [
   { link: '/dashboard/admin/capsules', title: 'کپسول‌های سایت', icon: <BsCapsule className="text-2xl" /> },
   { link: '/dashboard/admin/categories', title: 'دسته بندی ها', icon: <TbCategoryFilled className="text-2xl" /> },
   { link: '/dashboard/admin/setting', title: 'تنظیمات حساب', icon: <IoSettingsSharp className="text-2xl" /> },
+  { link: '/dashboard/panel', title: 'پنل کاربری', icon: <FaUser className="text-2xl" /> },
 ];
 
 export function AdminSidebar() {

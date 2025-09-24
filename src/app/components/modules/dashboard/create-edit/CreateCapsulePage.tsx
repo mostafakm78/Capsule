@@ -41,6 +41,7 @@ export default function CreateCapsulePage() {
   const router = useRouter();
   const [tab, setTab] = useState<dashboardCreateCapsuleTab>('info');
   const [loading, setLoading] = useState<boolean>(true);
+  const [submitting, setSubmitting] = useState(false);
   const { capsule, mode } = useSelector((state: RootState) => state.editOrcreate);
   const showToast = useCustomToast();
 
@@ -77,58 +78,61 @@ export default function CreateCapsulePage() {
   }
 
   const handleSubmit = async () => {
-    const fd = new FormData();
-
-    const appendIf = (key: string, val: unknown) => {
-      if (val === undefined || val === null || val === '') return;
-
-      if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
-        fd.append(key, String(val));
-        return;
-      }
-
-      if (val instanceof Date) {
-        fd.append(key, val.toISOString());
-        return;
-      }
-
-      if (val instanceof File || val instanceof Blob) {
-        fd.append(key, val);
-        return;
-      }
-
-      fd.append(key, JSON.stringify(val));
-    };
-    const categoryItem = capsule?.categoryItem?._id;
-
-    appendIf('title', capsule?.title);
-    appendIf('description', capsule?.description);
-    appendIf('extra', capsule?.extra);
-    appendIf('color', capsule?.color);
-    appendIf('categoryItem', categoryItem);
-    if (capsule?.removeImage === true) appendIf('removeImage', capsule.removeImage);
-
-    const file = fileRef.current;
-
-    if (file) {
-      fd.append('image', file);
-    }
-
-    const lock = capsule?.access?.lock as Lock | undefined;
-    const isTimed = lock === 'timed';
-
-    const rawUnlockAt = capsule?.access?.unlockAt as unknown;
-    const unlockAt: string | undefined = isTimed ? (isDate(rawUnlockAt) ? rawUnlockAt.toISOString() : (typeof rawUnlockAt === 'string' && rawUnlockAt) || undefined) : undefined;
-
-    const accessPayload: AccessPayload = {
-      visibility: (capsule?.access?.visibility as Visibility) ?? 'public',
-      lock: lock ?? 'none',
-      ...(unlockAt ? { unlockAt } : {}),
-    };
-
-    fd.append('access', JSON.stringify(accessPayload));
+    if (submitting) return;
+    setSubmitting(true);
 
     try {
+      const fd = new FormData();
+
+      const appendIf = (key: string, val: unknown) => {
+        if (val === undefined || val === null || val === '') return;
+
+        if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
+          fd.append(key, String(val));
+          return;
+        }
+
+        if (val instanceof Date) {
+          fd.append(key, val.toISOString());
+          return;
+        }
+
+        if (val instanceof File || val instanceof Blob) {
+          fd.append(key, val);
+          return;
+        }
+
+        fd.append(key, JSON.stringify(val));
+      };
+      const categoryItem = capsule?.categoryItem?._id;
+
+      appendIf('title', capsule?.title);
+      appendIf('description', capsule?.description);
+      appendIf('extra', capsule?.extra);
+      appendIf('color', capsule?.color);
+      appendIf('categoryItem', categoryItem);
+      if (capsule?.removeImage === true) appendIf('removeImage', capsule.removeImage);
+
+      const file = fileRef.current;
+
+      if (file) {
+        fd.append('image', file);
+      }
+
+      const lock = capsule?.access?.lock as Lock | undefined;
+      const isTimed = lock === 'timed';
+
+      const rawUnlockAt = capsule?.access?.unlockAt as unknown;
+      const unlockAt: string | undefined = isTimed ? (isDate(rawUnlockAt) ? rawUnlockAt.toISOString() : (typeof rawUnlockAt === 'string' && rawUnlockAt) || undefined) : undefined;
+
+      const accessPayload: AccessPayload = {
+        visibility: (capsule?.access?.visibility as Visibility) ?? 'public',
+        lock: lock ?? 'none',
+        ...(unlockAt ? { unlockAt } : {}),
+      };
+
+      fd.append('access', JSON.stringify(accessPayload));
+
       if (mode === 'edit' && capsule?._id) {
         const res = await callApi().patch(`/capsules/${capsule._id}`, fd);
         if (res.status === 200) {
@@ -164,6 +168,8 @@ export default function CreateCapsulePage() {
       } else {
         return showToast({ message: 'خطایی در ثبت کپسول شما پیش آمده لطفا کمی بعد تلاش کنید' });
       }
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -219,7 +225,7 @@ export default function CreateCapsulePage() {
 
       <div className="w-full flex justify-center mt-8 gap-4">
         <DeleteCpModal />
-        <Button onClick={handleSubmit} disabled={isTimedPassed} className="cursor-pointer md:w-1/4 py-6 text-lg">
+        <Button onClick={handleSubmit} disabled={isTimedPassed || submitting} className="cursor-pointer md:w-1/4 py-6 text-lg">
           {mode === 'edit' ? 'ویرایش کپسول' : 'ساخت کپسول'}
         </Button>
       </div>

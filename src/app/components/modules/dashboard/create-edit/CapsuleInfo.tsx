@@ -35,6 +35,7 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
   const { mode, capsule } = useAppSelector((state) => state.editOrcreate);
   const showToast = useCustomToast();
 
+  const [submiting, setSubmiting] = useState<boolean>(false);
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [extra, setExtra] = useState<string>('');
@@ -84,20 +85,25 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
   };
 
   const handleSubmit = () => {
+    if (!title || !description || submiting) return;
     if (!title || !description) {
       return showToast({ message: 'وارد کردن عنوان و توضیحات اجباری میباشد ❌', bg: 'bg-red-200' });
     }
-    dispatch(
-      setCapsule({
-        ...capsule,
-        title,
-        description,
-        extra,
-        color: selected,
-        removeImage: mode === 'edit' && rmvImage ? true : false,
-      })
-    );
-    showToast('تنظیمات کپسول شما ثبت شد ✅');
+    try {
+      dispatch(
+        setCapsule({
+          ...capsule,
+          title,
+          description,
+          extra,
+          color: selected,
+          removeImage: mode === 'edit' && rmvImage ? true : false,
+        })
+      );
+      showToast('تنظیمات کپسول شما ثبت شد ✅');
+    } finally {
+      setSubmiting(false);
+    }
   };
 
   let isTimedPassed = false;
@@ -215,7 +221,7 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
         </div>
 
         <div className="w-full flex justify-center mt-8">
-          <Button onClick={handleSubmit} disabled={!title || !description} className="cursor-pointer w-1/3 py-6 text-lg">
+          <Button onClick={handleSubmit} disabled={!title || !description || submiting} className="cursor-pointer w-1/3 py-6 text-lg">
             ثبت
           </Button>
         </div>

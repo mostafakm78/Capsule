@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { RiMenu4Fill } from 'react-icons/ri';
 import { Bungee } from 'next/font/google';
 import Link from 'next/link';
-import { MdHomeFilled } from 'react-icons/md';
+import { MdAdminPanelSettings, MdHomeFilled } from 'react-icons/md';
 import { BsCapsule } from 'react-icons/bs';
 import { IoSettingsSharp } from 'react-icons/io5';
 import { ThemeToggle } from '../../shared/Theme';
@@ -15,6 +15,7 @@ import { LinkProps } from '@/lib/types';
 import { JSX } from 'react';
 import { Separator } from '@/components/ui/separator';
 import { LogoutModal } from './LogoutModal';
+import { useAppSelector } from '@/app/hooks/hook';
 
 const bungee = Bungee({
   weight: '400',
@@ -26,10 +27,14 @@ const sidebarLinks: (LinkProps & { icon: JSX.Element })[] = [
   { link: '/dashboard/user-capsules', title: 'کپسول های شما', icon: <BsCapsule className="text-2xl" /> },
   { link: '/dashboard/setting', title: 'تنظیمات حساب', icon: <IoSettingsSharp className="text-2xl" /> },
   { link: '/dashboard/guide', title: 'راهنما', icon: <PiQuestionFill className="text-2xl" /> },
+  { link: '/dashboard/admin', title: 'پنل ادمین', icon: <MdAdminPanelSettings className="text-2xl" /> },
 ];
 
 export function DashboardSidebar() {
   const pathName = usePathname();
+  const { user } = useAppSelector((state) => state.user);
+
+  const admin = pathName.startsWith('/dashboard/admin');
 
   const linkClasses = (href: string) => {
     const isActive = href === '/' ? pathName === '/' : pathName.startsWith(href);
@@ -52,19 +57,23 @@ export function DashboardSidebar() {
             </SheetTitle>
           </SheetHeader>
           <div className="flex flex-col w-full py-4 px-10">
-            <Separator className='w-full bg-foreground/20 my-3'/>
+            <Separator className="w-full bg-foreground/20 my-3" />
             <div className="flex items-center justify-between">
               <span>تم سایت</span>
               <ThemeToggle />
             </div>
           </div>
           <div className="flex overflow-y-auto flex-col text-foreground/85 py-18 px-5 gap-6">
-            {sidebarLinks.map((linkItem, i) => (
-              <div key={i} className={linkClasses(linkItem.link)}>
-                {linkItem.icon}
-                <Link href={linkItem.link}>{linkItem.title}</Link>
-              </div>
-            ))}
+            {sidebarLinks.map((linkItem, i) => {
+              const isLast = i === sidebarLinks.length - 1;
+              if (isLast && user?.role !== 'admin' && admin) return null;
+              return (
+                <div key={i} className={linkClasses(linkItem.link)}>
+                  {linkItem.icon}
+                  <Link href={linkItem.link}>{linkItem.title}</Link>
+                </div>
+              );
+            })}
             <div className="flex flex-col text-foreground/70 pt-5  gap-6">
               <div className="flex items-center text-lg active:text-primary justify-start gap-3 p-2 rounded-lg hover:text-primary duration-300">
                 <ImExit className="text-2xl" />
