@@ -3,9 +3,8 @@ import Image from 'next/image';
 import { RiMenu4Fill } from 'react-icons/ri';
 import { Bungee } from 'next/font/google';
 import Link from 'next/link';
-import { MdHomeFilled } from 'react-icons/md';
+import { MdHomeFilled, MdOutlineEditNotifications } from 'react-icons/md';
 import { BsCapsule } from 'react-icons/bs';
-import { IoSettingsSharp } from 'react-icons/io5';
 import { ThemeToggle } from '../../shared/Theme';
 import { ImExit } from 'react-icons/im';
 import { FaUser, FaUsers } from 'react-icons/fa';
@@ -25,7 +24,7 @@ const sidebarLinks: (LinkProps & { icon: JSX.Element })[] = [
   { link: '/dashboard/admin/users', title: 'کاربران سایت', icon: <FaUsers className="text-2xl" /> },
   { link: '/dashboard/admin/capsules', title: 'کپسول‌های سایت', icon: <BsCapsule className="text-2xl" /> },
   { link: '/dashboard/admin/categories', title: 'دسته بندی ها', icon: <TbCategoryFilled className="text-2xl" /> },
-  { link: '/dashboard/admin/setting', title: 'تنظیمات حساب', icon: <IoSettingsSharp className="text-2xl" /> },
+  { link: '/dashboard/admin/notifications', title: 'مدیریت اعلان‌ها', icon: <MdOutlineEditNotifications className="text-2xl" /> },
   { link: '/dashboard/panel', title: 'پنل کاربری', icon: <FaUser className="text-2xl" /> },
 ];
 

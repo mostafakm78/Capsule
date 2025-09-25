@@ -7,7 +7,7 @@ import { ThemeToggle } from '@/app/components/shared/Theme';
 import Image from 'next/image';
 import { Bungee } from 'next/font/google';
 import Link from 'next/link';
-import { MdAdminPanelSettings, MdHomeFilled } from 'react-icons/md';
+import { MdAdminPanelSettings, MdHomeFilled, MdOutlineEditNotifications } from 'react-icons/md';
 import { HiMiniSquaresPlus } from 'react-icons/hi2';
 import { BsCapsule } from 'react-icons/bs';
 import { IoSettingsSharp } from 'react-icons/io5';
@@ -41,6 +41,7 @@ const adminLinks: (LinkProps & { icon: JSX.Element })[] = [
   { link: '/dashboard/admin/users', title: 'کاربران سایت', icon: <FaUsers className="text-2xl" /> },
   { link: '/dashboard/admin/capsules', title: 'کپسول‌های سایت', icon: <BsCapsule className="text-2xl" /> },
   { link: '/dashboard/admin/categories', title: 'دسته بندی ها', icon: <TbCategoryFilled className="text-2xl" /> },
+  { link: '/dashboard/admin/notifications', title: 'مدیریت اعلان‌ها', icon: <MdOutlineEditNotifications className="text-2xl" /> },
   { link: '/dashboard/panel', title: 'پنل کاربری', icon: <FaUser className="text-2xl" /> },
 ];
 

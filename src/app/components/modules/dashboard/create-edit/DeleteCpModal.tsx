@@ -21,9 +21,11 @@ export function DeleteCpModal() {
         showToast({ message: 'کپسول مورد نظر با موفقیت حذف شد ✅', bg: 'bg-green-200' });
         router.push('/dashboard/user-capsules');
         return;
+      } else {
+        return showToast({ message: 'مشکلی در حذف کپسول پیش آمده ❌', bg: 'bg-red-200' });
       }
-    } catch (error) {
-      console.log(error);
+    } catch {
+      return showToast({ message: 'مشکلی در حذف کپسول پیش آمده ❌', bg: 'bg-red-200' });
     }
   };
 

@@ -148,7 +148,7 @@ export default function AdminPanelIndex() {
           <div className="flex flex-col gap-1">
             <p className="lg:text-lg text-base font-bold text-foreground/80">ادمین عزیز شما میتونین از بخش کپسول های سایت تمام کپسول های ساخته شده رو ببینین.</p>
             <Link className="flex group items-center gap-2 lg:mt-0 mt-2 text-base" href="/dashboard/create-capsule">
-              <span className="text-foreground/80 group-hover:text-primary/80 duration-300">ساخت کپسول های سایت</span>
+              <span className="text-foreground/80 group-hover:text-primary/80 duration-300">دیدن کپسول های سایت</span>
               <FaLongArrowAltLeft className="text-2xl text-foreground group-hover:text-primary duration-300" />
             </Link>
           </div>

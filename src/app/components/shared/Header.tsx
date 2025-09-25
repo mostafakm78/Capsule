@@ -15,6 +15,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks/hook';
 import { fetchMe } from '@/app/store/userThunk';
 import { IoIosSearch } from 'react-icons/io';
 import { Input } from '@/components/ui/input';
+import Spotlight from './Spotlight';
 
 gsap.registerPlugin(useGSAP);
 
@@ -36,9 +37,7 @@ export default function Header({ bungee }: Logo) {
 
   const scope = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const overlayRef = useRef<HTMLDivElement>(null);
-  const inputWrapRef = useRef<HTMLDivElement>(null);
+  const inputWrapRef = useRef<HTMLDivElement>(null); // ← درست: بدون | null در جنریک
 
   const { user, loading } = useAppSelector((s) => s.user);
 
@@ -53,15 +52,12 @@ export default function Header({ bungee }: Logo) {
   useGSAP(
     () => {
       gsap.defaults({ overwrite: 'auto' });
-
       const isMobile = window.innerWidth < 480;
       const tl = gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.55 } });
 
       tl.from('.header-main', { autoAlpha: 0, y: -24 }).from(['.brand-anim', '.nav-link-anim'], { autoAlpha: 0, y: -16, stagger: 0.06 }, '-=0.25');
 
-      if (!isMobile) {
-        tl.from('.theme-anim', { autoAlpha: 0, y: -16 }, '<');
-      }
+      if (!isMobile) tl.from('.theme-anim', { autoAlpha: 0, y: -16 }, '<');
 
       tl.add(() => {
         gsap.set(['.header-main', '.brand-anim', '.nav-link-anim', '.theme-anim'], { clearProps: 'transform' });
@@ -72,38 +68,10 @@ export default function Header({ bungee }: Logo) {
     { scope }
   );
 
+  // اسکیل ظریف باکس سرچ
   useEffect(() => {
-    const el = document.documentElement;
-    if (search) el.classList.add('overflow-hidden');
-    else el.classList.remove('overflow-hidden');
-    return () => el.classList.remove('overflow-hidden');
-  }, [search]);
-
-  useEffect(() => {
-    const ov = overlayRef.current;
     const box = inputWrapRef.current;
-
-    gsap.to(ov, {
-      duration: 0.35,
-      ease: 'power2.out',
-      autoAlpha: search ? 1 : 0,
-      onStart: () => {
-        if (ov && search) {
-          gsap.set(ov, { pointerEvents: 'auto' });
-        }
-      },
-      onComplete: () => {
-        if (ov && !search) {
-          gsap.set(ov, { pointerEvents: 'none' });
-        }
-      },
-    });
-
-    gsap.to(box, {
-      duration: 0.28,
-      ease: 'power2.out',
-      scale: search ? 1.07 : 1,
-    });
+    gsap.to(box, { duration: 0.28, ease: 'power2.out', scale: search ? 1.07 : 1 });
   }, [search]);
 
   return (
@@ -113,21 +81,20 @@ export default function Header({ bungee }: Logo) {
         pathname === '/' ? 'bg-foreground/20' : 'bg-background pb-10 after:bg-linear-to-b after:from-foreground/30 after:to-foreground/10 after:content-[""] after:w-full after:h-full after:absolute dark:after:opacity-45 after:opacity-80 after:z-[1] after:blur-2xl after:pointer-events-none'
       } items-center justify-center`}
     >
-      <div
-        ref={overlayRef}
-        className="fixed inset-0 bg-black/60 backdrop-blur-[1px] z-40 opacity-0 pointer-events-none"
-        onMouseDown={(e) => {
-          e.preventDefault();
+      {/* Spotlight: به‌جای ref، خودِ المنت را می‌دهیم */}
+      <Spotlight
+        active={search}
+        onClose={() => {
           inputRef.current?.blur();
           setSearch(false);
         }}
-        aria-hidden
+        radius={170}
+        softness={28}
+        darkness={0.82}
+        anchorEl={inputWrapRef.current}
       />
 
-      <nav
-        className="header-main relative w-11/12 z-[60] lg:w-10/12 bg-background py-6 px-3 sm:px-6 md:px-10 mt-8
-                      flex items-center shadow-lg justify-around rounded-xl gap-2 md:gap-4 will-change-transform"
-      >
+      <nav className="header-main relative w-11/12 z-[60] lg:w-10/12 bg-background py-6 px-3 sm:px-6 md:px-10 mt-8 flex items-center shadow-lg justify-around rounded-xl gap-2 md:gap-4 will-change-transform">
         <div className="nav-link-anim lg:hidden text-4xl cursor-pointer will-change-transform">
           <Sidebar />
         </div>
@@ -137,6 +104,7 @@ export default function Header({ bungee }: Logo) {
           <h1 className={`${bungee.className}`}>Capsule</h1>
         </div>
 
+        {/* جعبه‌ی سرچ */}
         <div ref={inputWrapRef} className="md:flex w-2/4 relative hidden items-center will-change-transform">
           <Input ref={inputRef} onFocus={() => setSearch(true)} onBlur={() => setSearch(false)} className="bg-white dark:bg-slate-900" type="text" placeholder="کپسول مورد نظر خودت رو جستجو کن" />
           <div className="bg-primary absolute left-0 h-full rounded-l-lg flex items-center justify-center shadow-inner shadow-foreground/50">
@@ -148,7 +116,7 @@ export default function Header({ bungee }: Logo) {
           <div className="theme-anim hidden lg:block will-change-transform">
             <ThemeToggle />
           </div>
-          {loading ? <div></div> : <div className="nav-link-anim flex items-center will-change-transform">{user ? <UserPopover /> : <LoginButton />}</div>}
+          {loading ? <div /> : <div className="nav-link-anim flex items-center will-change-transform">{user ? <UserPopover /> : <LoginButton />}</div>}
         </div>
       </nav>
 
