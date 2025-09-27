@@ -17,6 +17,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { ApiError } from '@/lib/types';
 import { setStep } from '@/app/store/authStepOneSlice';
 import callApi from '@/app/services/callApi';
+import useCustomToast from '@/app/hooks/useCustomToast';
 
 const formSchemaStepTwo = z.object({
   email: z.email(),
@@ -27,6 +28,8 @@ const formSchemaStepTwo = z.object({
 type StepTwoData = z.infer<typeof formSchemaStepTwo>;
 
 export default function StepThreeForm({ anime }: { anime: string }) {
+  const showToast = useCustomToast();
+
   const [hideRepeat, setHideRepeat] = useState<boolean>(true);
   const dispatch = useDispatch<AppDispatch>();
   const email = useSelector((state: RootState) => state.authStepOne.pendingEmail);
@@ -45,7 +48,9 @@ export default function StepThreeForm({ anime }: { anime: string }) {
         const res = await callApi().post('/auth/signup', values);
         const response = res as AxiosResponse;
         if (response.status === 201) {
+          showToast({ message: 'ثبت نام شما با موفقیت انجام شد ✅', bg: 'bg-green-200' });
           dispatch(setStep(1));
+          return;
         }
       }
     } catch (err) {

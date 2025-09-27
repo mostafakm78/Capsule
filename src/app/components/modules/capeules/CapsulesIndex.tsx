@@ -1,12 +1,72 @@
+'use client';
+
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FaLongArrowAltLeft } from 'react-icons/fa';
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import CapsuelesCategory from './CapsulesCategory';
+import { Capsule, GetCapsulesResponse } from '@/lib/types';
+import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
 
-export default function CapsulesIndex() {
+type Props = {
+  capsules: GetCapsulesResponse;
+};
+
+export default function CapsulesIndex({ capsules }: Props) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const [publicCapsules, setPublicCapsules] = useState<Capsule[] | null>(null);
+
+  const currentPage = Number(searchParams.get('page') || 1);
+
+  useEffect(() => {
+    if (capsules) {
+      setPublicCapsules(capsules.items);
+    } else {
+      setPublicCapsules(null);
+    }
+  }, [capsules]);
+
+  const pushWithParams = (mutator: (p: URLSearchParams) => void) => {
+    const params = new URLSearchParams(searchParams.toString());
+    mutator(params);
+    const qs = params.toString();
+    router.push(qs ? `/capsules?${qs}` : `/capsules`);
+  };
+
+  const buildPageList = (total: number, curr: number): (number | '...')[] => {
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+
+    const res: (number | '...')[] = [];
+    const add = (v: number | '...') => {
+      if (res[res.length - 1] !== v) res.push(v);
+    };
+
+    add(1);
+    if (curr > 4) add('...');
+    for (let p = Math.max(2, curr - 1); p <= Math.min(total - 1, curr + 1); p++) add(p);
+    if (curr < total - 3) add('...');
+    add(total);
+    return res;
+  };
+
+  const goToPage = (p: number) => {
+    if (!capsules) return;
+    const totalPages = capsules.pagination.pages;
+    const target = Math.min(Math.max(1, p), totalPages);
+    pushWithParams((params) => {
+      params.set('page', String(target));
+    });
+  };
+
+  const goNext = () => goToPage(currentPage + 1);
+  const goPrev = () => goToPage(currentPage - 1);
+
   return (
     <section className="flex items-center justify-center">
       <div className="px-4 md:px-6 lg:px-10 flex flex-col lg:w-[90%] w-full justify-center items-center">
@@ -18,212 +78,87 @@ export default function CapsulesIndex() {
           <CapsuelesCategory />
           <div className="lg:col-span-9 w-full min-h-screen place-self-start">
             <div className="grid lg:grid-cols-12 md:grid-cols-2 grid-cols-1 gap-y-10 gap-x-6">
-              <Card className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white dark:bg-slate-900 h-[350px] border-none shadow-sm">
-                <CardHeader>
-                  <div className="absolute -top-[8%] left-1/2 -translate-x-1/2">
-                    <Avatar className="h-12 w-12 ring-2 ring-secondary">
-                      <AvatarImage src="https://github.com/shadcn.png" />
-                      <AvatarFallback>CP</AvatarFallback>
-                    </Avatar>
-                  </div>
-                  <CardTitle className="text-center text-xl mt-2 text-foreground">کپسول عمومی</CardTitle>
-                  <CardDescription className="text-center text-base text-foreground/80">
-                    <p>
-                      از کاربر : <span>مصطفی کمری</span>
-                    </p>
-                    <p>
-                      موضوع : <span>تصادف مرگبار</span>
-                    </p>
-                  </CardDescription>
-                </CardHeader>
-                <Separator className="bg-foreground/20" />
-                <CardContent>
-                  <p className="line-clamp-3 text-center">من یک خاطره بسیار جالب از یک تصادف دارم که خیلی شوخی شوخی داشت جدی میشد و داشتیم میمردیم!</p>
-                </CardContent>
-                <Separator className="bg-foreground/20" />
-                <CardFooter className="flex py-4 items-center justify-center">
-                  <Link className="flex bg-secondary py-1 px-2 rounded-md items-center justify-center gap-2 text-lg text-background" href="/capsules/1">
-                    <span>دیدن کپسول</span>
-                    <FaLongArrowAltLeft className="text-2xl" />
-                  </Link>
-                </CardFooter>
-              </Card>
-              <div className="lg:col-span-6 xl:col-span-4 group hidden lg:flex flex-col items-center justify-center pr-2 2xl:px-8 bg-accent rounded-md relative shadow-lg gap-6">
-                <div className="absolute -top-[10%] left-1/2 -translate-x-1/2">
-                  <Avatar className="h-12 w-12 ring-2 ring-secondary">
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CP</AvatarFallback>
-                  </Avatar>
-                </div>
-                <div className="absolute top-1/2 -translate-y-1/2 z-10 w-full opacity-0 left-[10%] shadow-xl p-2 rounded-lg text-center bg-slate-400 text-background group-hover:-top-32 group-hover:-translate-y-0 group-hover:opacity-100 group-hover:left-20 duration-300">
-                  <div className="flex flex-col items-center">
-                    <span className="font-medium">از کاربر :</span>
-                    <span className="text-background/80">مصطفی کمری</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <span className="font-medium">موضوع :</span>
-                    <span className="text-background/80">مصطفی کمری</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <span className="font-medium">خلاصه کپسول :</span>
-                    <p className="text-background/80 line-clamp-2">من یک خاطره بسیار جالب از یک تصادف دارم که خیلی شوخی شوخی داشت جدی میشد و داشتیم میمردیم!</p>
-                  </div>
-                </div>
-                <div className="w-1/3 relative h-2/3 flex flex-col items-center">
-                  <div className="bg-background dark:bg-foreground relative after:content-[''] after:absolute after:h-full after:w-full after:border-6 after:border-accent dark:after:border-accent/10 after:border-b-0 after:rounded-t-full border-2 border-black h-1/2 w-2/2 rounded-t-full group-hover:-translate-y-2 group-hover:rotate-6 duration-300"></div>
-                  <div className="bg-red-400/80 relative after:content-[''] after:absolute after:h-full after:w-full after:border-6 after:border-red-400/70 after:border-t-0 after:rounded-b-full border-2 border-black h-1/2 w-2/2 rounded-b-full group-hover:translate-y-2 group-hover:rotate-6 duration-300"></div>
-                </div>
-                <Link className="flex bg-secondary py-1 px-2 rounded-md items-center justify-center gap-2 text-lg text-background hover:scale-105 hover:opacity-80 duration-300" href="/capsules/1">
-                  <span>دیدن کپسول</span>
-                  <FaLongArrowAltLeft className="text-2xl" />
-                </Link>
-              </div>
-              <Card className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white dark:bg-slate-900 h-[350px] border-none shadow-sm">
-                <CardHeader>
-                  <div className="absolute -top-[8%] left-1/2 -translate-x-1/2">
-                    <Avatar className="h-12 w-12 ring-2 ring-secondary">
-                      <AvatarImage src="https://github.com/shadcn.png" />
-                      <AvatarFallback>CP</AvatarFallback>
-                    </Avatar>
-                  </div>
-                  <CardTitle className="text-center text-xl mt-2 text-foreground">کپسول عمومی</CardTitle>
-                  <CardDescription className="text-center text-base text-foreground/80">
-                    <p>
-                      از کاربر : <span>مصطفی کمری</span>
-                    </p>
-                    <p>
-                      موضوع : <span>تصادف مرگبار</span>
-                    </p>
-                  </CardDescription>
-                </CardHeader>
-                <Separator className="bg-foreground/20" />
-                <CardContent>
-                  <p className="line-clamp-3 text-center">من یک خاطره بسیار جالب از یک تصادف دارم که خیلی شوخی شوخی داشت جدی میشد و داشتیم میمردیم!</p>
-                </CardContent>
-                <Separator className="bg-foreground/20" />
-                <CardFooter className="flex py-4 items-center justify-center">
-                  <Link className="flex bg-secondary py-1 px-2 rounded-md items-center justify-center gap-2 text-lg text-background" href="">
-                    <span>دیدن کپسول</span>
-                    <FaLongArrowAltLeft className="text-2xl" />
-                  </Link>
-                </CardFooter>
-              </Card>
-              <Card className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white dark:bg-slate-900 h-[350px] border-none shadow-sm">
-                <CardHeader>
-                  <div className="absolute -top-[8%] left-1/2 -translate-x-1/2">
-                    <Avatar className="h-12 w-12 ring-2 ring-secondary">
-                      <AvatarImage src="https://github.com/shadcn.png" />
-                      <AvatarFallback>CP</AvatarFallback>
-                    </Avatar>
-                  </div>
-                  <CardTitle className="text-center text-xl mt-2 text-foreground">کپسول عمومی</CardTitle>
-                  <CardDescription className="text-center text-base text-foreground/80">
-                    <p>
-                      از کاربر : <span>مصطفی کمری</span>
-                    </p>
-                    <p>
-                      موضوع : <span>تصادف مرگبار</span>
-                    </p>
-                  </CardDescription>
-                </CardHeader>
-                <Separator className="bg-foreground/20" />
-                <CardContent>
-                  <p className="line-clamp-3">من یک خاطره بسیار جالب از یک تصادف دارم که خیلی شوخی شوخی داشت جدی میشد و داشتیم میمردیم!</p>
-                </CardContent>
-                <Separator className="bg-foreground/20" />
-                <CardFooter className="flex py-4 items-center justify-center">
-                  <Link className="flex bg-secondary py-1 px-2 rounded-md items-center justify-center gap-2 text-lg text-background" href="">
-                    <span>دیدن کپسول</span>
-                    <FaLongArrowAltLeft className="text-2xl" />
-                  </Link>
-                </CardFooter>
-              </Card>
-              <Card className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white dark:bg-slate-900 h-[350px] border-none shadow-sm">
-                <CardHeader>
-                  <div className="absolute -top-[8%] left-1/2 -translate-x-1/2">
-                    <Avatar className="h-12 w-12 ring-2 ring-secondary">
-                      <AvatarImage src="https://github.com/shadcn.png" />
-                      <AvatarFallback>CP</AvatarFallback>
-                    </Avatar>
-                  </div>
-                  <CardTitle className="text-center text-xl mt-2 text-foreground">کپسول عمومی</CardTitle>
-                  <CardDescription className="text-center text-base text-foreground/80">
-                    <p>
-                      از کاربر : <span>مصطفی کمری</span>
-                    </p>
-                    <p>
-                      موضوع : <span>تصادف مرگبار</span>
-                    </p>
-                  </CardDescription>
-                </CardHeader>
-                <Separator className="bg-foreground/20" />
-                <CardContent>
-                  <p className="line-clamp-3">من یک خاطره بسیار جالب از یک تصادف دارم که خیلی شوخی شوخی داشت جدی میشد و داشتیم میمردیم!</p>
-                </CardContent>
-                <Separator className="bg-foreground/20" />
-                <CardFooter className="flex py-4 items-center justify-center">
-                  <Link className="flex bg-secondary py-1 px-2 rounded-md items-center justify-center gap-2 text-lg text-background" href="">
-                    <span>دیدن کپسول</span>
-                    <FaLongArrowAltLeft className="text-2xl" />
-                  </Link>
-                </CardFooter>
-              </Card>
-              <Card className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white dark:bg-slate-900 h-[350px] border-none shadow-sm">
-                <CardHeader>
-                  <div className="absolute -top-[8%] left-1/2 -translate-x-1/2">
-                    <Avatar className="h-12 w-12 ring-2 ring-secondary">
-                      <AvatarImage src="https://github.com/shadcn.png" />
-                      <AvatarFallback>CP</AvatarFallback>
-                    </Avatar>
-                  </div>
-                  <CardTitle className="text-center text-xl mt-2 text-foreground">کپسول عمومی</CardTitle>
-                  <CardDescription className="text-center text-base text-foreground/80">
-                    <p>
-                      از کاربر : <span>مصطفی کمری</span>
-                    </p>
-                    <p>
-                      موضوع : <span>تصادف مرگبار</span>
-                    </p>
-                  </CardDescription>
-                </CardHeader>
-                <Separator className="bg-foreground/20" />
-                <CardContent>
-                  <p className="line-clamp-3">من یک خاطره بسیار جالب از یک تصادف دارم که خیلی شوخی شوخی داشت جدی میشد و داشتیم میمردیم!</p>
-                </CardContent>
-                <Separator className="bg-foreground/20" />
-                <CardFooter className="flex py-4 items-center justify-center">
-                  <Link className="flex bg-secondary py-1 px-2 rounded-md items-center justify-center gap-2 text-lg text-background" href="">
-                    <span>دیدن کپسول</span>
-                    <FaLongArrowAltLeft className="text-2xl" />
-                  </Link>
-                </CardFooter>
-              </Card>
+              {publicCapsules?.map((item) => (
+                <Card key={item._id} className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white py-0 hover:shadow-2xl hover:shadow-secondary/20 duration-300 dark:bg-slate-900 h-[420px] border-none shadow-sm">
+                  <CardHeader className='px-0'>
+                    <div className="absolute z-[50] -top-[5%] left-1/2 -translate-x-1/2">
+                      <Avatar className="h-12 w-12 ring-2 ring-secondary">
+                        <AvatarImage className="object-cover" src={item.owner?.avatar ? `http://localhost:8080/images/${item.owner.avatar}` : '/images/default.png'} />
+                        <AvatarFallback>...</AvatarFallback>
+                      </Avatar>
+                    </div>
+                    <Image
+                      className="object-cover w-full h-[130px] mb-2 p-0.5 rounded-t-md rounded-b-sm hover:scale-105 hover:shadow-xl hover:ring-2 hover:border-transparent ring-secondary shadow-secondary/30 duration-300"
+                      src={item.image ? `http://localhost:8080/images/${item.image}` : '/images/def.jpg'}
+                      alt="capsule image"
+                      width={500}
+                      height={500}
+                      unoptimized
+                    />
+                    <CardDescription className="text-center text-base text-foreground/80">
+                      <p>
+                        از کاربر : <span>مصطفی کمری</span>
+                      </p>
+                      <p>
+                        موضوع : <span>تصادف مرگبار</span>
+                      </p>
+                    </CardDescription>
+                  </CardHeader>
+                  <Separator className="bg-foreground/20" />
+                  <CardContent>
+                    <p className="line-clamp-2 break-words">من یک خاطره بسیار جالب از یک تصادف دارم که خیلی شوخی شوخی داشت جدی میشد و داشتیم میمردیم!</p>
+                  </CardContent>
+                  <Separator className="bg-foreground/20" />
+                  <CardFooter className="flex py-4 items-center justify-center">
+                    <Link className="flex py-1 group px-2 rounded-md items-center justify-center gap-2 w-2/3 h-[50px] text-lg text-background" href="/capsules/1">
+                      <div className="w-full relative h-full flex items-center">
+                        <div className="bg-background dark:bg-foreground relative after:content-[''] after:absolute after:h-full after:w-full after:border-6 after:border-accent dark:after:border-accent/10 after:border-l-0 after:rounded-r-full border-2 border-black h-full w-2/2 rounded-r-full group-hover:translate-x-8 group-hover:rotate-6 duration-300">
+                          <span className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 text-foreground dark:text-background">دیدن</span>
+                        </div>
+                        <div className="bg-red-400/80 relative after:content-[''] after:absolute after:h-full after:w-full after:border-6 after:border-red-400/70 after:border-r-0 after:rounded-l-full border-2 border-black h-full w-2/2 rounded-l-full group-hover:-translate-x-8 duration-300">
+                          <span className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 text-foreground dark:text-background">کپسول</span>
+                        </div>
+                      </div>
+                      <FaLongArrowAltLeft className="text-4xl absolute text-foreground opacity-0 group-hover:opacity-100 duration-200" />
+                    </Link>
+                  </CardFooter>
+                </Card>
+              ))}
             </div>
           </div>
         </div>
         <div className="mt-16">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationNext className="bg-primary dark:hover:text-foreground text-background hover:bg-foreground hover:text-background" href="#" />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem className="space-x-1">
-                <PaginationLink className="bg-primary dark:hover:text-foreground text-background hover:bg-foreground hover:text-background" href="#">
-                  1
-                </PaginationLink>
-                <PaginationLink className="bg-primary dark:hover:text-foreground text-background hover:bg-foreground hover:text-background" href="#">
-                  2
-                </PaginationLink>
-              </PaginationItem>
+          {capsules && capsules.pagination.pages > 1 && (
+            <Pagination dir="rtl">
+              <PaginationContent>
+                {currentPage !== 1 && (
+                  <PaginationItem>
+                    <PaginationPrevious onClick={goPrev} className="bg-primary text-background hover:bg-foreground hover:text-background disabled:opacity-50" href="#" />
+                  </PaginationItem>
+                )}
 
-              <PaginationItem>
-                <PaginationPrevious className="bg-primary dark:hover:text-foreground text-background hover:bg-foreground hover:text-background" href="#" />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+                {buildPageList(capsules.pagination.pages, currentPage).map((p, idx) =>
+                  p === '...' ? (
+                    <PaginationItem key={`dots-${idx}`}>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  ) : (
+                    <PaginationItem key={p}>
+                      <PaginationLink onClick={() => goToPage(p)} aria-current={p === currentPage ? 'page' : undefined} className={`${p === currentPage ? 'bg-foreground text-background' : 'bg-primary text-background hover:bg-foreground hover:text-background'}`} href="#">
+                        {p}
+                      </PaginationLink>
+                    </PaginationItem>
+                  )
+                )}
+
+                {currentPage !== capsules.pagination.pages && (
+                  <PaginationItem>
+                    <PaginationNext onClick={goNext} className="bg-primary text-background hover:bg-foreground hover:text-background disabled:opacity-50" href="#" />
+                  </PaginationItem>
+                )}
+              </PaginationContent>
+            </Pagination>
+          )}
         </div>
       </div>
     </section>

@@ -20,6 +20,7 @@ import { ClockLoader, PulseLoader } from 'react-spinners';
 import { usePersistedCountdown } from '@/app/hooks/useCountDown';
 import { setStep } from '@/app/store/authStepOneSlice';
 import callApi from '@/app/services/callApi';
+import useCustomToast from '@/app/hooks/useCustomToast';
 
 const formSchemaStepTwo = z.object({
   email: z.email(),
@@ -39,6 +40,8 @@ const toMMSS = (totalSec: number) => {
 };
 
 export default function StepTwoForm({ anime }: { anime: string }) {
+  const showToast = useCustomToast();
+
   const [otp, setOtp] = useState<boolean>(false);
   const [sendButton, setSendButton] = useState<'ورود' | 'ارسال کد'>('ورود');
   const [hide, setHide] = useState<boolean>(true);
@@ -64,7 +67,9 @@ export default function StepTwoForm({ anime }: { anime: string }) {
       try {
         const res = await callApi().post('/auth/login', values);
         if (res.status === 200) {
+          showToast({ message: 'ورود با موفقیت انجام شد ✅', bg: 'bg-green-200' });
           router.push('/');
+          return;
         }
       } catch (err) {
         const error = err as AxiosError<ApiError>;
@@ -92,8 +97,10 @@ export default function StepTwoForm({ anime }: { anime: string }) {
         const res = await callApi().post('/auth/otp/send', values);
         const response = res as AxiosResponse;
         if (response.status === 200) {
+          showToast({ message: 'کد ورود ارسال شد ✅', bg: 'bg-green-200' });
           startTimer(OTP_TIMER_SEC);
           setSendButton('ورود');
+          return;
         }
       } catch (err) {
         const error = err as AxiosError<ApiError>;
@@ -112,7 +119,9 @@ export default function StepTwoForm({ anime }: { anime: string }) {
         const res = await callApi().post('/auth/otp/verify', values);
         const response = res as AxiosResponse;
         if (response.status === 200) {
+          showToast({ message: 'ورود با موفقیت انجام شد ✅', bg: 'bg-green-200' });
           router.push('/');
+          return;
         }
       } catch (err) {
         const error = err as AxiosError<ApiError>;

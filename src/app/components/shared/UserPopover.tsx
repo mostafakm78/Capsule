@@ -17,7 +17,7 @@ export default function UserPopover() {
           <AvatarFallback>...</AvatarFallback>
         </Avatar>
       </PopoverTrigger>
-      <PopoverContent sideOffset={30} className="z-50 bg-white dark:bg-slate-900 lg:min-w-[300px] md:min-w-[300px] min-w-[250px] md:p-6 lg:ml-5 md:ml-10 ml-5">
+      <PopoverContent sideOffset={30} className="z-50 bg-white dark:bg-slate-900 lg:min-w-[300px] md:min-w-[300px] min-w-[250px] md:p-6 lg:ml-40 md:ml-10 ml-5">
         <div className="flex items-center gap-3">
           <div>
             <Avatar className="h-12 w-12 ring-2 ring-secondary">

@@ -68,6 +68,9 @@ export default function AdminPanelIndex() {
 
     return createdAt.getFullYear() === today.getFullYear() && createdAt.getMonth() === today.getMonth() && createdAt.getDate() === today.getDate();
   });
+
+  console.log(publicCapsules);
+
   const stats: statsProps[] = [
     {
       title: 'کپسول‌های ساخته‌شده',
@@ -133,7 +136,7 @@ export default function AdminPanelIndex() {
       </div>
       <div className="flex flex-col px-1 sm:px-2 md:px-4 lg:flex-row w-full items-center gap-6">
         <CapsulesChart capsules={capsules} />
-        <UsersChart users={users}/>
+        <UsersChart users={users} />
       </div>
       <div className="flex flex-col w-full p-1 sm:p-2 md:p-4">
         <CapsuleSliderAdmin capsules={capsules} />
