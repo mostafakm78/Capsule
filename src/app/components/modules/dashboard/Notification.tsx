@@ -45,7 +45,7 @@ export default function Notification() {
       <PopoverTrigger className="cursor-pointer text-foreground/70 data-[state=open]:text-secondary">
         <RiNotification4Line />
       </PopoverTrigger>
-      <PopoverContent sideOffset={30} className="z-50 lg:w-[500px] md:w-[350px] w-[260px] lg:ml-20 md:ml-10 ml-5">
+      <PopoverContent sideOffset={30} className="z-50 lg:w-[500px] md:w-[350px] w-[260px] lg:ml-20 md:ml-10 ml-5 h-[400px] overflow-y-auto">
         {loading && <div className="py-4">در حال بارگذاری...</div>}
 
         {!loading && notifications.length === 0 && <div className="py-4 text-foreground/70">اعلانی وجود ندارد.</div>}

@@ -18,6 +18,7 @@ import checkUnlockAt from '@/app/hooks/checkUnlockAt';
 import { DeleteCpModal } from './DeleteCpModal';
 import { useRouter } from 'next/navigation';
 import { PulseLoader } from 'react-spinners';
+import Image from 'next/image';
 
 const CapsuleInfo = dynamic(() => import('./CapsuleInfo'));
 const CapsuleTags = dynamic(() => import('./CapsuleTags'));
@@ -33,7 +34,7 @@ const isDate = (v: unknown): v is Date => v instanceof Date;
 
 const tabs: { id: dashboardCreateCapsuleTab; label: string; icon: ComponentType<{ className?: string }>; component: JSX.Element }[] = [
   { id: 'info', label: 'اطلاعات کپسول', icon: PiSubtitlesFill, component: <CapsuleInfo /> },
-  { id: 'tags', label: 'تگ‌ها و دسته‌بندی محصول', icon: FaImage, component: <CapsuleTags /> },
+  { id: 'tags', label: 'دسته‌بندی کپسول', icon: FaImage, component: <CapsuleTags /> },
   { id: 'status', label: 'وضعیت انتشار کپسول', icon: GrStatusInfo, component: <CapsuleStatus /> },
 ];
 
@@ -46,9 +47,7 @@ export default function CreateCapsulePage() {
   const showToast = useCustomToast();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    const timer = setTimeout(() => setLoading(false), 1000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -57,14 +56,15 @@ export default function CreateCapsulePage() {
     isTimedPassed = checkUnlockAt(capsule.access.unlockAt);
   }
 
+  // فایل انتخابی کاربر اینجا نگه داشته می‌شود
   const fileRef = useRef<File | null>(null);
   const onFileSelected = useCallback((file: File | null) => {
     fileRef.current = file;
   }, []);
 
+  // رنگ پس‌زمینه
   const color = capsule?.color;
   let colorCode;
-
   if (!color || color === 'default') {
     colorCode = 'bg-white dark:bg-slate-900';
   } else if (color === 'blue') {
@@ -91,19 +91,17 @@ export default function CreateCapsulePage() {
           fd.append(key, String(val));
           return;
         }
-
         if (val instanceof Date) {
           fd.append(key, val.toISOString());
           return;
         }
-
         if (val instanceof File || val instanceof Blob) {
           fd.append(key, val);
           return;
         }
-
         fd.append(key, JSON.stringify(val));
       };
+
       const categoryItem = capsule?.categoryItem?._id;
 
       appendIf('title', capsule?.title);
@@ -111,12 +109,10 @@ export default function CreateCapsulePage() {
       appendIf('extra', capsule?.extra);
       appendIf('color', capsule?.color);
       appendIf('categoryItem', categoryItem);
-      if (capsule?.removeImage === true) appendIf('removeImage', capsule.removeImage);
-
-      const file = fileRef.current;
-
-      if (file) {
-        fd.append('image', file);
+      if (capsule?.removeImage === true) {
+        appendIf('removeImage', capsule.removeImage);
+      } else if (fileRef.current) {
+        fd.set('image', fileRef.current);
       }
 
       const lock = capsule?.access?.lock as Lock | undefined;
@@ -130,12 +126,12 @@ export default function CreateCapsulePage() {
         lock: lock ?? 'none',
         ...(unlockAt ? { unlockAt } : {}),
       };
-
       fd.append('access', JSON.stringify(accessPayload));
 
       if (mode === 'edit' && capsule?._id) {
         const res = await callApi().patch(`/capsules/${capsule._id}`, fd);
         if (res.status === 200) {
+          fileRef.current = null;
           showToast({ message: 'کپسول شما با موفقیت بروزرسانی شد ✅', bg: 'bg-green-300' });
           router.push('/dashboard/user-capsules');
           return;
@@ -151,28 +147,26 @@ export default function CreateCapsulePage() {
     } catch (error) {
       const err = error as AxiosError<ApiError>;
       const payload = err.response?.data.data;
-      console.log(err);
+
       if (err.response?.data.message === 'File too large') {
-        return showToast({ message: 'حجم فایل وارد شده زیاد است ❌', bg: 'bg-red-200' });
-      }
-      if (err.response?.status === 500) {
-        return showToast({ message: 'وارد کردن فیلد عنوان ، توضیحات ، دسته‌بندی و نوع کپسول اجباری میباشد ❌', bg: 'bg-red-200' });
+        showToast({ message: 'حجم فایل وارد شده زیاد است ❌', bg: 'bg-red-200' });
+      } else if (err.response?.status === 500) {
+        showToast({ message: 'وارد کردن فیلد عنوان ، توضیحات ، دسته‌بندی و نوع کپسول اجباری میباشد ❌', bg: 'bg-red-200' });
       } else if (err.response?.status === 422) {
         if (Array.isArray(payload)) {
-          payload.forEach(({ message }) => {
-            return showToast({ message: message, bg: 'bg-red-200' });
-          });
+          payload.forEach(({ message }) => showToast({ message, bg: 'bg-red-200' }));
         }
       } else if (err.response?.status === 415) {
-        return showToast({ message: err.response.data.message });
+        showToast({ message: err.response.data.message });
       } else {
-        return showToast({ message: 'خطایی در ثبت کپسول شما پیش آمده لطفا کمی بعد تلاش کنید' });
+        showToast({ message: 'خطایی در ثبت کپسول شما پیش آمده لطفا کمی بعد تلاش کنید' });
       }
     } finally {
       setSubmitting(false);
     }
   };
 
+  // اگر روی کپسول دیگری رفتید، فایل انتخابی قبلی پاک شود
   useEffect(() => {
     fileRef.current = null;
   }, [capsule?._id]);
@@ -188,6 +182,7 @@ export default function CreateCapsulePage() {
   return (
     <section key={mode && capsule?._id} className="flex flex-col h-full gap-10">
       <span className='text-foreground text-xl pr-4 relative font-bold after:content-[""] after:h-2 after:w-2 after:rounded-full after:absolute after:bg-foreground after:right-0 after:top-1/2 after:-translate-y-1/2'>{mode === 'create' ? 'ساخت کپسول' : 'ویرایش کپسول'}</span>
+
       <div className="flex lg:flex-row flex-col h-full justify-start gap-10">
         {/* Desktop Tabs */}
         <div className="lg:flex hidden w-3/12 flex-col gap-4">
@@ -225,9 +220,16 @@ export default function CreateCapsulePage() {
 
       <div className="w-full flex justify-center mt-8 gap-4">
         <DeleteCpModal />
-        <Button onClick={handleSubmit} disabled={isTimedPassed || submitting} className="cursor-pointer md:w-1/4 py-6 text-lg">
+        <Button onClick={handleSubmit} disabled={(mode === 'edit' ? isTimedPassed : false) || submitting} className="cursor-pointer md:w-1/4 py-6 text-lg" aria-busy={submitting}>
           {mode === 'edit' ? 'ویرایش کپسول' : 'ساخت کپسول'}
         </Button>
+      </div>
+
+      <div className="flex gap-2 items-center py-4 px-2 border border-foreground/20 rounded-lg lg:w-2/3 w-full">
+        <Image src="/images/cartoon-question.png" alt="question" width={100} height={100} />
+        <div className="flex flex-col gap-1">
+          <p className="lg:text-lg text-base font-bold text-foreground/80">شما میتونین برای ساخت کپسول از سه بخش مختلف موجود ، مشخصات کپسول خودتون رو وارد کنین. توجه داشته باشین که بخش دسته بندی و وضعیت انتشار ضروری میباشد.</p>
+        </div>
       </div>
     </section>
   );

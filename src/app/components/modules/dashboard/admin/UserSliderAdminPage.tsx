@@ -78,16 +78,16 @@ export default function UserSliderAdmin({ users }: Props) {
             {users.slice(0, 10).map((user) => {
               return (
                 <SwiperSlide key={user._id} className="pt-10 lg:max-w-[300px] shrink-0">
-                  <Link href="" className="flex flex-col bg-white dark:bg-slate-900 rounded-lg items-center justify-center gap-6 h-[200px] border-none">
+                  <Link href={`/dashboard/admin/users/${user._id}`} className="flex flex-col bg-white dark:bg-slate-900 rounded-lg items-center justify-center gap-6 h-[200px] border-none">
                     <div>
                       <Avatar className="h-20 w-20 ring-2 ring-secondary">
-                        <AvatarImage className='object-cover' src={user?.avatar ? `http://localhost:8080/images/${user.avatar}` : '/images/default.png'} />
+                        <AvatarImage className="object-cover" src={user?.avatar ? `http://localhost:8080/images/${user.avatar}` : '/images/default.png'} />
                         <AvatarFallback>...</AvatarFallback>
                       </Avatar>
                     </div>
                     <div className="flex items-center justify-center gap-2">
                       <FaUser />
-                      <span className="font-light text-2xl text-foreground/80">مصطفی کمری</span>
+                      <span className="font-light text-2xl text-foreground/80">{user.name ?? user.email}</span>
                     </div>
                   </Link>
                 </SwiperSlide>

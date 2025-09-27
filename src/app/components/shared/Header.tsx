@@ -105,7 +105,7 @@ export default function Header({ bungee }: Logo) {
         </div>
 
         {/* جعبه‌ی سرچ */}
-        <div ref={inputWrapRef} className="md:flex w-2/4 relative hidden items-center will-change-transform">
+        <div ref={inputWrapRef} className="md:flex 2xl:w-2/5 w-1/3 relative hidden items-center will-change-transform">
           <Input ref={inputRef} onFocus={() => setSearch(true)} onBlur={() => setSearch(false)} className="bg-white dark:bg-slate-900" type="text" placeholder="کپسول مورد نظر خودت رو جستجو کن" />
           <div className="bg-primary absolute left-0 h-full rounded-l-lg flex items-center justify-center shadow-inner shadow-foreground/50">
             <IoIosSearch className="text-3xl cursor-pointer hover:animate-caret-blink mx-2 text-foreground/70" />

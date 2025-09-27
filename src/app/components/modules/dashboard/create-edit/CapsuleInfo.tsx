@@ -35,39 +35,47 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
   const { mode, capsule } = useAppSelector((state) => state.editOrcreate);
   const showToast = useCustomToast();
 
-  const [submiting, setSubmiting] = useState<boolean>(false);
+  const [submitting, setSubmitting] = useState<boolean>(false);
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [extra, setExtra] = useState<string>('');
   const [selected, setSelected] = useState<Color>('default');
+  const [inputKey, setInputKey] = useState(0);
+
+  // تصویر
   const [rmvImage, setRmvImage] = useState<boolean>(false);
   const [preview, setPreview] = useState<string | null>(null);
+  const [hasLocalImage, setHasLocalImage] = useState<boolean>(false); // 👈 مانع بازنویسی preview توسط useEffect
   const lastBlobUrl = useRef<string | null>(null);
 
+  // سینک اولیه با capsule از Redux
   useEffect(() => {
     if (!capsule) return;
-    if (capsule) {
-      setTitle(capsule.title || '');
-      setDescription(capsule.description || '');
-      setExtra(capsule.extra || '');
-      setSelected((capsule?.color as Color) || 'default');
 
-      if (rmvImage) {
-        setPreview(null);
-      } else if (capsule.image) {
-        setPreview(`http://localhost:8080/images/${capsule.image}`);
-      } else {
-        setPreview(null);
-      }
+    setTitle(capsule.title || '');
+    setDescription(capsule.description || '');
+    setExtra(capsule.extra || '');
+    setSelected((capsule?.color as Color) || 'default');
+
+    // اگر کاربر همین الان فایل محلی انتخاب کرده، preview را دست نزن
+    if (hasLocalImage) return;
+
+    if (rmvImage) {
+      setPreview(null);
+    } else if (capsule.image) {
+      setPreview(`http://localhost:8080/images/${capsule.image}`);
+    } else {
+      setPreview(null);
     }
-  }, [mode, capsule, rmvImage]);
+  }, [mode, capsule, rmvImage, hasLocalImage]);
 
+  // cleanup برای blob URL‌ها
   useEffect(() => {
     return () => {
-      if (lastBlobUrl.current) {
+      if (lastBlobUrl.current && lastBlobUrl.current.startsWith('blob:')) {
         URL.revokeObjectURL(lastBlobUrl.current);
-        lastBlobUrl.current = null;
       }
+      lastBlobUrl.current = null;
     };
   }, [onFileSelected]);
 
@@ -76,19 +84,43 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
     if (!file) return;
 
     setRmvImage(false);
+    setHasLocalImage(true); // 👈 از این لحظه preview را دست نزن
     onFileSelected?.(file);
 
     const url = URL.createObjectURL(file);
     setPreview(url);
+    // همین‌جا ثبت کن تا قبل از onLoad هم حفظ شود
+    lastBlobUrl.current = url;
 
-    e.target.value = '';
+    // اجازه بده دوباره همان فایل انتخاب شود
+    setInputKey((k) => k + 1);
+  };
+
+  const handleRemoveImage = () => {
+    setRmvImage(true);
+    setHasLocalImage(false);
+    setPreview(null);
+
+    if (lastBlobUrl.current && lastBlobUrl.current.startsWith('blob:')) {
+      URL.revokeObjectURL(lastBlobUrl.current);
+    }
+    lastBlobUrl.current = null;
+
+    onFileSelected?.(null);
+
+    setInputKey((k) => k + 1);
   };
 
   const handleSubmit = () => {
-    if (!title || !description || submiting) return;
+    if (submitting) return;
+    setSubmitting(true);
+
     if (!title || !description) {
-      return showToast({ message: 'وارد کردن عنوان و توضیحات اجباری میباشد ❌', bg: 'bg-red-200' });
+      showToast({ message: 'وارد کردن عنوان و توضیحات اجباری میباشد ❌', bg: 'bg-red-200' });
+      setSubmitting(false);
+      return;
     }
+
     try {
       dispatch(
         setCapsule({
@@ -102,7 +134,7 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
       );
       showToast('تنظیمات کپسول شما ثبت شد ✅');
     } finally {
-      setSubmiting(false);
+      setSubmitting(false);
     }
   };
 
@@ -143,20 +175,7 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
                 عکس<span className="text-red-500 text-xs underline underline-offset-2">حداکثر 5Mb</span>
               </div>
               {preview && (
-                <span
-                  onClick={() => {
-                    setRmvImage(true);
-                    setPreview(null);
-
-                    if (lastBlobUrl.current) {
-                      URL.revokeObjectURL(lastBlobUrl.current);
-                      lastBlobUrl.current = null;
-                    }
-
-                    onFileSelected?.(null);
-                  }}
-                  className="flex items-center text-xs cursor-pointer hover:scale-105 duration-300 bg-red-400 text-background rounded-lg p-1"
-                >
+                <span onClick={handleRemoveImage} className="flex items-center text-xs cursor-pointer hover:scale-105 duration-300 bg-red-400 text-background rounded-lg p-1">
                   حذف عکس
                   <IoClose className="text-base" />
                 </span>
@@ -176,16 +195,22 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
                   fill
                   className="object-cover rounded-lg"
                   onLoad={() => {
-                    if (lastBlobUrl.current && lastBlobUrl.current !== preview) {
+                    // اگر قبلاً blob دیگری داشتیم، پاکش کنیم
+                    if (lastBlobUrl.current && lastBlobUrl.current !== preview && lastBlobUrl.current.startsWith('blob:')) {
                       URL.revokeObjectURL(lastBlobUrl.current);
                     }
-                    lastBlobUrl.current = preview.startsWith('blob:') ? preview : null;
+                    // اگر preview جدید blob نیست (مثلاً URL سرور)، ریف را null کن
+                    if (!preview.startsWith('blob:')) {
+                      lastBlobUrl.current = null;
+                      setHasLocalImage(false);
+                    }
                   }}
                   unoptimized
                 />
               </div>
             )}
-            <Input onChange={handleFileChange} type="file" name="avatar" accept="image/*" className="hidden" />
+
+            <Input multiple={false} key={inputKey} onChange={handleFileChange} type="file" accept="image/*" className="hidden" />
           </Label>
         </div>
 
@@ -202,18 +227,7 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
             <RadioGroup value={selected} onValueChange={(value: Color) => setSelected(value)} className="flex gap-4">
               <div className="mt-4 flex gap-4">
                 {colors.map(({ id, colorCode }) => (
-                  <div
-                    key={id}
-                    onClick={() => setSelected(id as Color)}
-                    className={`
-                      ${colorCode}
-                      h-8 w-8 md:h-10 md:w-10 rounded-full
-                      transition-all
-                      ${selected === id ? 'ring-4 ring-primary' : 'ring ring-foreground/30'}
-                      cursor-pointer
-                    `}
-                    title={id}
-                  />
+                  <div key={id} onClick={() => setSelected(id as Color)} className={`${colorCode} h-8 w-8 md:h-10 md:w-10 rounded-full transition-all ${selected === id ? 'ring-4 ring-primary' : 'ring ring-foreground/30'} cursor-pointer`} title={id} />
                 ))}
               </div>
             </RadioGroup>
@@ -221,7 +235,7 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
         </div>
 
         <div className="w-full flex justify-center mt-8">
-          <Button onClick={handleSubmit} disabled={!title || !description || submiting} className="cursor-pointer w-1/3 py-6 text-lg">
+          <Button onClick={handleSubmit} disabled={!title || !description || submitting} className="cursor-pointer w-1/3 py-6 text-lg" aria-busy={submitting}>
             ثبت
           </Button>
         </div>

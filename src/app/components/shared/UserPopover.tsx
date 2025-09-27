@@ -4,6 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import { FaLongArrowAltLeft } from 'react-icons/fa';
+import { LogoutModal } from '../modules/dashboard/LogoutModal';
 
 export default function UserPopover() {
   const { user } = useAppSelector((state) => state.user);
@@ -12,7 +13,7 @@ export default function UserPopover() {
     <Popover>
       <PopoverTrigger className="cursor-pointer text-foreground/70 data-[state=open]:text-secondary">
         <Avatar className="h-10 w-10 ring-2 ring-secondary">
-          <AvatarImage className='object-cover' src={user?.avatar ? `http://localhost:8080/images/${user.avatar}` : '/images/default.png'} />
+          <AvatarImage className="object-cover" src={user?.avatar ? `http://localhost:8080/images/${user.avatar}` : '/images/default.png'} />
           <AvatarFallback>...</AvatarFallback>
         </Avatar>
       </PopoverTrigger>
@@ -20,7 +21,7 @@ export default function UserPopover() {
         <div className="flex items-center gap-3">
           <div>
             <Avatar className="h-12 w-12 ring-2 ring-secondary">
-              <AvatarImage className='object-cover' src={user?.avatar ? `http://localhost:8080/images/${user.avatar}` : '/images/default.png'} />
+              <AvatarImage className="object-cover" src={user?.avatar ? `http://localhost:8080/images/${user.avatar}` : '/images/default.png'} />
               <AvatarFallback>...</AvatarFallback>
             </Avatar>
           </div>
@@ -52,6 +53,10 @@ export default function UserPopover() {
           <Link className="p-2 text-foreground/70 font-light hover:bg-accent hover:text-foreground duration-150 rounded text-lg" href="/dashboard/create-capsule">
             راهنمای داشبورد
           </Link>
+          <Separator className="w-full bg-foreground/20 mt-2" />
+          <div className="p-2 text-foreground/70 font-light hover:bg-accent hover:text-foreground duration-150 rounded text-lg">
+            <LogoutModal />
+          </div>
         </div>
       </PopoverContent>
     </Popover>
