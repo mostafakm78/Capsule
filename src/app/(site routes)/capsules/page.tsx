@@ -31,7 +31,7 @@ export default async function Capsules({ searchParams }: PageProps) {
   if (searchParam?.categoryItem) params.categoryItem = searchParam?.categoryItem;
 
   try {
-    const res = await callApi().get<GetCapsulesResponse>('/capsules', { params });
+    const res = await callApi().get<GetCapsulesResponse>('/public/capsules', { params });
     return <CapsulesIndex capsules={res.data} />;
   } catch {
     return <CapsulesIndex capsules={emptyCapsules} />;

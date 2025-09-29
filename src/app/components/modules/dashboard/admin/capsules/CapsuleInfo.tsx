@@ -102,7 +102,7 @@ export default function CapsuleInfo({ singleCapsule }: Props) {
       visibility: vis,
       hadImage: !!singleCapsule.image,
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [singleCapsule]);
 
   useEffect(() => {
@@ -118,11 +118,15 @@ export default function CapsuleInfo({ singleCapsule }: Props) {
     (async () => {
       try {
         const res = await callApi().get('capsules/categories');
+        console.log(res);
+
         if (res.status === 200) {
           setCategories(res.data.categoryItems);
           setLoading(false);
         }
-      } catch {}
+      } catch (error) {
+        console.log(error);
+      }
     })();
   }, []);
 
