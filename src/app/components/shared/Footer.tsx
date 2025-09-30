@@ -28,16 +28,16 @@ export default function Footer({ bungee }: Logo) {
         </div>
         <Separator className="bg-foreground/15 mr-6 hidden lg:block" />
         <div className="flex gap-2 items-center text-3xl">
-          <Link className="bg-secondary/10 p-1 rounded-lg hover:bg-secondary text-secondary hover:text-background duration-300" href="">
+          <Link className="bg-secondary/10 p-1 rounded-lg hover:bg-secondary text-secondary hover:text-background duration-300" href="http://www.instagram.com/imyour_mosi" target="_blank">
             <FaInstagram />
           </Link>
-          <Link className="bg-secondary/10 p-1 rounded-lg hover:bg-secondary text-secondary hover:text-background duration-300" href="">
+          <Link className="bg-secondary/10 p-1 rounded-lg hover:bg-secondary text-secondary hover:text-background duration-300" href="https://t.me/Mostafakamari78" target="_blank">
             <FaTelegram />
           </Link>
-          <Link className="bg-secondary/10 p-1 rounded-lg hover:bg-secondary text-secondary hover:text-background duration-300" href="">
+          <Link className="bg-secondary/10 p-1 rounded-lg hover:bg-secondary text-secondary hover:text-background duration-300" href="http://linkedin.com/in/mostafa-kamari-b82450351" target="_blank">
             <FaLinkedin />
           </Link>
-          <Link className="bg-secondary/10 p-1 rounded-lg hover:bg-secondary text-secondary hover:text-background duration-300" href="">
+          <Link className="bg-secondary/10 p-1 rounded-lg hover:bg-secondary text-secondary hover:text-background duration-300" href="https://wa.me/989169799533" target="_blank">
             <FaWhatsapp />
           </Link>
           <Button onClick={scrollToUp} className="bg-secondary/10 cursor-pointer p-1 rounded-lg hover:bg-secondary text-secondary hover:text-background duration-300">
@@ -64,7 +64,10 @@ export default function Footer({ bungee }: Logo) {
           <Link className='text-foreground/80 pr-4 relative before:content-[""] before:h-[10px] before:w-[10px] before:bg-foreground/50 before:rounded-full before:absolute before:top-1/2 before:right-0 before:-translate-y-1/2 hover:before:bg-primary hover:text-primary duration-300' href="/about-us">
             درباره کپسول
           </Link>
-          <Link className='text-foreground/80 pr-4 relative before:content-[""] before:h-[10px] before:w-[10px] before:bg-foreground/50 before:rounded-full before:absolute before:top-1/2 before:right-0 before:-translate-y-1/2 hover:before:bg-primary hover:text-primary duration-300' href="/contact-us">
+          <Link
+            className='text-foreground/80 pr-4 relative before:content-[""] before:h-[10px] before:w-[10px] before:bg-foreground/50 before:rounded-full before:absolute before:top-1/2 before:right-0 before:-translate-y-1/2 hover:before:bg-primary hover:text-primary duration-300'
+            href="/contact-us"
+          >
             ارتباط با ما
           </Link>
         </div>
@@ -77,7 +80,7 @@ export default function Footer({ bungee }: Logo) {
               </span>
               <h4 className="text-foreground/70">ایمیل:</h4>
             </div>
-            <Link className="text-base group-hover:scale-105 duration-300" href="">
+            <Link className="text-base group-hover:scale-105 duration-300" href="mailto:mostafamf555@gmail.com" target="_blank">
               Mostafa@gmail.com
             </Link>
           </div>
@@ -88,7 +91,7 @@ export default function Footer({ bungee }: Logo) {
               </span>
               <h4 className="text-foreground/70">گیتهاب:</h4>
             </div>
-            <Link className="text-base group-hover:scale-105 duration-300" href="">
+            <Link className="text-base group-hover:scale-105 duration-300" href="https://github.com/mostafakm78" target="_blank">
               Mostafa kamari
             </Link>
           </div>
@@ -99,7 +102,7 @@ export default function Footer({ bungee }: Logo) {
               </span>
               <h4 className="text-foreground/70">تلگرام:</h4>
             </div>
-            <Link className="text-base group-hover:scale-105 duration-300" href="">
+            <Link className="text-base group-hover:scale-105 duration-300" href="https://t.me/Mostafakamari78" target="_blank">
               Mostafakamari78@
             </Link>
           </div>

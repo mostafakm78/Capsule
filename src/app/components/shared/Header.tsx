@@ -4,7 +4,7 @@ import { ThemeToggle } from './Theme';
 import Image from 'next/image';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Sidebar } from './Sidebar';
 import LoginButton from './LoginButton';
 import HeaderLink from './HeaderLink';
@@ -32,12 +32,15 @@ const headerLinks: LinkProps[] = [
 
 export default function Header({ bungee }: Logo) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const [search, setSearch] = useState(false);
+  const [searchInput, setSearchInput] = useState<string>('');
 
   const scope = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const inputWrapRef = useRef<HTMLDivElement>(null); // ← درست: بدون | null در جنریک
+  const inputWrapRef = useRef<HTMLDivElement>(null);
 
   const { user, loading } = useAppSelector((s) => s.user);
 
@@ -68,11 +71,46 @@ export default function Header({ bungee }: Logo) {
     { scope }
   );
 
-  // اسکیل ظریف باکس سرچ
   useEffect(() => {
     const box = inputWrapRef.current;
     gsap.to(box, { duration: 0.28, ease: 'power2.out', scale: search ? 1.07 : 1 });
   }, [search]);
+
+  const pushWithParams = (mutator: (p: URLSearchParams) => void) => {
+    const params = new URLSearchParams(searchParams.toString());
+    mutator(params);
+    const qs = params.toString();
+    router.push(qs ? `/capsules?${qs}` : `/capsules`);
+  };
+
+  const performSearchAction = () => {
+    const q = searchInput.trim();
+
+    if (q.length > 0) {
+      pushWithParams((params) => {
+        params.set('q', q);
+        params.set('page', '1');
+      });
+      setSearchInput('');
+      return;
+    }
+
+    if (searchParams.get('q')) {
+      pushWithParams((params) => {
+        params.delete('q');
+        params.set('page', '1');
+      });
+      setSearchInput('');
+      return;
+    }
+  };
+
+  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (!e.nativeEvent.isComposing && e.key === 'Enter') {
+      setSearch(false);
+      performSearchAction();
+    }
+  };
 
   return (
     <header
@@ -81,7 +119,6 @@ export default function Header({ bungee }: Logo) {
         pathname === '/' ? 'bg-foreground/20' : 'bg-background pb-10 after:bg-linear-to-b after:from-foreground/30 after:to-foreground/10 after:content-[""] after:w-full after:h-full after:absolute dark:after:opacity-45 after:opacity-80 after:z-[1] after:blur-2xl after:pointer-events-none'
       } items-center justify-center`}
     >
-      {/* Spotlight: به‌جای ref، خودِ المنت را می‌دهیم */}
       <Spotlight
         active={search}
         onClose={() => {
@@ -104,11 +141,10 @@ export default function Header({ bungee }: Logo) {
           <h1 className={`${bungee.className}`}>Capsule</h1>
         </div>
 
-        {/* جعبه‌ی سرچ */}
         <div ref={inputWrapRef} className="md:flex 2xl:w-3/6 w-2/5 relative hidden items-center will-change-transform">
-          <Input ref={inputRef} onFocus={() => setSearch(true)} onBlur={() => setSearch(false)} className="bg-white dark:bg-slate-900" type="text" placeholder="کپسول مورد نظر خودت رو جستجو کن" />
+          <Input value={searchInput} onChange={(e) => setSearchInput(e.target.value)} ref={inputRef} onKeyDown={handleKeyDown} onFocus={() => setSearch(true)} onBlur={() => setSearch(false)} className="bg-white dark:bg-slate-900" type="text" placeholder="کپسول مورد نظر خودت رو جستجو کن" />
           <div className="bg-primary absolute left-0 h-full rounded-l-lg flex items-center justify-center shadow-inner shadow-foreground/50">
-            <IoIosSearch className="text-3xl cursor-pointer hover:animate-caret-blink mx-2 text-foreground/70" />
+            <IoIosSearch onClick={performSearchAction} className="text-3xl cursor-pointer hover:animate-caret-blink mx-2 text-foreground/70" />
           </div>
         </div>
 

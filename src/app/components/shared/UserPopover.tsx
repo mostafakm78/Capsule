@@ -25,7 +25,7 @@ export default function UserPopover() {
               <AvatarFallback>...</AvatarFallback>
             </Avatar>
           </div>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col p-2 gap-1.5">
             <span className={`font-bold text-base text-foreground/70 line-clamp-1`}>{user?.name ?? user?.email}</span>
             <Link className="text-primary flex items-center gap-2 hover:text-foreground/80 duration-300" href="/dashboard/panel" target="_top">
               مشاهده پنل کاربری

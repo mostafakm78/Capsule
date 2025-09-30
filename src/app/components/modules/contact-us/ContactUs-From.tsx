@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { FieldPath, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -10,25 +10,52 @@ import { Input } from '@/components/ui/input';
 import { useRef, useState, useLayoutEffect } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import gsap from 'gsap';
+import callApi from '@/app/services/callApi';
+import useCustomToast from '@/app/hooks/useCustomToast';
+import { AxiosError } from 'axios';
+import { ApiError } from '@/lib/types';
+
+const toEnDigits = (s: string) => s.replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - '۰'.charCodeAt(0))).replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - '٠'.charCodeAt(0)));
+
+const cleanPhone = (s: string) => s.replace(/[\u200c\u200f\u200e\u202a-\u202e]/g, '').replace(/[^\d+]/g, '');
+
+const iranMobile = /^(?:0098|\+98|98|0)?9\d{9}$/;
 
 const step1Schema = z.object({
-  firstName: z.string().min(2, { message: 'نام الزامی است' }),
-  lastName: z.string().min(2, { message: 'نام خانوادگی الزامی است' }),
+  firstName: z.string().min(3, { message: 'نام الزامی است' }).max(12, { message: 'نام الزامی است' }).trim(),
+  lastName: z.string().min(3, { message: 'نام خانوادگی الزامی است' }).max(12, { message: 'نام خانوادگی الزامی است' }).trim(),
 });
 
 const step2Schema = z.object({
-  email: z.string().email({ message: 'ایمیل نامعتبر است' }),
-  phone: z.string().min(10, { message: 'شماره تماس معتبر نیست' }),
+  email: z.email({ message: 'ایمیل نامعتبر است' }),
+  number: z
+    .string()
+    .trim()
+    .transform(toEnDigits)
+    .transform(cleanPhone)
+    .refine((v) => iranMobile.test(v), { message: 'شماره موبایل نامعتبر است' })
+    .transform((v) => {
+      let digits = v;
+      if (digits.startsWith('0098')) digits = digits.slice(4);
+      else if (digits.startsWith('+98')) digits = digits.slice(3);
+      else if (digits.startsWith('98')) digits = digits.slice(2);
+      else if (digits.startsWith('0')) digits = digits.slice(1);
+      return `+98${digits}`;
+    }),
 });
 
 const step3Schema = z.object({
-  title: z.string().min(3, { message: 'عنوان شما نباید کمتر از ۳ حرف باشد' }),
-  description: z.string().min(10, { message: 'توضیحات شما نباید کمتر از ۱۰ حرف باشد' }),
+  title: z.string().min(4, { message: 'عنوان شما نباید کمتر از 4 حرف باشد' }).max(16, { message: 'عنوان شما نباید کمتر از 16 حرف باشد' }).trim(),
+  description: z.string().min(32, { message: 'توضیحات شما نباید کمتر از 32 حرف باشد' }).max(500, { message: 'توضیحات شما نباید کمتر از 500 حرف باشد' }).trim(),
 });
 
 const fullSchema = step1Schema.extend(step2Schema.shape).extend(step3Schema.shape);
 
+type FormValues = z.infer<typeof fullSchema>;
+
 export default function ContactUsFrom() {
+  const showToast = useCustomToast();
+
   const [step, setStep] = useState<number>(1);
   const formRef = useRef<HTMLDivElement | null>(null);
 
@@ -60,13 +87,13 @@ export default function ContactUsFrom() {
     }
   }, [step]);
 
-  const form = useForm({
+  const form = useForm<FormValues>({
     resolver: zodResolver(fullSchema),
     defaultValues: {
       firstName: '',
       lastName: '',
       email: '',
-      phone: '',
+      number: '',
       title: '',
       description: '',
     },
@@ -78,7 +105,7 @@ export default function ContactUsFrom() {
     if (step === 1) {
       valid = await form.trigger(['firstName', 'lastName']);
     } else if (step === 2) {
-      valid = await form.trigger(['email', 'phone']);
+      valid = await form.trigger(['email', 'number']);
     }
 
     if (valid) {
@@ -95,8 +122,40 @@ export default function ContactUsFrom() {
     }
   };
 
-  const onSubmit = (values: z.infer<typeof fullSchema>) => {
-    console.log('فرم ارسال شد:', values);
+  const onSubmit = async (values: z.infer<typeof fullSchema>) => {
+    try {
+      const res = await callApi().post('/public/contactus', values);
+      if (res.status === 201) {
+        showToast({ message: 'پیام شما به موفقیت ارسال شد ✅', bg: 'bg-green-200' });
+        form.reset({
+          firstName: '',
+          lastName: '',
+          number: '',
+          email: '',
+          title: '',
+          description: '',
+        });
+        setStep(1);
+        return;
+      }
+    } catch (err) {
+      {
+        const error = err as AxiosError<ApiError>;
+        const payload = error.response?.data.data;
+        if (Array.isArray(payload)) {
+          payload.forEach(({ field, message }) => {
+            const allowed: Array<keyof FormValues> = ['number', 'email', 'firstName', 'lastName', 'title', 'description'];
+            if (allowed.includes(field as keyof FormValues)) {
+              form.setError(field as FieldPath<FormValues>, { type: 'server', message });
+            } else {
+              form.setError('root', { type: 'server', message });
+            }
+          });
+        } else {
+          form.setError('root', { type: 'server', message: 'خطای نامشخص رخ داد' });
+        }
+      }
+    }
   };
 
   return (
@@ -174,14 +233,14 @@ export default function ContactUsFrom() {
 
                 <FormField
                   control={form.control}
-                  name="phone"
+                  name="number"
                   render={({ field }) => (
                     <FormItem className="p-4">
                       <FormLabel className="anime lg:text-2xl md:text-xl text-base">
                         شماره تماس: <FormMessage className="text-red-500 md:block hidden" />
                       </FormLabel>
                       <FormControl>
-                        <Input className="anime" placeholder="09123456789" {...field} />
+                        <Input className="anime" placeholder="0912..." {...field} />
                       </FormControl>
                       <FormMessage className="text-red-500 md:hidden" />
                     </FormItem>
@@ -228,7 +287,7 @@ export default function ContactUsFrom() {
             )}
           </form>
         </Form>
-        <div className={`flex ${step === 1 ? 'justify-end' : 'justify-between'} items-center w-full mt-6 px-4 gap-2 justify-center`}>
+        <div className={`flex ${step === 1 ? '' : 'justify-between'} items-center w-full mt-6 px-4 gap-2 justify-center`}>
           {step > 1 && (
             <Button type="button" variant="outline" className={`cursor-pointer w-full md:w-auto ${step > 1 ? 'w-2/4' : ''}`} onClick={onBack}>
               قبلی

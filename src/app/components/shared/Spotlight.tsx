@@ -41,17 +41,13 @@ export default function Spotlight({ active, onClose, radius = 160, softness = 24
 
     gsap.killTweensOf(el);
     if (active) {
-      gsap.set(el, { pointerEvents: 'auto' });
-      gsap.to(el, { opacity: 1, duration: 0.35, delay: 0.3, ease: 'power2.out' });
+      gsap.to(el, { opacity: 1, duration: 0.35, delay: 0.2, ease: 'power2.out' });
       document.documentElement.classList.add('overflow-hidden');
     } else {
       gsap.to(el, {
         opacity: 0,
         duration: 0.3,
         ease: 'power2.in',
-        onComplete: () => {
-          gsap.set(el, { pointerEvents: 'none' });
-        },
       });
       document.documentElement.classList.remove('overflow-hidden');
     }
@@ -60,18 +56,31 @@ export default function Spotlight({ active, onClose, radius = 160, softness = 24
     };
   }, [active]);
 
-  const handleMove: React.MouseEventHandler<HTMLDivElement> = (e) => {
+  useEffect(() => {
     const el = rootRef.current;
-    if (!el) return;
-    const x = e.clientX;
-    const y = e.clientY;
+    if (!el || !active) return;
 
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(() => {
-      el.style.setProperty('--x', `${x}px`);
-      el.style.setProperty('--y', `${y}px`);
-    });
-  };
+    const onMove = (e: MouseEvent) => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      const x = e.clientX;
+      const y = e.clientY;
+      rafRef.current = requestAnimationFrame(() => {
+        el.style.setProperty('--x', `${x}px`);
+        el.style.setProperty('--y', `${y}px`);
+      });
+    };
+
+    document.addEventListener('mousemove', onMove, { passive: true });
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose?.();
+    };
+    document.addEventListener('keydown', onKey);
+
+    return () => {
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [active, onClose]);
 
   const style: CSSProperties = {
     background: `radial-gradient(circle at var(--x) var(--y),
@@ -83,5 +92,12 @@ export default function Spotlight({ active, onClose, radius = 160, softness = 24
     transition: 'opacity 0.25s ease',
   };
 
-  return <div ref={rootRef} onMouseMove={handleMove} onClick={onClose} className="fixed inset-0 z-[65] opacity-0 pointer-events-none" aria-hidden style={style} />;
+  return (
+    <div
+      ref={rootRef}
+      aria-hidden
+      className="fixed inset-0 z-[40] opacity-0 pointer-events-none"
+      style={style}
+    />
+  );
 }

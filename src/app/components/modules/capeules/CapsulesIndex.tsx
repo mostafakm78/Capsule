@@ -93,26 +93,19 @@ export default function CapsulesIndex({ capsules }: Props) {
                   <Card key={item._id} className="lg:col-span-6 xl:col-span-4 flex flex-col relative bg-white py-0 hover:shadow-2xl hover:scale-[101%] hover:shadow-foreground/20 duration-300 dark:bg-slate-900 h-[420px] border-none shadow-sm ring-2 ring-primary/20">
                     <CardHeader className="px-0">
                       {user?._id === item.owner?._id ? (
-                        <div className="absolute z-[50] p-1 rounded-md right-1 top-1 bg-primary border-2 text-xs flex items-center gap-1">
+                        <div className="absolute z-[1] p-1 rounded-md right-1 top-1 bg-primary border-2 text-xs flex items-center gap-1">
                           <MdModeComment />
                           کپسول شما
                         </div>
                       ) : null}
 
-                      <div className="absolute z-[50] -top-[5%] left-1/2 -translate-x-1/2">
+                      <div className="absolute z-[1] -top-[5%] left-1/2 -translate-x-1/2">
                         <Avatar className="h-12 w-12 ring-2 ring-secondary">
                           <AvatarImage className="object-cover" src={item.owner?.avatar ? `http://localhost:8080/images/${item.owner.avatar}` : '/images/default.png'} />
                           <AvatarFallback>...</AvatarFallback>
                         </Avatar>
                       </div>
-                      <Image
-                        className="object-cover w-full h-[130px] mb-2 p-0.5 rounded-t-md rounded-b-sm hover:scale-105 hover:shadow-xl hover:ring-2 hover:border-transparent ring-secondary shadow-secondary/30 duration-300"
-                        src={item.image ? `http://localhost:8080/images/${item.image}` : '/images/def.jpg'}
-                        alt="capsule image"
-                        width={500}
-                        height={500}
-                        unoptimized
-                      />
+                      <Image className="object-cover w-full h-[130px] mb-2 p-0.5 rounded-t-md rounded-b-sm ring-secondary shadow-secondary/30" src={item.image ? `http://localhost:8080/images/${item.image}` : '/images/def.jpg'} alt="capsule image" width={500} height={500} unoptimized />
                       <CardDescription className="text-center text-sm text-foreground/80">
                         <p>
                           از کاربر : <span>{item?.owner?.name ?? item.owner?.email}</span>
@@ -128,7 +121,7 @@ export default function CapsulesIndex({ capsules }: Props) {
                     </CardContent>
                     <Separator className="bg-foreground/20" />
                     <CardFooter className="flex py-4 items-center justify-center">
-                      <Link className="flex py-1 group px-2 rounded-md items-center justify-center gap-2 w-2/3 h-[50px] text-lg text-background" href={`/capsules/${item._id}`}>
+                      <Link className="flex py-1 group px-2 rounded-md items-center justify-center gap-2 w-2/3 h-[50px] text-lg text-background" href={`/capsules/${item._id}`} target="_top">
                         <div className="w-full relative h-full flex items-center">
                           <div className="bg-background dark:bg-foreground relative after:content-[''] after:absolute after:h-full after:w-full after:border-6 after:border-accent dark:after:border-accent/10 after:border-l-0 after:rounded-r-full border-2 border-black h-full w-2/2 rounded-r-full group-hover:translate-x-8 group-hover:rotate-6 duration-300">
                             <span className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 text-foreground dark:text-background">دیدن</span>

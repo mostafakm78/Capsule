@@ -11,9 +11,9 @@ import { BsCapsule } from 'react-icons/bs';
 import { FaQuestion } from 'react-icons/fa';
 import { IoCall } from 'react-icons/io5';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { LinkProps } from '@/lib/types';
-import { JSX } from 'react';
+import { JSX, useState } from 'react';
 import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import { IoIosSearch } from 'react-icons/io';
@@ -33,15 +33,57 @@ const sidebarLinks: (LinkProps & { icon: JSX.Element })[] = [
 
 export function Sidebar() {
   const pathName = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [searchInput, setSearchInput] = useState<string>('');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const linkClasses = (href: string) => {
     const isActive = href === '/' ? pathName === '/' : pathName.startsWith(href);
     return `flex items-center ${isActive ? 'text-secondary' : 'text-foreground/80'} text-base md:text-xl bg-accent p-2 rounded-lg active:text-primary justify-start gap-4`;
   };
 
+  const pushWithParams = (mutator: (p: URLSearchParams) => void) => {
+    const params = new URLSearchParams(searchParams.toString());
+    mutator(params);
+    const qs = params.toString();
+    router.push(qs ? `/capsules?${qs}` : `/capsules`);
+  };
+
+  const performSearchAction = () => {
+    const q = searchInput.trim();
+
+    if (q.length > 0) {
+      pushWithParams((params) => {
+        params.set('q', q);
+        params.set('page', '1');
+      });
+      setIsOpen(false);
+      setSearchInput('');
+      return;
+    }
+
+    if (searchParams.get('q')) {
+      pushWithParams((params) => {
+        params.delete('q');
+        params.set('page', '1');
+      });
+      setIsOpen(false);
+      setSearchInput('');
+      return;
+    }
+  };
+
+  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (!e.nativeEvent.isComposing && e.key === 'Enter') {
+      setIsOpen(false);
+      performSearchAction();
+    }
+  };
+
   return (
     <aside>
-      <Sheet>
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
           <HiOutlineBars3 className="cursor-pointer text-3xl md:text-4xl" />
         </SheetTrigger>
@@ -67,8 +109,8 @@ export function Sidebar() {
           <div className="flex flex-col w-full py-4 sm:px-10 px-4">
             <Separator className="w-full bg-foreground/20 my-3" />
             <div className="flex w-full relative md:hidden justify-center items-center">
-              <Input className="bg-white dark:bg-slate-900" type="text" placeholder="کپسول رو سرچ کن" />
-              <IoIosSearch className="text-3xl cursor-pointer hover:animate-caret-blink absolute left-0 ml-3 text-foreground/70" />
+              <Input onKeyDown={handleKeyDown} value={searchInput} onChange={(e) => setSearchInput(e.target.value)} className="bg-white dark:bg-slate-900" type="text" placeholder="کپسول رو سرچ کن" />
+              <IoIosSearch onClick={performSearchAction} className="text-3xl cursor-pointer hover:animate-caret-blink absolute left-0 ml-3 text-foreground/70" />
             </div>
           </div>
 

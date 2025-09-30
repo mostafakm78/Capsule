@@ -16,10 +16,10 @@ export default function ContactUsComponent() {
           <div className="flex flex-col gap-10">
             <h5 className="md:text-2xl text-xl text-foreground/70 font-bold">پل های ارتباطی</h5>
             <div className="flex md:text-3xl text-2xl gap-6">
-              <Link className="bg-primary/10 md:p-4 p-2 rounded-lg hover:bg-primary text-primary hover:text-background duration-300" href="">
+              <Link className="bg-primary/10 md:p-4 p-2 rounded-lg hover:bg-primary text-primary hover:text-background duration-300" href="https://wa.me/989169799533" target="_blank">
                 <FaWhatsapp />
               </Link>
-              <Link className="bg-primary/10 md:p-4 p-2 rounded-lg hover:bg-primary text-primary hover:text-background duration-300" href="">
+              <Link className="bg-primary/10 md:p-4 p-2 rounded-lg hover:bg-primary text-primary hover:text-background duration-300" href="mailto:mostafamf555@gmail.com" target="_blank">
                 <MdMail />
               </Link>
             </div>
@@ -31,16 +31,16 @@ export default function ContactUsComponent() {
           <div className="flex flex-col gap-10">
             <h5 className="md:text-2xl text-xl text-foreground/70 font-bold">شبکه های اجتماعی</h5>
             <div className="flex md:text-3xl text-2xl gap-6">
-              <Link className="bg-primary/10 md:p-4 p-2 rounded-lg hover:bg-primary text-primary hover:text-background duration-300" href="">
+              <Link className="bg-primary/10 md:p-4 p-2 rounded-lg hover:bg-primary text-primary hover:text-background duration-300" href="http://www.instagram.com/imyour_mosi" target='_blank'>
                 <FaInstagram />
               </Link>
-              <Link className="bg-primary/10 md:p-4 p-2 rounded-lg hover:bg-primary text-primary hover:text-background duration-300" href="">
+              <Link className="bg-primary/10 md:p-4 p-2 rounded-lg hover:bg-primary text-primary hover:text-background duration-300" href="https://t.me/Mostafakamari78" target='_blank'>
                 <FaTelegram />
               </Link>
-              <Link className="bg-primary/10 md:p-4 p-2 rounded-lg hover:bg-primary text-primary hover:text-background duration-300" href="">
+              <Link className="bg-primary/10 md:p-4 p-2 rounded-lg hover:bg-primary text-primary hover:text-background duration-300" href="http://linkedin.com/in/mostafa-kamari-b82450351" target="_blank">
                 <FaLinkedin />
               </Link>
-              <Link className="bg-primary/10 md:p-4 p-2 rounded-lg hover:bg-primary text-primary hover:text-background duration-300" href="">
+              <Link className="bg-primary/10 md:p-4 p-2 rounded-lg hover:bg-primary text-primary hover:text-background duration-300" href="https://github.com/mostafakm78" target="_blank">
                 <FaGithub />
               </Link>
             </div>

@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import Loadings from '../../shared/loadings';
 import LastUserCapsules from './LastUserCapsules';
 import Link from 'next/link';
+import LastRelatedCapsules from './LastRelatedCapsules copy';
 
 type Props = {
   capsule: Capsule | undefined;
@@ -66,8 +67,8 @@ export default function SinglePageCapsule({ capsule }: Props) {
         <div className={`flex flex-col lg:p-10 p-3 gap-10 relative items-center ${colorCode} rounded-b-lg w-full`}>
           <span className="text-2xl self-start text-foreground/80 font-bold">موضوع : {singleCapsule?.title}</span>
           <div className="w-full flex flex-col lg:flex-row gap-10 items-center justify-center">
-            <p className="text-lg text-foreground bg-background lg:w-1/2 w-full min-h-[400px] p-6 rounded-md break-words text-right">{singleCapsule?.description}</p>
-            <p className="text-lg text-foreground bg-background lg:w-1/2 w-full min-h-[400px] p-6 rounded-md break-words text-right">{singleCapsule?.extra}</p>
+            <p className="text-lg text-foreground bg-background lg:w-1/2 w-full h-[400px] overflow-y-auto p-6 rounded-md break-words text-right">{singleCapsule?.description}</p>
+            <p className="text-lg text-foreground bg-background lg:w-1/2 w-full h-[400px] overflow-y-auto p-6 rounded-md break-words text-right">{singleCapsule?.extra}</p>
           </div>
           <div className="flex items-center justify-center gap-4">
             <span className="text-foreground/80">دسته بندی کپسول :</span>
@@ -82,6 +83,7 @@ export default function SinglePageCapsule({ capsule }: Props) {
           </div>
         </div>
         <LastUserCapsules capsuleId={singleCapsule?._id} userId={singleCapsule?.owner} />
+        <LastRelatedCapsules singleCapsule={singleCapsule} />
       </div>
     </section>
   );
