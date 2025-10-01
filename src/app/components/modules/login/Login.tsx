@@ -36,7 +36,7 @@ export default function LoginOrSignup() {
   }, [step]);
 
   return (
-    <section className="flex md:flex-row flex-col md:gap-6 items-center min-h-screen justify-center">
+    <section aria-label='ورود/ثبت‌نام' className="flex md:flex-row flex-col md:gap-6 items-center min-h-screen justify-center">
       <div className="md:w-2/5 lg:w-1/2 flex flex-col pt-6 md:pt-0 px-2 md:gap-4 gap-1 items-center justify-center text-2xl md:text-3xl lg:text-5xl xl:text-7xl text-foreground/85">
         <div className='flex items-center justify-center gap-2'>
           <Image className="logo h-[40px] w-[40px] md:h-[60px] md:w-[60px] xl:w-[100px] xl:h-[100px]" src="/images/Logo.png" alt="Logo" width={500} height={500} />

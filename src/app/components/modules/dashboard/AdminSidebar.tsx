@@ -5,7 +5,6 @@ import { Bungee } from 'next/font/google';
 import Link from 'next/link';
 import { MdHomeFilled, MdOutlineEditNotifications } from 'react-icons/md';
 import { BsCapsule } from 'react-icons/bs';
-import { ThemeToggle } from '../../shared/Theme';
 import { ImExit } from 'react-icons/im';
 import { FaUser, FaUsers } from 'react-icons/fa';
 import { usePathname } from 'next/navigation';
@@ -13,7 +12,10 @@ import { LinkProps } from '@/lib/types';
 import { JSX } from 'react';
 import { TbCategoryFilled } from 'react-icons/tb';
 import { Separator } from '@/components/ui/separator';
-import { LogoutModal } from './LogoutModal';
+import dynamic from 'next/dynamic';
+
+const ThemeToggle = dynamic(() => import('../../shared/Theme'), { ssr: false });
+const LogoutModal = dynamic(() => import('./LogoutModal'), { ssr: false });
 
 const bungee = Bungee({
   weight: '400',

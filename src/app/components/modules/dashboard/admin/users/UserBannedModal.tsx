@@ -15,6 +15,8 @@ export function UserBannedModal({ user }: Props) {
   const [userBan, setUserBan] = useState<boolean | undefined>(undefined);
   const showToast = useCustomToast();
 
+  console.log(isBanned);
+
   useEffect(() => {
     if (!user) return;
     if (user) {
@@ -23,10 +25,11 @@ export function UserBannedModal({ user }: Props) {
   }, [user]);
 
   async function handleBanned() {
+    if (!user) return;
     const next = !userBan;
-    setIsBanned(!isBanned);
+    setIsBanned(next);
     try {
-      const res = await callApi().patch(`/admin/users/${user?._id}`, { isBanned });
+      const res = await callApi().patch(`/admin/users/${user?._id}`, { isBanned: next });
       if (res.status === 200) {
         setUserBan(next);
         showToast({ message: 'وضعیت بن کاربر با موفقیت تغییر یافت ✅', bg: 'bg-green-200' });

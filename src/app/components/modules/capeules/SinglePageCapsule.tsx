@@ -22,7 +22,7 @@ export default function SinglePageCapsule({ capsule }: Props) {
   }, [capsule]);
 
   if (capsule === undefined) {
-    return <Loadings />;
+    return <Loadings aria-live="polite" />;
   }
 
   const lastSeen = singleCapsule?.createdAt;
@@ -50,33 +50,39 @@ export default function SinglePageCapsule({ capsule }: Props) {
   }
 
   return (
-    <section className="flex items-center justify-center">
+    <section className="flex items-center justify-center" aria-label={`Capsule detail page for ${singleCapsule?.title}`}>
       <div className="lg:px-10 px-4 flex flex-col lg:w-[90%] w-full justify-center items-center">
-        <div className="mt-4 flex relative items-center gap-2 bg-slate-900 rounded-t-lg w-full h-[400px]">
-          <Image className="object-cover w-full h-full rounded-t-lg" src={singleCapsule?.image ? `http://localhost:8080/images/${singleCapsule?.image}` : '/images/def.jpg'} alt="capsule image" width={500} height={500} unoptimized />
+        <div className="mt-4 flex relative items-center gap-2 bg-slate-900 rounded-t-lg w-full h-[400px]" role="region" aria-label="Capsule image and owner">
+          <Image className="object-cover w-full h-full rounded-t-lg" src={singleCapsule?.image ? `http://localhost:8080/images/${singleCapsule?.image}` : '/images/def.jpg'} alt={`${singleCapsule?.title} image`} width={500} height={500} priority unoptimized />
           <div className="absolute top-10 right-10 flex flex-col items-start gap-2">
-            <Avatar className="h-15 w-15 ring-2 ring-secondary">
-              <AvatarImage className="object-cover" src={singleCapsule?.owner?.avatar ? `http://localhost:8080/images/${singleCapsule?.owner.avatar}` : '/images/default.png'} />
+            <Avatar className="h-15 w-15 ring-2 ring-secondary" aria-label={`Owner avatar: ${singleCapsule?.owner?.name ?? 'بی نام'}`}>
+              <AvatarImage className="object-cover" src={singleCapsule?.owner?.avatar ? `http://localhost:8080/images/${singleCapsule?.owner.avatar}` : '/images/default.png'} alt={`${singleCapsule?.owner?.name ?? 'بی نام'} avatar`} />
               <AvatarFallback>...</AvatarFallback>
             </Avatar>
-            <div className="bg-secondary/80 p-1 rounded-md">
+            <div className="bg-secondary/80 p-1 rounded-md" aria-label={`Owner name: ${singleCapsule?.owner?.name ?? 'بی نام'}`}>
               از کاربر : <span>{singleCapsule?.owner?.name ?? 'بی نام'}</span>
             </div>
           </div>
         </div>
-        <div className={`flex flex-col lg:p-10 p-3 gap-10 relative items-center ${colorCode} rounded-b-lg w-full`}>
-          <span className="text-2xl self-start text-foreground/80 font-bold">موضوع : {singleCapsule?.title}</span>
-          <div className="w-full flex flex-col lg:flex-row gap-10 items-center justify-center">
-            <p className="text-lg text-foreground bg-background lg:w-1/2 w-full h-[400px] overflow-y-auto p-6 rounded-md break-words text-right">{singleCapsule?.description}</p>
-            <p className="text-lg text-foreground bg-background lg:w-1/2 w-full h-[400px] overflow-y-auto p-6 rounded-md break-words text-right">{singleCapsule?.extra}</p>
+        <div className={`flex flex-col lg:p-10 p-3 gap-10 relative items-center ${colorCode} rounded-b-lg w-full`} role="region" aria-label={`Capsule content for ${singleCapsule?.title}`}>
+          <span className="text-2xl self-start text-foreground/80 font-bold" aria-label={`Capsule title: ${singleCapsule?.title}`}>
+            موضوع : {singleCapsule?.title}
+          </span>
+          <div className="w-full flex flex-col lg:flex-row gap-10 items-center justify-center" role="group" aria-label="Capsule description and extra content">
+            <p className="text-lg text-foreground bg-background lg:w-1/2 w-full h-[400px] overflow-y-auto p-6 rounded-md break-words text-right" aria-label="Capsule description">
+              {singleCapsule?.description}
+            </p>
+            <p className="text-lg text-foreground bg-background lg:w-1/2 w-full h-[400px] overflow-y-auto p-6 rounded-md break-words text-right" aria-label="Capsule extra content">
+              {singleCapsule?.extra}
+            </p>
           </div>
-          <div className="flex items-center justify-center gap-4">
+          <div className="flex items-center justify-center gap-4" aria-label="Capsule category">
             <span className="text-foreground/80">دسته بندی کپسول :</span>
-            <Link href={`/capsules?categoryItem=${singleCapsule?.categoryItem?._id}`} className="bg-background p-1 px-3 rounded-2xl hover:scale-105 duration-300 text-foreground/80">
+            <Link href={`/capsules?categoryItem=${singleCapsule?.categoryItem?._id}`} className="bg-background p-1 px-3 rounded-2xl hover:scale-105 duration-300 text-foreground/80" aria-label={`Category: ${singleCapsule?.categoryItem?.title}`}>
               {singleCapsule?.categoryItem?.title}
             </Link>
           </div>
-          <div className="self-start">
+          <div className="self-start" aria-label={`Capsule created at: ${persianDate}`}>
             <span className="text-foreground/80">
               ارسال شده در تاریخ : <span>{persianDate}</span>
             </span>

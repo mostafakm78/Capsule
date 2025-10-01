@@ -1,11 +1,10 @@
-import AboutUsDesktop from '@/app/components/modules/about-us/About-Us-Desktop';
-import AboutUsMobile from '@/app/components/modules/about-us/About-Us-Mobile';
+import AboutUsWrapper from '@/app/components/modules/about-us/AboutUsWrapper';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'درباره ما',
+};
 
 export default function AboutUs() {
-  return (
-    <>
-      <AboutUsDesktop />
-      <AboutUsMobile />
-    </>
-  );
+  return <AboutUsWrapper />;
 }

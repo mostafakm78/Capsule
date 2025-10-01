@@ -71,7 +71,7 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <header className="flex flex-col relative mb-6 bg-linear-to-b from-foreground/20 to-background justify-center lg:pt-16 items-center">
+    <header aria-label="معرفی سایت" className="flex flex-col relative mb-6 bg-linear-to-b from-foreground/20 to-background justify-center lg:pt-16 items-center">
       <div className="flex lg:flex-row flex-col-reverse px-10 items-center md:gap-4 lg:py-6 pb-6 lg:gap-8 rounded-lg w-full">
         <div className="flex flex-col lg:w-1/2 w-full gap-10 justify-center items-center">
           <div className="text-center">

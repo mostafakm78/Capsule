@@ -51,7 +51,7 @@ export default function Register() {
     );
   }, []);
   return (
-    <section className="flex flex-col mb-20 px-4 md:px-6 lg:px-10 justify-center lg:mt-44 mt-20 items-center">
+    <section aria-label="ثبت نام در سایت" className="flex flex-col mb-20 px-4 md:px-6 lg:px-10 justify-center lg:mt-44 mt-20 items-center">
       <div className="flex lg:flex-row flex-col gap-10 justify-center items-center">
         <div className="w-full space-y-6">
           <div className="section-one flex text-center md:text-right items-center">

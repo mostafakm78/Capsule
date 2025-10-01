@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { ThemeProvider } from './components/providers/Theme-provider';
-import { ReduxProvider } from './components/providers/Redux-Provider';
+import { ThemeProvider } from './providers/Theme-provider';
+import { ReduxProvider } from './providers/Redux-Provider';
 import { Toaster } from '@/components/ui/sonner';
 import ProgressBarLoading from './components/shared/Progressbar';
 

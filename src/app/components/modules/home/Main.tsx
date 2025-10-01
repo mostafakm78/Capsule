@@ -6,7 +6,7 @@ import WhatIsThis from './WhatIsThis';
 
 export default function Main() {
   return (
-    <main>
+    <main aria-label="main section">
       <HeroSection />
       <WhatIsThis />
       <UseCases />

@@ -5,12 +5,13 @@ import callApi from '@/app/services/callApi';
 import { clearUser } from '@/app/store/userSlice';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogDescription, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useRouter } from 'next/navigation';
+import { useCallback } from 'react';
 
-export function LogoutModal() {
+export default function LogoutModal() {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     try {
       await callApi()
         .post('/auth/logout', {})
@@ -20,7 +21,7 @@ export function LogoutModal() {
       router.replace('/');
       router.refresh();
     }
-  };
+  }, [dispatch, router]);
 
   return (
     <AlertDialog>

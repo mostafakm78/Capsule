@@ -15,7 +15,6 @@ export const ShinyButton = React.forwardRef<HTMLButtonElement, ShinyButtonProps>
   useEffect(() => {
     if (!buttonRef.current) return;
 
-
     gsap.fromTo(buttonRef.current, { scale: 1.2 }, { scale: 1, duration: 0.5, ease: 'power2.out' });
 
     gsap.fromTo(

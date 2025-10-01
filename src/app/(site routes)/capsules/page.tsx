@@ -1,7 +1,11 @@
-
 import CapsulesIndex from '@/app/components/modules/capeules/CapsulesIndex';
 import callApi from '@/app/services/callApi';
 import { GetCapsulesResponse } from '@/lib/types';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'کپسول های عمومی',
+};
 
 const emptyCapsules: GetCapsulesResponse = {
   items: [],

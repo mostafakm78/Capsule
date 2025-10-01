@@ -21,6 +21,7 @@ export default function Card({ setSwiperApi, isEnd, isBegining }: CardProps) {
   return (
     <>
       <Swiper
+        aria-label="نظرات کاربران"
         effect={'cards'}
         grabCursor={true}
         modules={[EffectCards]}

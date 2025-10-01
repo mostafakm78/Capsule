@@ -112,7 +112,7 @@ export default function UseCases() {
   };
 
   return (
-    <section id="pinned-section" className="lg:h-[700px]">
+    <section aria-label="کپسول چیکار میکنه ؟" id="pinned-section" className="lg:h-[700px]">
       <div className="flex lg:flex-row flex-col h-full w-full px-1 md:px-6 lg:px-10 gap-10">
         <div
           ref={divRef}

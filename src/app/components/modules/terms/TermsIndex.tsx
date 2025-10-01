@@ -1,10 +1,10 @@
 export default function TermsIndex() {
   return (
-    <section className="flex items-center justify-center px-4 md:px-6 lg:px-10">
+    <section aria-label="قوانین و مقررات سایت" className="flex items-center justify-center px-4 md:px-6 lg:px-10">
       <div className="flex flex-col gap-20 items-center lg:w-[90%]">
         <div className="flex flex-col items-center gap-3">
           <h3 className="lg:text-5xl md:text-4xl text-3xl font-kalmeh">قوانین و مقررات سایت</h3>
-          <p className="lg:text-2xl md:text-lg text-base text-foreground/80">در این صفحه شرایط استفاده از وبسایت آموزشی راکت را مشاهده میکنید.</p>
+          <p className="lg:text-2xl md:text-lg text-base text-foreground/80">در این صفحه شرایط استفاده از وبسایت آموزشی کپسول را مشاهده میکنید.</p>
         </div>
         <div className="flex flex-col space-y-4 bg-white dark:bg-slate-900 text-lg text-foreground/60 rounded-lg md:p-10 p-4">
           <h1>به کپسول خوش آمدید.</h1>
@@ -18,7 +18,7 @@ export default function TermsIndex() {
             <li>شما موظف هستید در هنگام عضویت در سایت تمام اطلاعات را به شکل صحیح و معتبر وارد کنید، از جمله ایمیل</li>
             <li>در صورتی که فرد دیگری بدون اجازه شما به اطلاعات کاربری شما دسترسی پیدا کرد حتما در اولین فرصت به ما گزارش دهید.</li>
             <li>از در اختیار گذاشتن نام کاربری و رمز عبور خود به اشخاص ثالث خودداری کنید زیرا شما مسئول اتفاقاتی هستید که به پروفایل کاربری شما مرتبط می گردد.</li>
-            <li>هر حساب کاربری تنها مجاز است توسط یک شخص استفاده شود، در صورت استفاده چندین شخص از یک اکانت راکت این حق را برای خود محفوظ می داند که اکانت مورد نظر را مسدود نماید.</li>
+            <li>هر حساب کاربری تنها مجاز است توسط یک شخص استفاده شود، در صورت استفاده چندین شخص از یک اکانت کپسول این حق را برای خود محفوظ می داند که اکانت مورد نظر را مسدود نماید.</li>
             <li>استفاده از هرگونه نام جعلی یا تقلبی و یا ایمیل نامعتبر در جهت سو استفاده های احتمالی یا نقض حقوق اشخاص دیگر موجب مسدود شدن حساب کاربری میگردد.</li>
             <li>شما حق ندارید هویت و موقعیتِ جغرافیایِ خودتان را پنهان کنید یا به شکلی دیگر جلوه دهید. شما حق ندارید خودتان را جایِ کسی دیگر معرفی کنید.</li>
           </ul>

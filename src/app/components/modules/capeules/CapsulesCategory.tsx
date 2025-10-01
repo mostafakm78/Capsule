@@ -131,19 +131,21 @@ export default function CapsuelesCategory() {
   };
 
   return (
-    <div className="lg:col-span-3 lg:block md:flex md:justify-center md:gap-10 w-full space-y-4 lg:place-self-start">
+    <div className="lg:col-span-3 lg:block md:flex md:justify-center md:gap-10 w-full space-y-4 lg:place-self-start" aria-label="Capsules Category and Sorting Section">
       {/* مرتب سازی */}
-      <div ref={sortRef} className="bg-white md:w-full h-[90px] overflow-hidden rounded-lg shadow-md dark:bg-slate-900 flex flex-col p-8">
+      <div ref={sortRef} className="bg-white md:w-full h-[90px] overflow-hidden rounded-lg shadow-md dark:bg-slate-900 flex flex-col p-8" aria-label="Sort Section">
         <div className="flex items-center justify-between">
-          <h6 className="text-xl font-semibold">مرتب سازی بر اساس</h6>
-          <div ref={sortIconRef} className="cursor-pointer lg:hidden" onClick={() => toggleSection('sort')}>
-            <FaCaretDown className="text-2xl" />
+          <h6 className="text-xl font-semibold" aria-label="Sort by">
+            مرتب سازی بر اساس
+          </h6>
+          <div ref={sortIconRef} className="cursor-pointer lg:hidden" onClick={() => toggleSection('sort')} aria-label="Toggle Sort Options" role="button" tabIndex={0}>
+            <FaCaretDown className="text-2xl" aria-hidden="true" />
           </div>
         </div>
         <Separator className="w-full bg-foreground/20 my-4" />
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2" role="list">
           {sortLinks.map((item, i) => (
-            <Link key={i} href={item.link} className={linkClasses(item.link)}>
+            <Link key={i} href={item.link} className={linkClasses(item.link)} aria-label={`Sort by ${item.title}`} role="listitem">
               {item.title}
             </Link>
           ))}
@@ -151,15 +153,17 @@ export default function CapsuelesCategory() {
       </div>
 
       {/* فیلتر */}
-      <div ref={filterRef} className="bg-white md:w-full h-[90px] overflow-hidden rounded-lg shadow-md dark:bg-slate-900 flex flex-col p-8">
+      <div ref={filterRef} className="bg-white md:w-full h-[90px] overflow-hidden rounded-lg shadow-md dark:bg-slate-900 flex flex-col p-8" aria-label="Filter Section">
         <div className="flex items-center justify-between">
-          <h6 className="text-xl font-semibold">فیلتر بر اساس دسته‌بندی</h6>
-          <div ref={filterIconRef} className="cursor-pointer lg:hidden" onClick={() => toggleSection('filter')}>
-            <FaCaretDown className="text-2xl" />
+          <h6 className="text-xl font-semibold" aria-label="Filter by Category">
+            فیلتر بر اساس دسته‌بندی
+          </h6>
+          <div ref={filterIconRef} className="cursor-pointer lg:hidden" onClick={() => toggleSection('filter')} aria-label="Toggle Filter Options" role="button" tabIndex={0}>
+            <FaCaretDown className="text-2xl" aria-hidden="true" />
           </div>
         </div>
         <Separator className="w-full bg-foreground/20 my-4" />
-        <div className="flex flex-wrap gap-1 space-y-1.5">
+        <div className="flex flex-wrap gap-1 space-y-1.5" role="list">
           {categoryItem &&
             categoryItem.map((item) => {
               const checked = selectCategories.includes(item?._id);
@@ -169,14 +173,16 @@ export default function CapsuelesCategory() {
                   htmlFor={`cat-${item._id}`}
                   className={`
                         flex items-center gap-3 cursor-pointer rounded-md px-2 py-1${checked ? 'bg-primary/10' : 'hover:bg-foreground/5'}`}
+                  aria-label={`Category ${item.title}`}
+                  role="listitem"
                 >
-                  <Checkbox id={`cat-${item._id}`} className="cursor-pointer" checked={checked} onCheckedChange={(val) => toggleCategory(item._id, Boolean(val))} />
+                  <Checkbox id={`cat-${item._id}`} className="cursor-pointer" checked={checked} onCheckedChange={(val) => toggleCategory(item._id, Boolean(val))} aria-checked={checked} />
                   <span className="text-sm">{item.title}</span>
                 </label>
               );
             })}
         </div>
-        <Button onClick={handleCategoryItem} className="cursor-pointer mt-3">
+        <Button onClick={handleCategoryItem} className="cursor-pointer mt-3" aria-label="Search by selected categories">
           جستجو
         </Button>
       </div>

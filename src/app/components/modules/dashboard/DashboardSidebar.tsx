@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { MdAdminPanelSettings, MdHomeFilled } from 'react-icons/md';
 import { BsCapsule } from 'react-icons/bs';
 import { IoSettingsSharp } from 'react-icons/io5';
-import { ThemeToggle } from '../../shared/Theme';
 import { ImExit } from 'react-icons/im';
 import { PiQuestionFill } from 'react-icons/pi';
 import { HiMiniSquaresPlus } from 'react-icons/hi2';
@@ -14,8 +13,11 @@ import { usePathname } from 'next/navigation';
 import { LinkProps } from '@/lib/types';
 import { JSX } from 'react';
 import { Separator } from '@/components/ui/separator';
-import { LogoutModal } from './LogoutModal';
 import { useAppSelector } from '@/app/hooks/hook';
+import dynamic from 'next/dynamic';
+
+const ThemeToggle = dynamic(() => import('../../shared/Theme'), { ssr: false });
+const LogoutModal = dynamic(() => import('./LogoutModal'), { ssr: false });
 
 const bungee = Bungee({
   weight: '400',

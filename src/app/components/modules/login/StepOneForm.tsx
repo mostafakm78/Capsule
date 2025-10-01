@@ -66,7 +66,7 @@ export default function StepOneForm({ anime }: { anime: string }) {
       <p className="text-base text-foreground/70 self-start">ایمیل خود را وارد کنید</p>
       <Separator className="bg-foreground/10 my-4" />
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 w-full">
+        <form aria-label="وارد کردن ایمیل" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 w-full">
           <FormField
             control={form.control}
             name="email"

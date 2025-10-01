@@ -1,6 +1,12 @@
 import HomePagePanel from '@/app/components/modules/dashboard/panel/HomePagePanel';
 import callApi from '@/app/services/callApi';
+import { Metadata } from 'next';
 import { headers } from 'next/headers';
+
+export const metadata: Metadata = {
+  title: 'داشبورد کپسول',
+  description: 'بخش داشبورد و پنل کاربری سایت کپسول',
+};
 
 export default async function Dashboard() {
   const cookieHeader = (await headers()).get('cookie') ?? '';

@@ -50,7 +50,7 @@ export default function WhatIsThis() {
     );
   }, []);
   return (
-    <section className="flex flex-col px-10 justify-start items-center">
+    <section aria-label="کپسول چیه ؟" className="flex flex-col px-10 justify-start items-center">
       <div className="flex lg:flex-row flex-col gap-4 lg:gap-0 w-full xl:w-2/3 lg:w-3/4 px-10 justify-between">
         <div className="text flex items-center justify-center gap-2 text-xl lg:text-2xl">
           <span className="relative z-[2] after:content-[''] after:absolute after:w-[20px] after:h-[20px] lg:after:h-[30px] lg:after:w-[30px] lg:after:top-2 after:top-1 lg:after:left-3 after:left-2 after:rounded-full after:bg-purple-500/25">

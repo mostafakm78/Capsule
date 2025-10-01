@@ -17,6 +17,7 @@ import { IoIosSearch } from 'react-icons/io';
 import { UserBannedModal } from './UserBannedModal';
 import { UserFlagModal } from './UserFlagModal';
 import { UserTypeModal } from './UserTypeModal';
+import { useAppSelector } from '@/app/hooks/hook';
 
 type Sort = 'new' | 'old';
 type Flag = 'all' | 'sus' | 'review' | 'violation' | 'none';
@@ -24,6 +25,8 @@ type Flag = 'all' | 'sus' | 'review' | 'violation' | 'none';
 export default function Users() {
   const searchParams = useSearchParams();
   const router = useRouter();
+
+  const { user } = useAppSelector((state) => state.user);
 
   const [users, setUsers] = useState<GetUsersResponse>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -103,6 +106,8 @@ export default function Users() {
       cancelled = true;
     };
   }, [searchParams]);
+
+  const filterUser = users?.items?.filter((singleUser) => singleUser._id !== user?._id);
 
   const performSearchAction = () => {
     const q = search.trim();
@@ -272,7 +277,7 @@ export default function Users() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users?.items.map((user, i) => (
+            {filterUser?.map((user, i) => (
               <TableRow className={`${user.flag === 'sus' ? 'bg-orange-500/30' : user.flag === 'review' ? 'bg-orange-500/30' : user.flag === 'violation' ? 'bg-red-500/30' : ''}`} key={user._id}>
                 <TableCell>{i + 1}</TableCell>
                 <TableCell className="md:font-medium">

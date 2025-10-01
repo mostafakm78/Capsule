@@ -1,11 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import Card from './Card';
 import { BiSolidLeftArrow, BiSolidRightArrow } from 'react-icons/bi';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import dynamic from 'next/dynamic';
+
+const Card = dynamic(() => import('./Card'), { ssr: false });
 
 type SwiperApi = {
   slidePrev: () => void;
@@ -16,8 +18,8 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 export default function Testimonials() {
   const [swiperApi, setSwiperApi] = useState<SwiperApi | null>(null);
-  const [isBeginning , setIsBeginning] = useState<boolean>(true)
-  const [isEnd , setIsEnd] = useState<boolean>(false)
+  const [isBeginning, setIsBeginning] = useState<boolean>(true);
+  const [isEnd, setIsEnd] = useState<boolean>(false);
 
   useGSAP(() => {
     gsap.fromTo(
@@ -56,7 +58,7 @@ export default function Testimonials() {
   }, []);
 
   return (
-    <section className="flex mb-16 px-4 md:px-6 lg:px-10 justify-center lg:mt-44 mt-20 items-center">
+    <section aria-label="تجربه کاربران" className="flex mb-16 px-4 md:px-6 lg:px-10 justify-center lg:mt-44 mt-20 items-center">
       <div className="flex lg:flex-row flex-col gap-10 justify-center items-center">
         <div className="w-full space-y-6">
           <div className="section-right flex items-center">
@@ -70,7 +72,7 @@ export default function Testimonials() {
           <p className="section-right lg:text-xl text-sm md:text-base text-foreground/70 lg:w-2/3 w-full lg:mr-14 mx-auto"> بخش کوچیکی از نظرات کاربرای کپسول درباره تجربه ای که اینجا داشتن</p>
           <div className="section-right flex items-center w-2/3 justify-between lg:text-xl text-2xl text-foreground/70 lg:mr-14 mx-auto">
             <div className="flex gap-3">
-              <BiSolidRightArrow onClick={() => swiperApi?.slidePrev()} className={`cursor-pointer ${isBeginning ? 'opacity-50' : ''}`}  />
+              <BiSolidRightArrow onClick={() => swiperApi?.slidePrev()} className={`cursor-pointer ${isBeginning ? 'opacity-50' : ''}`} />
               <BiSolidLeftArrow onClick={() => swiperApi?.slideNext()} className={`cursor-pointer ${isEnd ? 'opacity-50' : ''}`} />
             </div>
             <svg className="text-foreground/60 transform hidden lg:block lg:rotate-0" width="81" height="25" viewBox="0 0 81 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -88,7 +90,7 @@ export default function Testimonials() {
           </div>
         </div>
         <div className="section-left w-full relative after:content-[''] after:absolute after:h-full after:w-full after:bg-foreground/15 after:top-1/2 after:left-1/2 after:-translate-y-1/2 after:-translate-x-1/2 after:blur-3xl">
-          <Card setSwiperApi={setSwiperApi} isEnd={setIsEnd} isBegining={setIsBeginning}/>
+          <Card setSwiperApi={setSwiperApi} isEnd={setIsEnd} isBegining={setIsBeginning} />
         </div>
       </div>
     </section>

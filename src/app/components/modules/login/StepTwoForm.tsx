@@ -137,7 +137,7 @@ export default function StepTwoForm({ anime }: { anime: string }) {
       <p className="text-base text-foreground/70 self-start">پسورد خود را وارد کنید</p>
       <Separator className="bg-foreground/10 my-4" />
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 w-full">
+        <form aria-label="ورود" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 w-full">
           <FormField
             control={form.control}
             name="email"

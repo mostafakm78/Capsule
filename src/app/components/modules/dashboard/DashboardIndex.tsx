@@ -3,7 +3,6 @@
 import { Separator } from '@/components/ui/separator';
 import jalaali from 'jalaali-js';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ThemeToggle } from '@/app/components/shared/Theme';
 import Image from 'next/image';
 import { Bungee } from 'next/font/google';
 import Link from 'next/link';
@@ -20,9 +19,13 @@ import { LinkProps } from '@/lib/types';
 import { JSX, useEffect, useState } from 'react';
 import { AdminSidebar } from './AdminSidebar';
 import { FaUser, FaUsers } from 'react-icons/fa';
-import Notification from './Notification';
-import { LogoutModal } from './LogoutModal';
 import { useAppSelector } from '@/app/hooks/hook';
+import dynamic from 'next/dynamic';
+
+const ThemeToggle = dynamic(() => import('@/app/components/shared/Theme'), { ssr: false });
+const LogoutModal = dynamic(() => import('./LogoutModal'), { ssr: false });
+const Notification = dynamic(() => import('./Notification'), { ssr: false });
+
 const bungee = Bungee({
   weight: '400',
 });
@@ -138,7 +141,7 @@ export default function DashboardLayoutIndex({ children }: { children: React.Rea
               <Notification />
             </div>
             <Avatar className="h-10 w-10 ring-2 ring-secondary">
-              <AvatarImage className='object-cover' src={user?.avatar ? `http://localhost:8080/images/${user.avatar}` : '/images/default.png'} />
+              <AvatarImage className="object-cover" src={user?.avatar ? `http://localhost:8080/images/${user.avatar}` : '/images/default.png'} />
               <AvatarFallback>...</AvatarFallback>
             </Avatar>
           </div>

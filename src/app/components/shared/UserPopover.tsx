@@ -4,20 +4,22 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import { FaLongArrowAltLeft } from 'react-icons/fa';
-import { LogoutModal } from '../modules/dashboard/LogoutModal';
+import dynamic from 'next/dynamic';
+
+const LogoutModal = dynamic(() => import('../modules/dashboard/LogoutModal'), { ssr: false });
 
 export default function UserPopover() {
   const { user } = useAppSelector((state) => state.user);
 
   return (
     <Popover>
-      <PopoverTrigger className="cursor-pointer text-foreground/70 data-[state=open]:text-secondary">
+      <PopoverTrigger aria-label="پروفایل" className="cursor-pointer text-foreground/70 data-[state=open]:text-secondary">
         <Avatar className="h-10 w-10 ring-2 ring-secondary">
           <AvatarImage className="object-cover" src={user?.avatar ? `http://localhost:8080/images/${user.avatar}` : '/images/default.png'} />
           <AvatarFallback>...</AvatarFallback>
         </Avatar>
       </PopoverTrigger>
-      <PopoverContent sideOffset={30} className="z-50 bg-white dark:bg-slate-900 lg:min-w-[300px] md:min-w-[300px] min-w-[250px] md:p-6 lg:ml-40 md:ml-10 ml-5">
+      <PopoverContent aria-label="لینک های داشبورد" sideOffset={30} className="z-50 bg-white dark:bg-slate-900 lg:min-w-[300px] md:min-w-[300px] min-w-[250px] md:p-6 lg:ml-40 md:ml-10 ml-5">
         <div className="flex items-center gap-3">
           <div>
             <Avatar className="h-12 w-12 ring-2 ring-secondary">
