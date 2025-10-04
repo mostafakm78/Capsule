@@ -17,7 +17,9 @@ import { Label } from '@/components/ui/label';
 
 /* Google font for the brand title */
 const bungee = Bungee({
+  subsets: ['latin'],
   weight: '400',
+  display: 'swap',
 });
 
 /* Sort options: map to links that set ?sort=newest|oldest */

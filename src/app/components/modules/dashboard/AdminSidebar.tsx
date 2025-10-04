@@ -20,7 +20,9 @@ const LogoutModal = dynamic(() => import('./LogoutModal'), { ssr: false });
 
 /* Brand font config */
 const bungee = Bungee({
+  subsets: ['latin'],
   weight: '400',
+  display: 'swap',
 });
 
 /* Admin sidebar navigation links with icons (source of truth for menu items) */

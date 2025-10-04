@@ -16,7 +16,9 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 
 const bungee = Bungee({
+  subsets: ['latin'],
   weight: '400',
+  display: 'swap',
 });
 
 type Props = {

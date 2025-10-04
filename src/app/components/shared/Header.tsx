@@ -18,10 +18,10 @@ import ThemeToggle from './Theme';
 import useMobile from '@/app/hooks/useMobile';
 
 /* UI code-splitting: load non-critical header parts lazily */
-const HeaderLink = dynamic(() => import('./HeaderLink'));
+const HeaderLink = dynamic(() => import('./HeaderLink'), { ssr: false });
 const UserPopover = dynamic(() => import('./UserPopover'), { ssr: false });
 const Spotlight = dynamic(() => import('./Spotlight'), { ssr: false });
-const LoginButton = dynamic(() => import('./LoginButton'));
+const LoginButton = dynamic(() => import('./LoginButton'), { ssr: false });
 const Sidebar = dynamic(() => import('./Sidebar'), { ssr: false });
 
 /* Register GSAP plugin for scoped animations */

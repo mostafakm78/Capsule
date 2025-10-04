@@ -2,8 +2,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Bungee } from 'next/font/google';
 import { FaLongArrowAltLeft } from 'react-icons/fa';
+
 const bungee = Bungee({
+  subsets: ['latin'],
   weight: '400',
+  display: 'swap',
 });
 
 export default function AccessDenied() {

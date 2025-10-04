@@ -21,7 +21,9 @@ const ThemeToggle = dynamic(() => import('../../shared/Theme'), { ssr: false });
 const LogoutModal = dynamic(() => import('./LogoutModal'), { ssr: false });
 
 const bungee = Bungee({
+  subsets: ['latin'],
   weight: '400',
+  display: 'swap',
 });
 
 const sidebarLinks: (LinkProps & { icon: JSX.Element })[] = [

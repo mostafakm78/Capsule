@@ -12,7 +12,9 @@ import gsap from 'gsap';
 
 /* Initialize the Bungee font (400 weight) */
 const bungee = Bungee({
+  subsets: ['latin'],
   weight: '400',
+  display: 'swap',
 });
 
 export default function LoginOrSignup() {

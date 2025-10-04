@@ -29,7 +29,9 @@ const LogoutModal = dynamic(() => import('./LogoutModal'), { ssr: false });
 const Notification = dynamic(() => import('./Notification'), { ssr: false });
 
 const bungee = Bungee({
+  subsets: ['latin'],
   weight: '400',
+  display: 'swap',
 });
 
 const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;

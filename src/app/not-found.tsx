@@ -6,7 +6,9 @@ import { LinkProps } from '@/lib/types';
 
 // Load Bungee font at weight 400
 const bungee = Bungee({
+  subsets: ['latin'],
   weight: '400',
+  display: 'swap',
 });
 
 // Top navigation links shown on the NotFound page

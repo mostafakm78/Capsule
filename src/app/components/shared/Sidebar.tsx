@@ -23,8 +23,9 @@ const ThemeToggle = dynamic(() => import('./Theme'), { ssr: false });
 
 /* Brand font setup (Bungee) used for the logo wordmark */
 const bungee = Bungee({
-  weight: '400',
   subsets: ['latin'],
+  weight: '400',
+  display: 'swap',
 });
 
 /* Static config: list of primary navigation links with leading icons */
