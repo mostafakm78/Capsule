@@ -22,14 +22,17 @@ import { setStep } from '@/app/store/authStepOneSlice';
 import callApi from '@/app/services/callApi';
 import useCustomToast from '@/app/hooks/useCustomToast';
 
+/* Zod schema for step-two: email required; password or otp depending on mode */
 const formSchemaStepTwo = z.object({
   email: z.email(),
   password: z.string().min(5, { message: 'پسورد شما باید بالای 5 کاراکتر باشد' }).optional().or(z.literal('')),
   otp: z.string().min(6, { message: 'کد یکبار مصرف شما باید ٦ باید' }).max(6, { message: 'کد یکبار مصرف شما باید ٦ باید' }).optional().or(z.literal('')),
 });
 
+/* TS type inferred from schema */
 type StepTwoData = z.infer<typeof formSchemaStepTwo>;
 
+/* OTP timer helpers */
 const OTP_TIMER_SEC = 180;
 const timerKey = (email: string) => `otpTimerExpiresAt:${email}`;
 const toMMSS = (totalSec: number) => {
@@ -40,24 +43,39 @@ const toMMSS = (totalSec: number) => {
 };
 
 export default function StepTwoForm({ anime }: { anime: string }) {
+  /* Toast helper for user feedback */
   const showToast = useCustomToast();
 
+  /* Local UI state: otp mode toggle, send/login button label, and password visibility */
   const [otp, setOtp] = useState<boolean>(false);
   const [sendButton, setSendButton] = useState<'ورود' | 'ارسال کد'>('ورود');
   const [hide, setHide] = useState<boolean>(true);
+
+  /* Redux + router wiring */
   const dispatch = useDispatch<AppDispatch>();
   const email = useSelector((state: RootState) => state.authStepOne.pendingEmail);
   const { left: remaining, start: startTimer } = usePersistedCountdown(timerKey(email));
   const router = useRouter();
+
+  /* Current action mode for submit button text/behavior */
   const mode = !otp ? 'loginPassword' : sendButton === 'ارسال کد' ? 'sendOtp' : 'loginOtp';
 
+  /* React Hook Form setup with schema-based resolver and default values */
   const form = useForm<StepTwoData>({
     resolver: zodResolver(formSchemaStepTwo),
     defaultValues: { email, password: '', otp: '' },
   });
 
+  /* Submission state (disables button & shows spinner) */
   const { isSubmitting } = form.formState;
 
+  /*
+    Submit handler:
+    - Password login flow when otp=false
+    - Send OTP when otp=true && sendButton='ارسال کد'
+    - Verify OTP when otp=true && sendButton='ورود'
+    - Maps API errors to form fields or root via form.setError
+  */
   async function onSubmit(values: StepTwoData) {
     if (!otp) {
       if (!values.password) {
@@ -74,6 +92,8 @@ export default function StepTwoForm({ anime }: { anime: string }) {
       } catch (err) {
         const error = err as AxiosError<ApiError>;
         const payload = error.response?.data.data;
+        console.log(err);
+
         if (error.status === 401) {
           form.setError('password', { type: 'server', message: 'ایمیل یا پسورد صحیح نمیباشد' });
         }
@@ -132,32 +152,48 @@ export default function StepTwoForm({ anime }: { anime: string }) {
   }
 
   return (
-    <>
-      <h4 className="text-2xl text-foreground/80 self-start font-bold">ورود</h4>
-      <p className="text-base text-foreground/70 self-start">پسورد خود را وارد کنید</p>
+    <section aria-labelledby="login-title">
+      {/* Section header: title + short instruction */}
+      <header>
+        <h4 id="login-title" className="text-2xl text-foreground/80 self-start font-bold">
+          ورود
+        </h4>
+        <p className="text-base text-foreground/70 self-start">پسورد خود را وارد کنید</p>
+      </header>
+
+      {/* Visual divider between header and form */}
       <Separator className="bg-foreground/10 my-4" />
+
+      {/* Form context provider */}
       <Form {...form}>
+        {/* Native form element (kept intact); localized aria-label for assistive tech */}
         <form aria-label="ورود" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 w-full">
+          {/* Email (read-only) field */}
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem className="space-y-1.5">
+                {/* Label + inline validation message + "edit" action */}
                 <div className="flex justify-between items-center">
-                  <FormLabel>
+                  {/* Associate label to input by id/htmlFor (accessibility) */}
+                  <FormLabel htmlFor="email">
                     ایمیل: <FormMessage className="text-red-500 text-xs" />
                   </FormLabel>
+                  {/* Keep span (styling intact); navigates back to step 1 */}
                   <span onClick={() => dispatch(setStep(1))} className="text-primary text-xs cursor-pointer hover:underline">
                     ویرایش
                   </span>
                 </div>
                 <FormControl>
-                  <Input disabled {...field} className={anime} />
+                  {/* Disabled email input; id added to link with label */}
+                  <Input id="email" disabled {...field} className={anime} />
                 </FormControl>
               </FormItem>
             )}
           />
 
+          {/* Password field (disabled when OTP mode is active) */}
           <FormField
             control={form.control}
             name="password"
@@ -165,14 +201,16 @@ export default function StepTwoForm({ anime }: { anime: string }) {
             render={({ field }) => (
               <FormItem className="space-y-1.5">
                 <div className="flex justify-between items-center">
-                  <FormLabel>
+                  <FormLabel htmlFor="password">
                     پسورد: <FormMessage className="text-red-500 text-xs" />
                   </FormLabel>
+                  {/* Forgot password affordance (no behavior wired here) */}
                   <span className="text-primary text-xs min-w-20 cursor-pointer hover:underline">فراموش کرده‌اید؟</span>
                 </div>
                 <FormControl>
+                  {/* Password input with show/hide toggle button */}
                   <div className={`${anime} relative`}>
-                    <Input placeholder="پسورد اکانت" type={hide ? 'password' : 'text'} {...field} />
+                    <Input id="password" placeholder="پسورد اکانت" type={hide ? 'password' : 'text'} {...field} />
                     <button type="button" onClick={() => setHide(!hide)} className="absolute inset-y-0 left-0 flex items-center pl-3 z-10 cursor-pointer" aria-label={hide ? 'نمایش پسورد' : 'مخفی‌کردن پسورد'} title={hide ? 'نمایش پسورد' : 'مخفی‌کردن پسورد'}>
                       <span className="relative w-5 h-5">
                         <IoEye
@@ -190,6 +228,8 @@ export default function StepTwoForm({ anime }: { anime: string }) {
               </FormItem>
             )}
           />
+
+          {/* OTP field (enabled only in OTP mode) */}
           <FormField
             control={form.control}
             name="otp"
@@ -197,19 +237,22 @@ export default function StepTwoForm({ anime }: { anime: string }) {
             render={({ field }) => (
               <FormItem className="space-y-1.5">
                 <div className="flex justify-between items-center">
-                  <FormLabel>
+                  <FormLabel htmlFor="otp">
                     کد یکبار مصرف: <FormMessage className="text-red-500 text-xs" />
                   </FormLabel>
                 </div>
                 <FormControl>
                   <div className={`${anime} relative`}>
-                    <Input placeholder="کد یکبار مصرف وارد نمایید" type={'text'} {...field} />
+                    <Input id="otp" placeholder="کد یکبار مصرف وارد نمایید" type={'text'} {...field} />
                   </div>
                 </FormControl>
               </FormItem>
             )}
           />
+
+          {/* Auth method switch + (when in OTP mode) timer indicator */}
           <div className="flex min-h-8 items-center justify-between">
+            {/* Toggle between password login and OTP login (kept visually as buttons) */}
             {otp ? (
               <button
                 type="button"
@@ -235,6 +278,8 @@ export default function StepTwoForm({ anime }: { anime: string }) {
                 ورود با کد یکبار مصرف
               </button>
             )}
+
+            {/* OTP countdown and animated clock (shown only in OTP mode) */}
             <div className="flex items-center gap-2">
               {otp && (
                 <>
@@ -246,7 +291,9 @@ export default function StepTwoForm({ anime }: { anime: string }) {
               )}
             </div>
           </div>
-          <div className="text-[12px] flex gap-1 items-center font-light text-foreground">
+
+          {/* Complementary terms notice (semantic aside) */}
+          <aside className="text-[12px] flex gap-1 items-center font-light text-foreground">
             <FaCheck className="bg-primary text-background rounded-full text-[14px] p-0.5" />
             <p>
               ورود/ثبت نام شما به منظور پذیرش{' '}
@@ -255,7 +302,9 @@ export default function StepTwoForm({ anime }: { anime: string }) {
               </Link>{' '}
               میباشد
             </p>
-          </div>
+          </aside>
+
+          {/* Primary submit button (disabled while submitting or during OTP cooldown) */}
           <Button type="submit" className="w-full py-5 text-lg cursor-pointer" disabled={isSubmitting || (mode === 'sendOtp' && remaining > 0)} aria-busy={isSubmitting}>
             {isSubmitting ? (
               <div className="flex items-center gap-2 justify-center">
@@ -277,6 +326,6 @@ export default function StepTwoForm({ anime }: { anime: string }) {
           </Button>
         </form>
       </Form>
-    </>
+    </section>
   );
 }

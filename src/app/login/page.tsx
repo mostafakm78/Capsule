@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'ورود/ثبت‌نام',
-  description: 'بخش ورود/ثبت‌نام سایت کپسول برای عضویت یا وارد شدن به حساب',
+  description: 'بخش ورود/ثبت‌نام سایت کپسول برای عضویت یا وارد شدن به حساب در سایت کپسول',
 };
 
 export default function Login() {

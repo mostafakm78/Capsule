@@ -1,17 +1,38 @@
 export default function TermsIndex() {
   return (
-    <section aria-label="قوانین و مقررات سایت" className="flex items-center justify-center px-4 md:px-6 lg:px-10">
+    // Main landmark for the Terms page (localized Persian label)
+    <main aria-label="قوانین و مقررات سایت" role="main" className="flex items-center justify-center px-4 md:px-6 lg:px-10">
       <div className="flex flex-col gap-20 items-center lg:w-[90%]">
-        <div className="flex flex-col items-center gap-3">
-          <h3 className="lg:text-5xl md:text-4xl text-3xl font-kalmeh">قوانین و مقررات سایت</h3>
-          <p className="lg:text-2xl md:text-lg text-base text-foreground/80">در این صفحه شرایط استفاده از وبسایت آموزشی کپسول را مشاهده میکنید.</p>
-        </div>
-        <div className="flex flex-col space-y-4 bg-white dark:bg-slate-900 text-lg text-foreground/60 rounded-lg md:p-10 p-4">
+        {/* Page header: page title + short description */}
+        <header className="flex flex-col items-center gap-3" aria-describedby="terms-subtitle">
+          {/* Expose this h3 as level-1 heading semantically without changing styles */}
+          <h3
+            id="terms-title"
+            className="lg:text-5xl md:text-4xl text-3xl font-kalmeh"
+            role="heading"
+            aria-level={1}
+          >
+            قوانین و مقررات سایت
+          </h3>
+          <p id="terms-subtitle" className="lg:text-2xl md:text-lg text-base text-foreground/80">
+            در این صفحه شرایط استفاده از وبسایت آموزشی کپسول را مشاهده میکنید.
+          </p>
+        </header>
+
+        {/* Main terms content: grouped as an article, labeled by the page title */}
+        <article
+          className="flex flex-col space-y-4 bg-white dark:bg-slate-900 text-lg text-foreground/60 rounded-lg md:p-10 p-4"
+          role="article"
+          aria-labelledby="terms-title"
+        >
+          {/* Intro section */}
           <h1>به کپسول خوش آمدید.</h1>
           <p>
             هر سرویس دهنده‌ای در دنیای واقعی و مجازی بر پایه یک سری قوانین و مقررات بنا شده است تا بتواند محیط عادلانه و بهتری برای مخاطبان خود ایجاد کند. به همین منظور ما در کپسول یک سری قوانین و مقررات را گرده هم آورده‌ایم، که به شرح زیر آنها را توضیح خواهیم داد . دقت کنید عضویت در سایت و ساخت
             کپسول ، به منزله مطالعه و قبول قوانین و مقررات مربوطه است.
           </p>
+
+          {/* Account rules */}
           <h2 className="text-primary text-3xl font-bold mt-6">قوانین حساب کاربری</h2>
           <p>اکثر امکانات کپسول مربوط به اعضای آن می شود و اگر شما قصد استفاده از این دسته از محتوا را دارید، نیاز است ابتدا در سایت کپسول عضو شوید، داشتن یک حساب کاربری ملزم به رعایت قوانین زیر می باشد :‌</p>
           <ul className="list-disc lg:px-14 px-8 text-lg">
@@ -22,9 +43,13 @@ export default function TermsIndex() {
             <li>استفاده از هرگونه نام جعلی یا تقلبی و یا ایمیل نامعتبر در جهت سو استفاده های احتمالی یا نقض حقوق اشخاص دیگر موجب مسدود شدن حساب کاربری میگردد.</li>
             <li>شما حق ندارید هویت و موقعیتِ جغرافیایِ خودتان را پنهان کنید یا به شکلی دیگر جلوه دهید. شما حق ندارید خودتان را جایِ کسی دیگر معرفی کنید.</li>
           </ul>
+
+          {/* Privacy */}
           <h2 className="text-primary text-3xl font-bold mt-6">حریم شخصی کاربران</h2>
           <p>امروزه حفظ حریم شخصی برای اکثر افراد جامعه بسیار مهم است، همانطور که این مسئله برای ما مهم است . ما در کپسول سعی داریم با حفظ حریم شخصی شما، حاشیه امنی برای فعالیتتان در کپسول بوجود آوریم.</p>
           <p>اطلاعاتی که از شما در روند عضویت یا در بخش پروفایل سازی دریافت میکنیم نزد کپسول محفوظ مانده و در اختیار شخص حقیقی یا حقوقی ثالث به جز در مواردی که به درخواست قانون و مراجع ذی صلاح الزام آور باشد، قرار نخواهد گرفت.</p>
+
+          {/* Public capsules */}
           <h2 className="text-primary text-3xl font-bold mt-6">ساخت کپسول عمومی</h2>
           <p>در صورت مشاهده هرگونه از موارد زیر در بخش کپسول‌های عمومی و همچنین کپسولی که توسط شما ایجاد شده، حذف خواهد گردید و در صورت تکرار حساب کاربری شما بسته خواهد شد:</p>
           <ul className="list-disc lg:px-14 px-8 text-lg">
@@ -35,6 +60,8 @@ export default function TermsIndex() {
             <li>هرگونه محتوا حاوی هرزنامه</li>
             <li>اطلاعات شخصی یا حساس افراد ثالث</li>
           </ul>
+
+          {/* IP rights */}
           <h2 className="text-primary text-3xl font-bold mt-6">حقوق مالکیت معنوی</h2>
           <ul className="list-disc lg:px-14 px-8 text-lg">
             <li>شما با ارسال نظرات، پیشنهادات، ایده ها و هرگونه محتوا برای ما به ما مجوز استفاده از آن برای نشر و به اشتراک گذاری مثلا در موارد تبلیغاتی را خواهید داد.</li>
@@ -43,8 +70,12 @@ export default function TermsIndex() {
             <li>تمام اطلاعاتی که ما در وب سایت جمع آوری می کنیم زیر نظر سیاست حفظ حریم خصوصی می باشد.</li>
             <li>شما حق استفاده از بخشی از کپسول ها تصاویر و یا متن به شکل جدا شده از بستر اصلی آن را برای استفاده تجاری یا بازنشر آن نخواهید داشت.</li>
           </ul>
+
+          {/* Moderation */}
           <h2 className="text-primary text-3xl font-bold mt-6">نظارت بر محتوا</h2>
           <p>کپسول حق دارد به صلاحدیدِ خود نوشته‌هایِ کاربران و تولیدکنندگان محتوا که رویِ سرویس قرار می‌گیرند و از قوانین سایت تبعیت نمی کنند را ویرایش و حذف و یا کلا از انتشارِ آن جلوگیری کند. ما در کپسول سعی داریم محتوای سالم و به دور از هر گونه توهینی داشته باشیم .</p>
+
+          {/* Violations */}
           <h2 className="text-primary text-3xl font-bold mt-6">عدم رعایت قوانین</h2>
           <p>
             در صورت عدم رعایت قوانین مندرج شده در این صفحه، کپسول این حق را برای خود محفوظ می‌دارد که بلافاصله دسترسی شما به وبسایت را معلق کند یا به طور کلی به پایان برساند و اکانتِ شما (یا بخشی از آن) را مسدود کند. کپسول حق دارد هرکدام از موارد ذکر شده در ذیل را تغییر دهد یا به صورتِ دائم یا موقت
@@ -53,6 +84,8 @@ export default function TermsIndex() {
           <ul className="list-disc lg:px-14 px-8 text-lg">
             <li>محدود کردنِ شما از دسترسی به بخش یا تمام محتوای قابل استفاده در اکانت شما</li>
           </ul>
+
+          {/* Security */}
           <h2 className="text-primary text-3xl font-bold mt-6">امنیت وبسایت</h2>
           <p>امنیت بخش مهمی از هر سایت به شمار می آید، که حفظ آن باعث ایجاد فضای راحت تر بین افرادی که از یک سرویس استفاده میکنند می شود . شما با عضویت در کپسول تعهد میدهید :‌</p>
           <ul className="list-disc lg:px-14 px-8 text-lg">
@@ -64,11 +97,13 @@ export default function TermsIndex() {
           <p>
             اگر وب سایت حاوی لینک ها به سایت های دیگر و منابع ارائه شده توسط اشخاص ثالث باشد، این لینک ها فقط برای راحتی شما ارائه می شوند. ما هیچگونه مسئولیتی در قبال محتوای آن سایت یا منابع نداریم و هیچ گونه مسئولیتی در قبال آنها و یا از دست دادن یا خسارت ناشی به علت استفاده شما از آنها را نداریم.
           </p>
+
+          {/* Changes */}
           <h2 className="text-primary text-3xl font-bold mt-6">تغییرات</h2>
           <p>ما میتوانیم در هر زمان بر اساس نیاز سیاست‌های سایت کپسول را تغییر دهیم، بخش‌های از قوانین را حذف و یا تغییر دهیم یا بندهای به آن اضافه کنیم . البته بعد از هرگونه تغییر، ادامه فعالیت شما در کپسول به منزله موافق بودن با قوانین جدید به شمار می آید.</p>
           <p>در صورت عدم توجه و رعایت قوانین جدید، کپسول این حق را برای خود محفوظ میدارد که اکانت شما را مسدود یا به شکل کامل حذف کند</p>
-        </div>
+        </article>
       </div>
-    </section>
+    </main>
   );
 }

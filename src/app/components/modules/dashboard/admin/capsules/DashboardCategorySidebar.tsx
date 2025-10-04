@@ -19,11 +19,13 @@ const bungee = Bungee({
   weight: '400',
 });
 
+// Semantic: static list of sort links used in the sidebar "Sort by" section
 const sortLinks: LinkProps[] = [
   { link: `/dashboard/admin/capsules?sort=newest`, title: 'جدید ترین' },
   { link: `/dashboard/admin/capsules?sort=oldest`, title: 'قدیمی ترین' },
 ];
 
+// Semantic: radio options for capsule visibility filter
 const capsuleType = [
   { title: 'عمومی', value: 'public' },
   { title: 'خصوصی', value: 'private' },
@@ -32,6 +34,7 @@ const capsuleType = [
 
 type CpType = (typeof capsuleType)[number]['value'] | '';
 
+// Utility (pure): parse selected categories from URLSearchParams (supports multi & comma-separated)
 function parseCategoriesFromParams(sp: ReadonlyURLSearchParams): string[] {
   const multi = sp.getAll('categoryItem');
   const single = sp.get('categoryItem') || '';
@@ -44,15 +47,21 @@ function parseCategoriesFromParams(sp: ReadonlyURLSearchParams): string[] {
   return Array.from(new Set(values));
 }
 
+// Component: Admin capsules filter sidebar (opens in a Sheet/Drawer)
 export function DashboardCategorySidebar() {
+  // Router/navigation helpers
   const router = useRouter();
   const pathName = usePathname();
   const searchParams = useSearchParams();
 
+  // State: list of all category items (fetched from API)
   const [categoryItem, setCategoryItem] = useState<CategoryItem[] | null>(null);
+  // State: IDs of categories selected by the user (synced with URL)
   const [selectCategories, setSelectCategories] = useState<string[]>([]);
+  // State: selected capsule visibility (public/private/all), synced with URL
   const [CpType, setCpType] = useState<CpType>('');
 
+  // Effect: fetch categories for filter UI on mount
   useEffect(() => {
     (async () => {
       try {
@@ -64,23 +73,28 @@ export function DashboardCategorySidebar() {
     })();
   }, []);
 
+  // Ref: Track last href to avoid redundant state updates when URL doesn't change
   const lastHrefRef = useRef<string>('');
   useEffect(() => {
     const hrefNow = `${pathName}?${searchParams.toString()}`;
     if (lastHrefRef.current === hrefNow) return;
     lastHrefRef.current = hrefNow;
 
+    // Sync selected categories from URL on route/query changes
     setSelectCategories(parseCategoriesFromParams(searchParams));
 
+    // Sync visibility (CpType) from URL on route/query changes
     const vis = searchParams.get('visibility');
     setCpType(vis === 'public' || vis === 'private' ? vis : '');
   }, [pathName, searchParams]);
 
+  // Handler: toggle a category id in local selection state
   function toggleCategory(id: string, checked: boolean) {
     const idStr = String(id);
     setSelectCategories((prev) => (checked ? Array.from(new Set([...prev, idStr])) : prev.filter((x) => x !== idStr)));
   }
 
+  // Helper: construct a new query string by mutating current params then push to router
   const pushWithParams = (mutator: (p: URLSearchParams) => void) => {
     const params = new URLSearchParams(searchParams.toString());
     mutator(params);
@@ -88,6 +102,7 @@ export function DashboardCategorySidebar() {
     router.push(qs ? `/dashboard/admin/capsules?${qs}` : '/dashboard/admin/capsules');
   };
 
+  // Action: apply selected categories to URL (removes when none)
   const handleCategoryItem = () => {
     if (selectCategories.length === 0) {
       router.push('/dashboard/admin/capsules');
@@ -95,11 +110,12 @@ export function DashboardCategorySidebar() {
     }
     pushWithParams((params) => {
       params.delete('categoryItem');
-
+      // Append each selected category as separate query entries
       selectCategories.forEach((id) => params.append('categoryItem', id));
     });
   };
 
+  // Action: apply selected visibility to URL (delete when "all" or empty)
   const handleCpType = () => {
     pushWithParams((params) => {
       if (CpType === 'all' || CpType === '' || CpType == null) {
@@ -107,10 +123,12 @@ export function DashboardCategorySidebar() {
       } else {
         params.set('visibility', CpType);
       }
+      // Reset pagination when applying new filter
       params.set('page', '1');
     });
   };
 
+  // UI helper: compute active state styling for sort links based on current URL
   const linkClasses = (href: string) => {
     const isSamePath = pathName === '/dashboard/admin/capsules';
     const hrefQuery = href.split('?')[1] || '';
@@ -129,12 +147,18 @@ export function DashboardCategorySidebar() {
   };
 
   return (
+    // Semantic container for the floating filters control in the page
     <aside>
+      {/* Sheet (drawer) to show filters UI */}
       <Sheet>
+        {/* Trigger button (filter icon) – opens the filters panel */}
         <SheetTrigger asChild>
           <IoFilterSharp className="text-2xl cursor-pointer" />
         </SheetTrigger>
+
+        {/* Drawer content */}
         <SheetContent>
+          {/* Drawer header with brand/logo (semantic header/title) */}
           <SheetHeader className="items-center mt-10">
             <SheetTitle>
               <div className="brand flex xl:text-5xl lg:text-4xl text-3xl text-muted items-center gap-2 justify-center">
@@ -144,8 +168,9 @@ export function DashboardCategorySidebar() {
             </SheetTitle>
           </SheetHeader>
 
+          {/* Drawer body – scrollable filter sections */}
           <div className="flex flex-col overflow-y-auto text-foreground/85 py-8 px-5 gap-8">
-            {/* مرتب سازی */}
+            {/* Sort section (semantic subsection) */}
             <div>
               <h6 className="text-xl font-semibold">مرتب سازی بر اساس</h6>
               <Separator className="w-full bg-foreground/20 my-4" />
@@ -158,7 +183,7 @@ export function DashboardCategorySidebar() {
               </div>
             </div>
 
-            {/* فیلتر */}
+            {/* Category filter section */}
             <div className="flex flex-col">
               <h6 className="text-xl font-semibold">فیلتر بر اساس دسته‌بندی</h6>
               <Separator className="w-full bg-foreground/20 my-4" />
@@ -167,6 +192,7 @@ export function DashboardCategorySidebar() {
                   categoryItem.map((item) => {
                     const checked = selectCategories.includes(item?._id);
                     return (
+                      // Each category item with a checkbox, clickable label for better UX
                       <label
                         key={item._id}
                         htmlFor={`cat-${item._id}`}
@@ -179,15 +205,18 @@ export function DashboardCategorySidebar() {
                     );
                   })}
               </div>
+              {/* Apply selected category filters */}
               <Button onClick={handleCategoryItem} className="cursor-pointer mt-3">
                 جستجو
               </Button>
             </div>
 
+            {/* Visibility filter section */}
             <div className="flex flex-col">
               <h6 className="text-xl font-semibold">فیلتر بر اساس نوع کپسول</h6>
               <Separator className="w-full bg-foreground/20 my-4" />
               <div className="pl-6">
+                {/* Radio group to choose between public/private/all */}
                 <RadioGroup dir="rtl" value={CpType} onValueChange={(v) => setCpType(v as CpType)} className="flex flex-wrap gap-4">
                   {capsuleType.map((item, i) => {
                     return (
@@ -201,6 +230,7 @@ export function DashboardCategorySidebar() {
                   })}
                 </RadioGroup>
               </div>
+              {/* Apply selected visibility filter */}
               <Button onClick={handleCpType} className="cursor-pointer mt-3">
                 جستجو
               </Button>

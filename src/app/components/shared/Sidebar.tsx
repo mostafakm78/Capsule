@@ -18,13 +18,16 @@ import { Input } from '@/components/ui/input';
 import { IoIosSearch } from 'react-icons/io';
 import dynamic from 'next/dynamic';
 
+/* Lazy-load theme toggle to reduce initial JS for the sidebar */
 const ThemeToggle = dynamic(() => import('./Theme'), { ssr: false });
 
+/* Brand font setup (Bungee) used for the logo wordmark */
 const bungee = Bungee({
   weight: '400',
   subsets: ['latin'],
 });
 
+/* Static config: list of primary navigation links with leading icons */
 const sidebarLinks: (LinkProps & { icon: JSX.Element })[] = [
   { link: '/', title: 'صفحه اصلی', icon: <MdHomeFilled className="text-2xl" /> },
   { link: '/capsules', title: 'کپسول های عمومی', icon: <BsCapsule className="text-xl" /> },
@@ -34,17 +37,24 @@ const sidebarLinks: (LinkProps & { icon: JSX.Element })[] = [
 ];
 
 export default function Sidebar() {
+  /* Routing/query hooks: used for active link state and search navigation */
   const pathName = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
+
+  /* Local component state: search input value and drawer open/close flag */
   const [searchInput, setSearchInput] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
+  // NOTE: visual helper (unchanged)
+  /* Computes link classes based on current route; purely visual (no a11y impact) */
   const linkClasses = (href: string) => {
     const isActive = href === '/' ? pathName === '/' : pathName.startsWith(href);
     return `flex items-center ${isActive ? 'text-secondary' : 'text-foreground/80'} text-base md:text-xl bg-accent p-2 rounded-lg active:text-primary justify-start gap-4`;
   };
 
+  // NOTE: routing helpers (unchanged)
+  /* Pushes to /capsules with mutated query params; isolates query logic */
   const pushWithParams = useCallback(
     (mutator: (p: URLSearchParams) => void) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -55,6 +65,7 @@ export default function Sidebar() {
     [router, searchParams]
   );
 
+  /* Executes search: sets/removes `q` and resets `page`; also closes the drawer */
   const performSearchAction = useCallback(() => {
     const q = searchInput.trim();
 
@@ -79,6 +90,7 @@ export default function Sidebar() {
     }
   }, [pushWithParams, searchInput, searchParams]);
 
+  /* Submits search on Enter key (ignores IME composition); closes drawer */
   const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = useCallback(
     (e) => {
       if (!e.nativeEvent.isComposing && e.key === 'Enter') {
@@ -92,46 +104,63 @@ export default function Sidebar() {
   return (
     <aside aria-label="منوی سایت">
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
+        {/* Trigger button: hamburger icon; provides a Persian label for AT */}
         <SheetTrigger asChild>
-          <HiOutlineBars3 className="cursor-pointer text-3xl md:text-4xl" />
+          <HiOutlineBars3 className="cursor-pointer text-3xl md:text-4xl" aria-label="باز کردن منو" />
         </SheetTrigger>
+
+        {/* Drawer content region: houses brand, theme, search, and primary links */}
         <SheetContent>
+          {/* Drawer header: branded logo + wordmark */}
           <SheetHeader className="items-center mt-10">
             <SheetTitle>
-              <div aria-label="لوگو کپسول" className="brand flex xl:text-5xl lg:text-4xl text-3xl text-muted items-center gap-2 justify-center">
-                <Image className="logo h-[30px] w-[30px] lg:h-[40px] lg:w-[40px] xl:w-[50px] xl:h-[50px]" src="/images/Logo.png" alt="Logo" width={50} height={50} />
+              <div aria-label="لوگوی کپسول" className="brand flex xl:text-5xl lg:text-4xl text-3xl text-muted items-center gap-2 justify-center">
+                {/* Logo image with localized Persian alt text for accessibility */}
+                <Image className="logo h-[30px] w-[30px] lg:h-[40px] lg:w-[40px] xl:w-[50px] xl:h-[50px]" src="/images/Logo.png" alt="لوگوی کپسول" width={50} height={50} />
                 <h1 className={bungee.className}>Capsule</h1>
               </div>
             </SheetTitle>
           </SheetHeader>
 
-          {/* تنظیمات تم */}
-          <div aria-label="تم سایت" className="flex flex-col w-full py-4 sm:px-10 px-4">
+          {/* Theme settings block: quick access to light/dark toggle */}
+          <section aria-label="تنظیمات تم" className="flex flex-col w-full py-4 sm:px-10 px-4">
             <Separator className="w-full bg-foreground/20 my-3" />
             <div className="flex items-center justify-between">
               <span>تم سایت</span>
               <ThemeToggle />
             </div>
-          </div>
+          </section>
 
-          <div aria-label="جستجو" className="flex flex-col w-full py-4 sm:px-10 px-4">
+          {/* Search (mobile-first): uses role="search" and localized labels */}
+          <section aria-label="جستجو" className="flex flex-col w-full py-4 sm:px-10 px-4" role="search">
             <Separator className="w-full bg-foreground/20 my-3" />
             <div className="flex w-full relative md:hidden justify-center items-center">
-              <Input onKeyDown={handleKeyDown} value={searchInput} onChange={(e) => setSearchInput(e.target.value)} className="bg-white dark:bg-slate-900" type="text" placeholder="کپسول رو سرچ کن" />
-              <IoIosSearch onClick={performSearchAction} className="text-3xl cursor-pointer hover:animate-caret-blink absolute left-0 ml-3 text-foreground/70" />
+              <Input onKeyDown={handleKeyDown} value={searchInput} onChange={(e) => setSearchInput(e.target.value)} className="bg-white dark:bg-slate-900" type="text" placeholder="کپسول رو سرچ کن" aria-label="جستجوی کپسول" />
+              <IoIosSearch onClick={performSearchAction} className="text-3xl cursor-pointer hover:animate-caret-blink absolute left-0 ml-3 text-foreground/70" aria-label="جستجو" />
             </div>
-          </div>
+          </section>
 
-          {/* لینک‌ها */}
-          <div aria-label="لینک های سایت" className="flex flex-col text-lg w-full py-4 gap-4 sm:px-10 px-4">
+          {/* Primary navigation area: list of site links inside a nav landmark */}
+          <nav aria-label="لینک‌های سایت" className="flex flex-col text-lg w-full py-4 gap-4 sm:px-10 px-4" role="navigation">
             <div className="border-t border-foreground/20 py-3"></div>
-            {sidebarLinks.map((linkItem, i) => (
-              <Link key={i} href={linkItem.link} className={linkClasses(linkItem.link)}>
-                {linkItem.icon}
-                {linkItem.title}
-              </Link>
-            ))}
-          </div>
+            {sidebarLinks.map((linkItem, i) => {
+              /* Compute semantic active state for aria-current */
+              const isActive = linkItem.link === '/' ? pathName === '/' : pathName.startsWith(linkItem.link);
+              return (
+                <Link
+                  key={i}
+                  href={linkItem.link}
+                  className={linkClasses(linkItem.link)}
+                  aria-label={linkItem.title} /* Persian accessibile name for each link */
+                  aria-current={isActive ? 'page' : undefined} /* Announces current page to screen readers */
+                  title={linkItem.title} /* Tooltip for mouse users */
+                >
+                  {linkItem.icon /* Decorative leading icon (kept as-is; no a11y changes to avoid style diffs) */}
+                  {linkItem.title}
+                </Link>
+              );
+            })}
+          </nav>
         </SheetContent>
       </Sheet>
     </aside>

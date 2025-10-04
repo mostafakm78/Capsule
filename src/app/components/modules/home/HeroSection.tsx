@@ -14,83 +14,53 @@ export default function HeroSection() {
   const timeline = gsap.timeline();
 
   useGSAP(() => {
+    // GSAP timeline to reveal hero texts and CTA in sequence
     timeline
-      .fromTo(
-        '.title-one',
-        {
-          opacity: 0,
-          y: 10,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          ease: 'power2.out',
-          duration: 0.5,
-          delay: 0.5,
-          stagger: 0.3,
-        }
-      )
-      .fromTo(
-        '.title-two',
-        {
-          opacity: 0,
-          y: 10,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          ease: 'power2.out',
-          duration: 0.5,
-          stagger: 0.3,
-        }
-      )
-      .fromTo(
-        '.title-three',
-        {
-          opacity: 0,
-          y: 10,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          ease: 'power2.out',
-          duration: 0.5,
-          stagger: 0.3,
-        }
-      )
-      .fromTo(
-        '.start',
-        {
-          opacity: 0,
-        },
-        {
-          opacity: 1,
-          ease: 'power2.out',
-        }
-      );
+      // Animate first title & subtitle group
+      .fromTo('.title-one', { opacity: 0, y: 10 }, { opacity: 1, y: 0, ease: 'power2.out', duration: 0.5, delay: 0.5, stagger: 0.3 })
+      // Animate second title & subtitle group
+      .fromTo('.title-two', { opacity: 0, y: 10 }, { opacity: 1, y: 0, ease: 'power2.out', duration: 0.5, stagger: 0.3 })
+      // Animate third title & subtitle group
+      .fromTo('.title-three', { opacity: 0, y: 10 }, { opacity: 1, y: 0, ease: 'power2.out', duration: 0.5, stagger: 0.3 })
+      // Finally fade in the call-to-action text inside the button
+      .fromTo('.start', { opacity: 0 }, { opacity: 1, ease: 'power2.out' });
   }, []);
 
   return (
+    // Hero banner for the page; exposes an accessible label for screen readers
     <header aria-label="معرفی سایت" className="flex flex-col relative mb-6 bg-linear-to-b from-foreground/20 to-background justify-center lg:pt-16 items-center">
-      <div className="flex lg:flex-row flex-col-reverse px-10 items-center md:gap-4 lg:py-6 pb-6 lg:gap-8 rounded-lg w-full">
-        <div className="flex flex-col lg:w-1/2 w-full gap-10 justify-center items-center">
-          <div className="text-center">
+      {/* Semantic wrapper for hero content columns (text/media) */}
+      <section className="flex lg:flex-row flex-col-reverse px-10 items-center md:gap-4 lg:py-6 pb-6 lg:gap-8 rounded-lg w-full">
+        {/* Left column: textual pitch + CTA (grouped as a section) */}
+        <section className="flex flex-col lg:w-1/2 w-full gap-10 justify-center items-center">
+          {/* Subsection: Step 1 title + subtitle */}
+          <section className="text-center">
+            {/* Main hero slogans (animated via GSAP classes) */}
             <h2 className="title-one text-5xl font-kalmeh text-foreground">خاطره بساز</h2>
             <p className="title-one text-lg text-muted/80 font-light mt-3">لحظه‌هات رو با صدا، تصویر یا متن ثبت کن</p>
-          </div>
-          <div className="text-center">
+          </section>
+
+          {/* Subsection: Step 2 title + subtitle */}
+          <section className="text-center">
             <h2 className="title-two text-5xl font-kalmeh text-foreground">کپسول کن</h2>
             <p className="title-two text-lg text-muted/80 font-light mt-3">بهش زمان بده تا در آینده باز بشه</p>
-          </div>
-          <div className="text-center">
+          </section>
+
+          {/* Subsection: Step 3 title + subtitle */}
+          <section className="text-center">
             <h2 className="title-three text-5xl font-kalmeh text-foreground">بفرست</h2>
             <p className="title-three text-lg text-muted/80 font-light mt-3">برای خودت یا کسی که دوستش داری</p>
-          </div>
+          </section>
+
+          {/* Primary call-to-action button; navigation handled by Next.js router */}
           <ShinyButton onClick={() => router.push('/login')} className="md:w-2/3 w-full bg-secondary hover:bg-primary hover:border-primary shadow-lg py-4">
             <span className="start">شروع رایگان</span>
           </ShinyButton>
-        </div>
-        <div className="px-10 relative h-[300px] w-full md:w-2/3 lg:w-1/2">
+        </section>
+
+        {/* Right column: illustrative visual area (as a figure to semantically group media) */}
+        <figure className="px-10 relative h-[300px] w-full md:w-2/3 lg:w-1/2">
+          {/* Background decorative SVG for visual depth */}
           <svg className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2" id="character-background-area" viewBox="0 0 550 520" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               opacity="0.5"
@@ -106,11 +76,12 @@ export default function HeroSection() {
             />
           </svg>
 
+          {/* Centered Lottie animation over the SVG background */}
           <div className="absolute inset-0 flex justify-center items-center">
             <Lottie animationData={typingAnimation} loop={false} />
           </div>
-        </div>
-      </div>
+        </figure>
+      </section>
     </header>
   );
 }

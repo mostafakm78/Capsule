@@ -18,6 +18,8 @@ import { IoClose } from 'react-icons/io5';
 
 type Color = 'default' | 'red' | 'green' | 'blue' | 'yellow';
 
+// Available background color options (used for preview ring highlight)
+/* Each option maps an id to the corresponding Tailwind class */
 const colors: dashboardCreateCapsuleColorOption[] = [
   { id: 'default', colorCode: 'bg-white dark:bg-slate-900' },
   { id: 'red', colorCode: 'bg-red-600/15 dark:bg-red-800/50' },
@@ -30,25 +32,29 @@ type Props = {
   onFileSelected?: (file: File | null) => void;
 };
 
+const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL
+
 export default function CapsuleInfo({ onFileSelected }: Props) {
+  // Redux and helpers
   const dispatch = useAppDispatch();
   const { mode, capsule } = useAppSelector((state) => state.editOrcreate);
   const showToast = useCustomToast();
 
+  // Local UI state for form fields
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [extra, setExtra] = useState<string>('');
   const [selected, setSelected] = useState<Color>('default');
-  const [inputKey, setInputKey] = useState(0);
+  const [inputKey, setInputKey] = useState(0); // forces file input reset
 
-  // تصویر
-  const [rmvImage, setRmvImage] = useState<boolean>(false);
-  const [preview, setPreview] = useState<string | null>(null);
-  const [hasLocalImage, setHasLocalImage] = useState<boolean>(false); // 👈 مانع بازنویسی preview توسط useEffect
-  const lastBlobUrl = useRef<string | null>(null);
+  // Image selection / preview handling
+  const [rmvImage, setRmvImage] = useState<boolean>(false); // flag to remove existing server image on edit
+  const [preview, setPreview] = useState<string | null>(null); // preview URL (blob or server)
+  const [hasLocalImage, setHasLocalImage] = useState<boolean>(false); // prevents server preview override after local selection
+  const lastBlobUrl = useRef<string | null>(null); // tracks the last blob URL to revoke on cleanup
 
-  // سینک اولیه با capsule از Redux
+  // Initialize form fields from Redux capsule; keep preview unless user just picked a local file
   useEffect(() => {
     if (!capsule) return;
 
@@ -57,19 +63,19 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
     setExtra(capsule.extra || '');
     setSelected((capsule?.color as Color) || 'default');
 
-    // اگر کاربر همین الان فایل محلی انتخاب کرده، preview را دست نزن
+    // If user has selected a local file, do not override the local preview with server image
     if (hasLocalImage) return;
 
     if (rmvImage) {
       setPreview(null);
     } else if (capsule.image) {
-      setPreview(`http://localhost:8080/images/${capsule.image}`);
+      setPreview(`${baseURL}/images/${capsule.image}`);
     } else {
       setPreview(null);
     }
   }, [mode, capsule, rmvImage, hasLocalImage]);
 
-  // cleanup برای blob URL‌ها
+  // Revoke blob URLs on unmount to avoid memory leaks
   useEffect(() => {
     return () => {
       if (lastBlobUrl.current && lastBlobUrl.current.startsWith('blob:')) {
@@ -79,23 +85,24 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
     };
   }, [onFileSelected]);
 
+  // Handle selecting a new image file; create a preview blob URL and notify parent via callback
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setRmvImage(false);
-    setHasLocalImage(true); // 👈 از این لحظه preview را دست نزن
+    setHasLocalImage(true);
     onFileSelected?.(file);
 
     const url = URL.createObjectURL(file);
     setPreview(url);
-    // همین‌جا ثبت کن تا قبل از onLoad هم حفظ شود
-    lastBlobUrl.current = url;
+    lastBlobUrl.current = url; // store immediately so it's tracked even before onLoad
 
-    // اجازه بده دوباره همان فایل انتخاب شود
+    // Reset the input so the same file can be selected again if needed
     setInputKey((k) => k + 1);
   };
 
+  // Remove currently previewed image (local or server) and mark for removal on submit (when editing)
   const handleRemoveImage = () => {
     setRmvImage(true);
     setHasLocalImage(false);
@@ -108,9 +115,11 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
 
     onFileSelected?.(null);
 
+    // Reset file input
     setInputKey((k) => k + 1);
   };
 
+  // Persist current form values to Redux; basic validation for required fields
   const handleSubmit = () => {
     if (submitting) return;
     setSubmitting(true);
@@ -138,6 +147,7 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
     }
   };
 
+  // If capsule has a timed lock and the time already passed, show the info component instead of the form
   let isTimedPassed = false;
   if (capsule?.access?.unlockAt && capsule.createdAt) {
     isTimedPassed = checkUnlockAt(capsule.access.unlockAt);
@@ -147,13 +157,17 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
   }
 
   return (
-    <div className="flex w-full md:p-8 p-4 h-full flex-col">
-      <div className="flex flex-col gap-6">
-        <div className="space-y-1">
+    // Root section for "Capsule Info" step; contains the entire form
+    <section className="flex w-full md:p-8 p-4 h-full flex-col">
+      {/* Vertical stack for all fields and actions */}
+      <section className="flex flex-col gap-6">
+        {/* Form heading and short description */}
+        <header className="space-y-1">
           <h4 className="text-foreground/95 pr-5 relative text-xl after:content-[''] after:absolute after:w-2.5 after:h-2.5 after:bg-foreground/80 after:rounded-full after:right-0 after:top-1/2 after:-translate-y-1/2">اطلاعات</h4>
           <p className="text-foreground/80">در این قسمت میتونین اسم ، یادداشت‌ها ، عکس و حتی رنگ کپسول خودتون رو مشخص کنین.</p>
-        </div>
+        </header>
 
+        {/* Title input (required) */}
         <Label className="flex flex-col items-start text-base text-foreground/80">
           <span>
             اسم کپسول<span className="text-red-500 text-lg">*</span>
@@ -161,6 +175,7 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
           <Input type="text" placeholder="مثال : تولد برادرم" value={title} onChange={(e) => setTitle(e.target.value)} className="md:text-sm md:placeholder:text-sm" />
         </Label>
 
+        {/* Description textarea (required) */}
         <Label className="flex flex-col items-start text-base text-foreground/80">
           <span>
             توضیحات شما<span className="text-red-500 text-lg">*</span>
@@ -168,7 +183,8 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
           <Textarea placeholder="نوشته های شما برای ذخیره در کپسول" value={description} onChange={(e) => setDescription(e.target.value)} className="md:text-sm md:placeholder:text-sm w-full h-[200px]" />
         </Label>
 
-        <div className="flex flex-col gap-2">
+        {/* Image picker block: shows pick button, live preview and remove action */}
+        <section className="flex flex-col gap-2">
           <span className="text-base text-foreground/80 font-medium">
             <span className="flex items-center justify-between px-1">
               <div className="flex items-center gap-3">
@@ -183,10 +199,13 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
             </span>
           </span>
 
+          {/* Clickable dropzone-like label that holds the hidden file input */}
           <Label className={`relative flex flex-col bg-background h-[200px] items-center justify-center border border-primary cursor-pointer ${preview ? 'p-0' : 'p-4'} rounded-lg text-base text-foreground/80 overflow-hidden`}>
+            {/* Placeholder icon/text when no image is selected */}
             <span className={`text-lg ${preview ? 'hidden' : ''}`}>انتخاب عکس</span>
             <MdOutlineCameraAlt className={`text-4xl ${preview ? 'hidden' : ''}`} />
 
+            {/* Image preview (either blob or server URL) */}
             {preview && (
               <div className="relative w-full h-full">
                 <Image
@@ -195,34 +214,38 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
                   fill
                   className="object-cover rounded-lg"
                   onLoad={() => {
-                    // اگر قبلاً blob دیگری داشتیم، پاکش کنیم
+                    // Revoke previous blob URL to free memory (when switching local images)
                     if (lastBlobUrl.current && lastBlobUrl.current !== preview && lastBlobUrl.current.startsWith('blob:')) {
                       URL.revokeObjectURL(lastBlobUrl.current);
                     }
-                    // اگر preview جدید blob نیست (مثلاً URL سرور)، ریف را null کن
+                    // If preview is server URL (not blob), clear the blob ref and allow server-driven updates again
                     if (!preview.startsWith('blob:')) {
                       lastBlobUrl.current = null;
                       setHasLocalImage(false);
                     }
                   }}
-                  unoptimized
+
                 />
               </div>
             )}
 
+            {/* Hidden file input; keyed to allow selecting the same file twice */}
             <Input multiple={false} key={inputKey} onChange={handleFileChange} type="file" accept="image/*" className="hidden" />
           </Label>
-        </div>
+        </section>
 
+        {/* Optional extra notes textarea */}
         <Label className="flex flex-col items-start text-base text-foreground/80">
           توضیحات اضافی
           <Textarea placeholder="نوشته های شما برای ذخیره در کپسول" value={extra} onChange={(e) => setExtra(e.target.value)} className="md:text-sm md:placeholder:text-sm w-full h-[200px]" />
         </Label>
 
-        <div className="flex flex-col items-center gap-2">
+        {/* Background color picker (radio-like UI) */}
+        <section className="flex flex-col items-center gap-2">
           <span className="text-foreground/80 self-start text-base font-medium">رنگ پس زمینه کپسول شما</span>
           <p className="text-sm self-start text-foreground/70">شما میتونین برای نمایش کپسول خودتون چه در پنل خصوصی خودتون و چه در بخش عمومی از رنگ های زیر انتخاب کنین.</p>
 
+          {/* Color swatches; highlight current selection with a ring */}
           <div className="mt-4">
             <RadioGroup value={selected} onValueChange={(value: Color) => setSelected(value)} className="flex gap-4">
               <div className="mt-4 flex gap-4">
@@ -232,14 +255,15 @@ export default function CapsuleInfo({ onFileSelected }: Props) {
               </div>
             </RadioGroup>
           </div>
-        </div>
+        </section>
 
-        <div className="w-full flex justify-center mt-8">
+        {/* Submit button (saves current step data to Redux) */}
+        <footer className="w-full flex justify-center mt-8">
           <Button onClick={handleSubmit} disabled={!title || !description || submitting} className="cursor-pointer w-1/3 py-6 text-lg" aria-busy={submitting}>
             ثبت
           </Button>
-        </div>
-      </div>
-    </div>
+        </footer>
+      </section>
+    </section>
   );
 }

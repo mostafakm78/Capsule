@@ -35,7 +35,6 @@ export default async function RootLayout({
       <body className="bg-background overflow-x-hidden">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ReduxProvider>
-            {/* <UserHydrator /> */}
             <ProgressBarLoading />
             {children}
             <Toaster position="top-right" />

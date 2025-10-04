@@ -19,10 +19,17 @@ import checkUnlockAt from '@/app/hooks/checkUnlockAt';
 export default function CapsuleStatus() {
   const dispatch = useAppDispatch();
   const { capsule } = useSelector((state: RootState) => state.editOrcreate);
+
+  // Local UI state for visibility (public/private)
   const [selected, setSelected] = useState<Visibility | ''>('');
+
+  // Local UI state for private lock mode (timed/none)
   const [privateType, setPrivateType] = useState<Lock | ''>('');
+
+  // Toast helper for feedback
   const showToast = useCustomToast();
 
+  // Initialize local state from store capsule (kept in sync when capsule changes)
   useEffect(() => {
     if (!capsule) return;
     const v = capsule.access?.visibility as Visibility | undefined;
@@ -31,27 +38,30 @@ export default function CapsuleStatus() {
     setPrivateType(v === 'private' ? l ?? '' : '');
   }, [capsule]);
 
+  // Human-readable (Persian) date string for the timed lock unlock date
   const formattedDate =
     capsule?.access?.unlockAt && privateType === 'timed'
       ? (() => {
           const date = new Date(capsule.access?.unlockAt);
           const { jy, jm, jd } = jalaali.toJalaali(date);
           const months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
-
           return `${jd} ${months[jm - 1]} ${jy}`;
         })()
       : '';
 
+  // Radio options for visibility selection
   const visOptions = [
     { id: 'vis-public', value: 'public' as const, label: 'کپسول عمومی' },
     { id: 'vis-private', value: 'private' as const, label: 'کپسول خصوصی' },
   ] as const;
 
+  // Radio options for private sub-mode selection
   const lockOptions = [
     { id: 'lock-timed', value: 'timed' as const, label: 'خصوصی زمان‌دار' },
     { id: 'lock-none', value: 'none' as const, label: 'خصوصی بدون زمان' },
   ] as const;
 
+  // Persist the current selection back to the store with minimal validation
   const handleSubmit = () => {
     if (!selected) {
       return showToast({ message: 'وارد کردن نوع کپسول اجباری میباشد ❌', bg: 'bg-red-200' });
@@ -62,6 +72,8 @@ export default function CapsuleStatus() {
     if (selected === 'private' && privateType && !capsule?.access?.unlockAt) {
       return showToast({ message: 'وارد کردن زمان کپسول در کپسول خصوصی زمان دار اجباری میباشد ❌', bg: 'bg-red-200' });
     }
+
+    // Inform user and sync the (already-updated) capsule back to store
     showToast('تنظیمات کپسول شما ثبت شد ✅');
     dispatch(
       setCapsule({
@@ -70,6 +82,7 @@ export default function CapsuleStatus() {
     );
   };
 
+  // If capsule is time-locked and the unlock date has passed, show the informational component instead
   let isTimedPassed = false;
   if (capsule?.access?.unlockAt && capsule.createdAt) {
     isTimedPassed = checkUnlockAt(capsule.access.unlockAt);
@@ -79,10 +92,12 @@ export default function CapsuleStatus() {
   }
 
   return (
-    <div className="flex w-full p-8 h-full flex-col">
-      <div className="flex flex-col min-h-screen justify-between gap-6">
-        {/* عنوان */}
-        <div>
+    // Root section for the "Capsule Status" configuration panel
+    <section className="flex w-full p-8 h-full flex-col" aria-label="Capsule status configuration">
+      {/* Main vertical layout that spaces controls and the summary/actions */}
+      <section className="flex flex-col min-h-screen justify-between gap-6">
+        {/* ===== Header: Title + short description ===== */}
+        <header>
           <div className="space-y-1">
             <h4 className="text-foreground/95 pr-5 relative text-xl after:content-[''] after:absolute after:w-2.5 after:h-2.5 after:bg-foreground/80 after:rounded-full after:right-0 after:top-1/2 after:-translate-y-1/2">وضعیت کپسول</h4>
             <p className="text-foreground/80">
@@ -91,18 +106,20 @@ export default function CapsuleStatus() {
             </p>
           </div>
 
-          {/* انتخاب اصلی (public/private) */}
+          {/* ===== Visibility selection (public/private) ===== */}
           <RadioGroup
             dir="rtl"
             value={selected}
             onValueChange={(val: Visibility) => {
               setSelected(val);
-              // اگر public شد، حالت خصوصی رو پاک کن
+
+              // Compute next access snapshot depending on public/private state
               const nextAccess = val === 'public' ? { visibility: 'public' as const, lock: 'none' as const, unlockAt: undefined } : { visibility: 'private' as const, lock: (capsule?.access?.lock ?? 'none') as Lock, unlockAt: capsule?.access?.unlockAt };
 
-              // reset زیرمجموعه وقتی سوئیچ می‌کنیم
+              // Reset sub-mode state accordingly
               setPrivateType(val === 'private' ? (nextAccess.lock as Lock) : '');
 
+              // Push new access structure to the store (non-destructive merge)
               dispatch(
                 setCapsule({
                   ...capsule,
@@ -114,9 +131,11 @@ export default function CapsuleStatus() {
               );
             }}
             className="flex flex-wrap items-center justify-center gap-4 mt-16"
+            aria-label="Select capsule visibility"
           >
             {visOptions.map((opt) => (
               <div key={opt.id} className="inline-flex">
+                {/* Input visually hidden; styled label acts as the interactive pill */}
                 <RadioGroupItem id={opt.id} value={opt.value} className="sr-only" />
                 <Label
                   htmlFor={opt.id}
@@ -129,13 +148,15 @@ export default function CapsuleStatus() {
             ))}
           </RadioGroup>
 
-          {/* زیرمجموعه خصوصی (timed/none) */}
+          {/* ===== Private sub-options (timed/none) only when private is selected ===== */}
           {selected === 'private' && (
             <RadioGroup
               dir="rtl"
               value={privateType}
               onValueChange={(val: Lock) => {
                 setPrivateType(val);
+
+                // Update lock mode; if switching to 'none', drop any previous unlockAt
                 dispatch(
                   setCapsule({
                     ...capsule,
@@ -149,9 +170,11 @@ export default function CapsuleStatus() {
                 );
               }}
               className="flex flex-wrap items-center justify-center gap-4 mt-6"
+              aria-label="Select private capsule mode"
             >
               {lockOptions.map((opt) => (
                 <div key={opt.id} className="inline-flex">
+                  {/* Input visually hidden; styled label acts as the interactive pill */}
                   <RadioGroupItem id={opt.id} value={opt.value} className="sr-only" />
                   <Label
                     htmlFor={opt.id}
@@ -165,36 +188,40 @@ export default function CapsuleStatus() {
             </RadioGroup>
           )}
 
-          {/* تقویم شمسی فقط وقتی زمان‌دار */}
+          {/* ===== Timed calendar picker (Jalali) shows only for "private -> timed" ===== */}
           {selected === 'private' && privateType === 'timed' && (
             <div className="flex justify-center mt-6">
+              {/* Date/time selection component updates the store's unlockAt internally */}
               <CalendarHijri />
             </div>
           )}
-        </div>
+        </header>
 
-        <div>
-          <div className="flex gap-2 w-full p-6 border border-foreground/20 rounded-lg">
+        {/* ===== Summary + Submit + Note ===== */}
+        <section>
+          {/* Selection summary box (read-only preview of current choices) */}
+          <section className="flex gap-2 w-full p-6 border border-foreground/20 rounded-lg" aria-label="Selection summary">
             <div className="space-x-4">
               <span className="text-foreground/90 font-bold">نوع کپسول :</span>
               <span className="text-foreground/70 font-light">
-                {/* نمایش فارسی از روی state انگلیسی */}
+                {/* Humanized summary of the selected options */}
                 {selected === 'public' ? 'کپسول عمومی' : selected === 'private' ? 'کپسول خصوصی' : ''}
                 {selected === 'private' ? ' / ' : ''}
                 {selected === 'private' ? (privateType === 'timed' ? 'خصوصی زمان‌دار' : privateType === 'none' ? 'خصوصی بدون زمان' : '') : ''}
                 {privateType === 'timed' && formattedDate ? ` / زمان کپسول : ${formattedDate}` : ''}
               </span>
             </div>
-          </div>
+          </section>
 
-          {/* دکمه ثبت */}
-          <div className="w-full flex justify-center mt-8">
+          {/* Action area: submit button to persist selections to the store */}
+          <footer className="w-full flex justify-center mt-8" aria-label="Actions">
             <Button onClick={handleSubmit} className="cursor-pointer w-1/3 py-6 text-lg" disabled={!selected || (selected === 'private' && !privateType)}>
               ثبت
             </Button>
-          </div>
+          </footer>
 
-          <div className="flex flex-col gap-4 lg:p-4 lg:px-6">
+          {/* Helper note explaining behavior and constraints */}
+          <section className="flex flex-col gap-4 lg:p-4 lg:px-6" aria-label="Important note">
             <span className="text-foreground text-xl pr-4 relative font-bold after:content-[''] after:h-2 after:w-2 after:rounded-full after:absolute after:bg-foreground after:right-0 after:top-1/2 after:-translate-y-1/2">توجه</span>
             <div className="flex gap-2 items-center py-4 px-2 border border-foreground/20 rounded-lg w-full">
               <Image src="/images/cartoon-question.png" alt="question" width={100} height={100} />
@@ -202,9 +229,9 @@ export default function CapsuleStatus() {
                 <p className="lg:text-lg text-base font-bold text-foreground/80">می‌تونید بعد از ساخت کپسول حالتش رو تغییر بدین؛ اما کپسول‌های خصوصیِ زمان‌دار تا زمان تعیین‌شده در دسترس نیستند.</p>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
+          </section>
+        </section>
+      </section>
+    </section>
   );
 }

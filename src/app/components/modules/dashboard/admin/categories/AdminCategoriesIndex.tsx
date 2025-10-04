@@ -18,21 +18,31 @@ type Group = { title: string; _id: string };
 type CategoryItems = { createdAt: string; group: Group; title: string; updatedAt: string; _id: string };
 
 export default function AdminCategoriesIndex() {
+  // Toast helper for feedback
   const showToast = useCustomToast();
+  // Next.js router for navigations after CRUD actions
   const router = useRouter();
 
+  // Loading indicator for initial fetch
   const [loading, setLoading] = useState<boolean>(true);
+  // Flat list of category items fetched from API
   const [categories, setCategories] = useState<CategoryItems[] | null>(null);
+
+  // Local state for "Create category item"
   const [categoryGroup, setCategoryGroup] = useState<string>('');
   const [categoryItem, setCategoryItem] = useState<string>('');
+
+  // Local state for "Edit category item"
   const [selectedGroupId, setSelectedGroupId] = useState<string>('');
   const [selectedItemId, setSelectedItemId] = useState<string>('');
   const [newCategoryItem, setNewCategoryItem] = useState<string>('');
 
+  // When the selected group changes (in edit form), reset the selected item
   useEffect(() => {
     setSelectedItemId('');
   }, [selectedGroupId]);
 
+  // Fetch all categories (admin view) on mount
   useEffect(() => {
     (async () => {
       try {
@@ -41,10 +51,13 @@ export default function AdminCategoriesIndex() {
           setCategories(res.data.categoryItems);
           setLoading(false);
         }
-      } catch {}
+      } catch {
+        // Intentionally silent; UI shows loader/empty state
+      }
     })();
   }, []);
 
+  // Build a grouped view {group -> items[]} from the flat category items list
   const groups: GroupView[] = useMemo(() => {
     if (!categories) return [];
     const map = new Map<string, GroupView>();
@@ -56,8 +69,10 @@ export default function AdminCategoriesIndex() {
     return Array.from(map.values());
   }, [categories]);
 
+  // Items filtered by currently selected group (for the edit form)
   const filteredItems = useMemo(() => groups.find((g) => g.id === selectedGroupId)?.items ?? [], [groups, selectedGroupId]);
 
+  // Create a new category item under a chosen group
   async function createCategory() {
     if (categoryGroup === '' || !categoryGroup || !categoryGroup.trim() || !categoryItem || categoryItem === '' || !categoryItem.trim()) {
       return showToast({ message: 'لطفا برای ساخت دسته‌بندی جدید عنوان و اسم رو وارد کنید ❌', bg: 'bg-red-200' });
@@ -76,6 +91,7 @@ export default function AdminCategoriesIndex() {
     }
   }
 
+  // Edit an existing category item (rename)
   async function editCategory() {
     if (newCategoryItem === '' || !newCategoryItem || !newCategoryItem.trim() || !selectedGroupId || selectedGroupId === '' || !selectedGroupId.trim() || !selectedItemId || selectedItemId === '' || !selectedItemId.trim()) {
       return showToast({ message: 'لطفا برای ویرایش دسته‌بندی هر سه فیلد را کامل کنید ❌', bg: 'bg-red-200' });
@@ -95,47 +111,69 @@ export default function AdminCategoriesIndex() {
   }
 
   return (
+    // Page wrapper for the Categories admin
     <section className="flex flex-col h-full gap-10">
-      <div className="flex flex-col h-full justify-start gap-10">
-        <span className='text-foreground text-xl pr-4 relative font-bold after:content-[""] after:h-2 after:w-2 after:rounded-full after:absolute after:bg-foreground after:right-0 after:top-1/2 after:-translate-y-1/2'>دسته‌بندی‌های سایت</span>
-        <div className="flex flex-col gap-6 md:p-8 p-3 bg-white dark:bg-slate-900 rounded-lg items-center justify-center w-full">
-          <div className="space-y-1 self-start">
-            <h4 className="text-foreground/95 pr-5 relative text-xl after:content-[''] after:absolute after:w-2.5 after:h-2.5 after:bg-foreground/80 after:rounded-full after:right-0 after:top-1/2 after:-translate-y-1/2">دسته‌بندی ها</h4>
+      {/* Page content area */}
+      <main className="flex flex-col h-full justify-start gap-10">
+        {/* Page title */}
+        <h1 className='text-foreground text-xl pr-4 relative font-bold after:content-[""] after:h-2 after:w-2 after:rounded-full after:absolute after:bg-foreground after:right-0 after:top-1/2 after:-translate-y-1/2'>دسته‌بندی‌های سایت</h1>
+
+        {/* Card: categories listing + create/edit forms */}
+        <section className="flex flex-col gap-6 md:p-8 p-3 bg-white dark:bg-slate-900 rounded-lg items-center justify-center w-full">
+          {/* Intro block */}
+          <header className="space-y-1 self-start">
+            <h2 className="text-foreground/95 pr-5 relative text-xl after:content-[''] after:absolute after:w-2.5 after:h-2.5 after:bg-foreground/80 after:rounded-full after:right-0 after:top-1/2 after:-translate-y-1/2">دسته‌بندی ها</h2>
             <p className="text-foreground/80">در این قسمت میتونین دسته بندی جدید وارد کنید و یا حذف کنید.</p>
-          </div>
+          </header>
+
+          {/* Loading state */}
           {loading ? (
             <div className="flex items-center justify-center gap-2 h-80">
               <span>درحال بارگزاری</span>
               <PulseLoader size={7} />
             </div>
           ) : (
-            <div dir="rtl" className="flex flex-col gap-8">
+            // Categories grouped list (each group with its items and delete button)
+            <section dir="rtl" className="flex flex-col gap-8">
               {groups.map((group, idx) => (
-                <div key={idx} className="flex flex-col gap-4">
-                  <h5 className="text-lg font-semibold">{group.title}</h5>
+                <section key={idx} className="flex flex-col gap-4">
+                  {/* Group title */}
+                  <h3 className="text-lg font-semibold">{group.title}</h3>
+
+                  {/* Tags grid for items (each item includes AlertModal to handle removal) */}
                   <div className="flex flex-wrap gap-3">
                     {group.items.map((item, i) => (
-                      <div
+                      <article
                         key={i}
                         className={`cursor-pointer relative flex items-center rounded-full px-4 py-2 border transition-colors
                       hover:bg-red-400`}
                       >
-                        <AlertModal item={item} groupId={group.id}/>
+                        {/* Delete confirmation modal for this item */}
+                        <AlertModal item={item} groupId={group.id} />
+                        {/* Spacer (kept for layout consistency) */}
                         <div className="hidden" />
+                        {/* Item label */}
                         {item.title}
-                      </div>
+                      </article>
                     ))}
                   </div>
-                </div>
+                </section>
               ))}
-            </div>
+            </section>
           )}
+
+          {/* Divider between list and forms */}
           <Separator className="bg-foreground/20 w-full my-4" />
-          <div className="space-y-1 self-start">
-            <h4 className="text-foreground/95 pr-5 relative text-xl after:content-[''] after:absolute after:w-2.5 after:h-2.5 after:bg-foreground/80 after:rounded-full after:right-0 after:top-1/2 after:-translate-y-1/2">افزودن دسته‌بندی جدید</h4>
-          </div>
-          <div className="w-full flex-col flex items-center justify-between gap-6 lg:px-10 md:px-6 px-4">
+
+          {/* Create category item section */}
+          <section className="space-y-1 self-start">
+            <h2 className="text-foreground/95 pr-5 relative text-xl after:content-[''] after:absolute after:w-2.5 after:h-2.5 after:bg-foreground/80 after:rounded-full after:right-0 after:top-1/2 after:-translate-y-1/2">افزودن دسته‌بندی جدید</h2>
+          </section>
+
+          {/* Create form (group + item name) */}
+          <section className="w-full flex-col flex items-center justify-between gap-6 lg:px-10 md:px-6 px-4">
             <div className="w-full flex gap-6">
+              {/* Select a group (title) for the new item */}
               <div className="flex flex-col w-full gap-2 items-start text-base text-foreground/80">
                 <span className="font-medium">انتخاب عنوان دسته‌بندی</span>
                 <Select value={categoryGroup} onValueChange={(val) => setCategoryGroup(val)} dir="rtl">
@@ -151,21 +189,32 @@ export default function AdminCategoriesIndex() {
                   </SelectContent>
                 </Select>
               </div>
+
+              {/* New category item name */}
               <Label htmlFor="name" className="flex flex-col w-full items-start text-base text-foreground/80 font-medium">
                 اسم دسته‌بندی جدید
                 <Input value={categoryItem} onChange={(e) => setCategoryItem(e.target.value)} className="md:placeholder:text-sm" id="name" type="text" placeholder="اسم دسته‌بندی" />
               </Label>
             </div>
+
+            {/* Submit create */}
             <Button disabled={!categoryItem && !categoryGroup} onClick={createCategory} className="cursor-pointer w-1/3 py-6 text-lg">
               ثبت
             </Button>
-          </div>
-          <div className="space-y-1 self-start">
-            <h4 className="text-foreground/95 pr-5 relative text-xl after:content-[''] after:absolute after:w-2.5 after:h-2.5 after:bg-foreground/80 after:rounded-full after:right-0 after:top-1/2 after:-translate-y-1/2">ویرایش دسته‌بندی های موجود</h4>
-          </div>
-          <div className="w-full flex items-center justify-between gap-6 lg:px-10 md:px-6 px-4">
+          </section>
+
+          {/* Edit category item section */}
+          <section className="space-y-1 self-start">
+            <h2 className="text-foreground/95 pr-5 relative text-xl after:content-[''] after:absolute after:w-2.5 after:h-2.5 after:bg-foreground/80 after:rounded-full after:right-0 after:top-1/2 after:-translate-y-1/2">ویرایش دسته‌بندی های موجود</h2>
+          </section>
+
+          {/* Edit form (pick group -> pick item -> new name) */}
+          <section className="w-full flex items-center justify-between gap-6 lg:px-10 md:px-6 px-4">
+            {/* Group & item selectors */}
             <div className="flex flex-col w-full gap-2 items-start text-base text-foreground/80">
               <span className="font-medium">انتخاب عنوان دسته‌بندی</span>
+
+              {/* Group selector (for edit) */}
               <Select value={selectedGroupId} onValueChange={setSelectedGroupId} dir="rtl">
                 <SelectTrigger className="w-full border border-primary">
                   <SelectValue placeholder="یک عنوان دسته‌بندی انتخاب کنید" />
@@ -179,7 +228,7 @@ export default function AdminCategoriesIndex() {
                 </SelectContent>
               </Select>
 
-              {/* انتخاب دسته‌بندی (آیتمِ زیرمجموعه‌ی گروه انتخاب‌شده) */}
+              {/* Item selector (depends on chosen group) */}
               <Select value={selectedItemId} onValueChange={setSelectedItemId} dir="rtl" disabled={!selectedGroupId}>
                 <SelectTrigger className="w-full border border-primary">
                   <SelectValue placeholder={selectedGroupId ? 'یک دسته‌بندی انتخاب کنید' : 'ابتدا یک عنوان دسته‌بندی انتخاب کنید'} />
@@ -193,23 +242,31 @@ export default function AdminCategoriesIndex() {
                 </SelectContent>
               </Select>
             </div>
+
+            {/* New name for the selected item */}
             <Label htmlFor="name" className="flex flex-col w-full items-start text-base text-foreground/80 font-medium">
               اسم دسته‌بندی جدید
               <Input value={newCategoryItem} onChange={(e) => setNewCategoryItem(e.target.value)} className="md:placeholder:text-sm" id="name" type="text" placeholder="اسم دسته‌بندی" />
             </Label>
-          </div>
+          </section>
+
+          {/* Submit edit */}
           <Button onClick={editCategory} disabled={!newCategoryItem} className="cursor-pointer w-1/3 py-6 text-lg">
             ثبت
           </Button>
+
+          {/* Spacer to keep consistent bottom space in the card */}
           <div className="w-full flex justify-center mt-8"></div>
-        </div>
-        <div className="flex gap-2 items-center py-4 px-2 border border-foreground/20 rounded-lg lg:w-2/3 w-full">
+        </section>
+
+        {/* Help/Hint card at bottom of page */}
+        <aside className="flex gap-2 items-center py-4 px-2 border border-foreground/20 rounded-lg lg:w-2/3 w-full">
           <Image src="/images/cartoon-question.png" alt="question" width={100} height={100} />
           <div className="flex flex-col gap-1">
             <p className="lg:text-lg text-base font-bold text-foreground/80">ادمین عزیز شما میتونین با کلیک روی دسته‌بندی های موجود اون رو حذف کنین و یا از قسمت های پایین دسته بندی های موجود ، دسته بندی جدید اضافه کنین یا دسته بندی رو ویرایش کنین.</p>
           </div>
-        </div>
-      </div>
+        </aside>
+      </main>
     </section>
   );
 }

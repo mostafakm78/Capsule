@@ -17,7 +17,7 @@ export default function CheckUserLogin() {
     }
   }, [user, router]);
 
-  if (loading || user) return <Loadings />;
+  if (user && loading) return <Loadings />;
 
   return <LoginOrSignup />;
 }

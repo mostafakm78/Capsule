@@ -1,28 +1,37 @@
-'use client';
+'use client'; // Marks this component as a Client Component for Next.js (enables hooks, browser APIs)
+
 import { useEffect, useState } from 'react';
 import * as jalaali from 'jalaali-js';
 
+// Mapping of ASCII digits to Persian digits for display
 const PERSIAN_DIGITS = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
 
+// Convert any ASCII digits in a string to Persian digits (UI-facing)
 const toPersianDigits = (input: string) => input.replace(/\d/g, (d) => PERSIAN_DIGITS[Number(d)]);
+// Convert Persian digits in a string to ASCII digits (logic/validation)
 const toEnglishDigits = (input: string) => input.replace(/[۰-۹]/g, (d) => String(PERSIAN_DIGITS.indexOf(d)));
 
+// Get number of days for a given Jalaali (Persian) month/year
 const daysInMonth = (month: number, year: number) => jalaali.jalaaliMonthLength(year, month);
 
+// Component props interface
 interface Props {
   birthday: string | Date | '';
-  setBirthday: (val: string) => void; // prop کامپوننت پدر
+  setBirthday: (val: string) => void; // Callback to update parent component's birthday value
 }
 
+// Controlled inputs for a Jalaali (Persian) birth date with conversion to ISO (Gregorian)
 export default function BirthDateInputs({ birthday, setBirthday }: Props) {
+  // Local state for day/month/year (stored as ASCII digits; rendered as Persian)
   const [day, setDay] = useState('');
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
 
+  // Allowed year range (Jalaali)
   const MIN_YEAR = 1250;
   const MAX_YEAR = 1404;
 
-  // تبدیل prop به state داخلی
+  // Sync incoming `birthday` prop into local day/month/year state (supports Date or ISO string)
   useEffect(() => {
     if (!birthday) {
       setDay('');
@@ -36,6 +45,7 @@ export default function BirthDateInputs({ birthday, setBirthday }: Props) {
       if (birthday instanceof Date) dt = birthday;
       else dt = new Date(birthday);
 
+      // If the date parses correctly, convert to Jalaali parts and populate state
       if (!isNaN(dt.getTime())) {
         const { jy, jm, jd } = jalaali.toJalaali(dt);
         setYear(String(jy));
@@ -43,24 +53,28 @@ export default function BirthDateInputs({ birthday, setBirthday }: Props) {
         setDay(String(jd));
       }
     } catch {
+      // Reset on parse/convert failure
       setDay('');
       setMonth('');
       setYear('');
     }
   }, [birthday]);
 
+  // Helper: strip non-digits after normalizing to ASCII digits
   const onlyNumbers = (val: string) => toEnglishDigits(val).replace(/\D/g, '');
 
+  // Push the combined Jalaali date up to parent as an ISO (Gregorian) string (UTC @ midnight)
   const updateBirthday = (d: number, m: number, y: number) => {
     try {
       const { gy, gm, gd } = jalaali.toGregorian(y, m, d);
       const isoWithZ = new Date(Date.UTC(gy, gm - 1, gd)).toISOString().replace('.000', '');
-      setBirthday(isoWithZ); // آپدیت فقط کامپوننت پدر
+      setBirthday(isoWithZ); // Update parent only; local state remains Jalaali-formatted
     } catch (err) {
       console.error('convert jalaali->gregorian failed', err);
     }
   };
 
+  // Day input change: clamp to [1, daysInMonth], update parent if all parts present
   const handleDayChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const v = onlyNumbers(e.target.value).slice(0, 2);
     let val = Number(v || 0);
@@ -73,6 +87,7 @@ export default function BirthDateInputs({ birthday, setBirthday }: Props) {
     if (val && month && year) updateBirthday(val, Number(month), Number(year));
   };
 
+  // Month input change: clamp to [1, 12], adjust day if it exceeds month length, update parent if complete
   const handleMonthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const v = onlyNumbers(e.target.value).slice(0, 2);
     let val = Number(v || 0);
@@ -86,6 +101,7 @@ export default function BirthDateInputs({ birthday, setBirthday }: Props) {
     }
   };
 
+  // Year input change: accept up to 4 digits, validate range when full; adjust day if needed; update parent if complete
   const handleYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const v = onlyNumbers(e.target.value).slice(0, 4);
     setYear(v);
@@ -99,6 +115,7 @@ export default function BirthDateInputs({ birthday, setBirthday }: Props) {
     }
   };
 
+  // On blur: clear invalid year values outside the allowed range
   const handleYearBlur = () => {
     if (!year) return;
     const y = Number(year);
@@ -106,12 +123,16 @@ export default function BirthDateInputs({ birthday, setBirthday }: Props) {
   };
 
   return (
-    <div className="flex w-full items-center justify-center gap-2 border border-primary rounded-lg p-2">
-      <input type="text" inputMode="numeric" value={day ? toPersianDigits(day) : ''} onChange={handleDayChange} placeholder="روز" className="w-full text-center bg-transparent outline-none" />
+    // Semantic wrapper for the three birthdate inputs (keeps existing styles intact)
+    <section className="flex w-full items-center justify-center gap-2 border border-primary rounded-lg p-2">
+      {/* Day input (numeric, shows Persian digits but stores ASCII internally) */}
+      <input type="text" inputMode="numeric" value={day ? toPersianDigits(day) : ''} onChange={handleDayChange} placeholder="روز" className="w/full text-center bg-transparent outline-none" />
       <span>/</span>
-      <input type="text" inputMode="numeric" value={month ? toPersianDigits(month) : ''} onChange={handleMonthChange} placeholder="ماه" className="w-full text-center bg-transparent outline-none" />
+      {/* Month input */}
+      <input type="text" inputMode="numeric" value={month ? toPersianDigits(month) : ''} onChange={handleMonthChange} placeholder="ماه" className="w/full text-center bg-transparent outline-none" />
       <span>/</span>
-      <input type="text" inputMode="numeric" value={year ? toPersianDigits(year) : ''} onChange={handleYearChange} onBlur={handleYearBlur} placeholder="سال" className="w-full text-center bg-transparent outline-none" />
-    </div>
+      {/* Year input with range validation on blur */}
+      <input type="text" inputMode="numeric" value={year ? toPersianDigits(year) : ''} onChange={handleYearChange} onBlur={handleYearBlur} placeholder="سال" className="w/full text-center bg-transparent outline-none" />
+    </section>
   );
 }

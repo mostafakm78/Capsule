@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { UsersModal } from './UsersModal';
@@ -23,21 +25,27 @@ type Sort = 'new' | 'old';
 type Flag = 'all' | 'sus' | 'review' | 'violation' | 'none';
 
 export default function Users() {
+  // Read URL search params and router for navigation/state sync
   const searchParams = useSearchParams();
   const router = useRouter();
 
+  // Current logged-in user (to exclude from admin list actions)
   const { user } = useAppSelector((state) => state.user);
 
+  // Server response and local UI state
   const [users, setUsers] = useState<GetUsersResponse>();
   const [loading, setLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>('');
 
+  // Filter controls state (banned flag, review flag, sort order)
   const [banned, setBanned] = useState<'true' | 'false'>('false');
   const [flag, setFlag] = useState<Flag>('all');
   const [sort, setSort] = useState<Sort>('new');
 
+  // Active page number (defaults to 1)
   const currentPage = Number(searchParams.get('page') || 1);
 
+  // Initialize filters from URL parameters whenever they change
   useEffect(() => {
     const sp = searchParams;
     const spFlag = (sp.get('flag') as Flag) || 'all';
@@ -49,6 +57,7 @@ export default function Users() {
     setSort(sp.get('sort') === 'oldest' ? 'old' : 'new');
   }, [searchParams]);
 
+  // Helper: mutate URL params and push (preserving other params)
   const pushWithParams = (mutator: (p: URLSearchParams) => void) => {
     const params = new URLSearchParams(searchParams.toString());
     mutator(params);
@@ -56,6 +65,7 @@ export default function Users() {
     router.push(qs ? `/dashboard/admin/users?${qs}` : `/dashboard/admin/users`);
   };
 
+  // Build a compact pagination model with ellipses (e.g. 1 … 5 6 7 … 20)
   const buildPageList = (total: number, curr: number): (number | '...')[] => {
     if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
 
@@ -72,6 +82,7 @@ export default function Users() {
     return res;
   };
 
+  // Go to specific page (clamped to range)
   const goToPage = (p: number) => {
     if (!users) return;
     const totalPages = users.pagination.pages;
@@ -81,9 +92,11 @@ export default function Users() {
     });
   };
 
+  // Pagination convenience handlers
   const goNext = () => goToPage(currentPage + 1);
   const goPrev = () => goToPage(currentPage - 1);
 
+  // Fetch users list whenever URL params change
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -107,8 +120,10 @@ export default function Users() {
     };
   }, [searchParams]);
 
+  // Exclude the current admin from the list (to avoid self-actions)
   const filterUser = users?.items?.filter((singleUser) => singleUser._id !== user?._id);
 
+  // Execute search: if input has value => set q param; else clear existing q
   const performSearchAction = () => {
     const q = search.trim();
 
@@ -131,22 +146,26 @@ export default function Users() {
     }
   };
 
+  // Allow pressing Enter to run search
   const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (!e.nativeEvent.isComposing && e.key === 'Enter') {
       performSearchAction();
     }
   };
 
+  // Dynamic label for the search button (search/clear)
   const getButtonLabel = () => {
     if (search.trim().length > 0) return 'جستجو';
     if (searchParams.get('q')) return 'پاک کردن';
     return 'جستجو';
   };
 
+  // Reset filters to default by navigating to base path
   const handleRemove = () => {
     router.push('/dashboard/admin/users');
   };
 
+  // Apply selected filters to URL params and reset to page 1
   const handleApply = () => {
     pushWithParams((params) => {
       if (flag === 'all') params.delete('flag');
@@ -162,17 +181,20 @@ export default function Users() {
     });
   };
 
+  // Loading state (centered spinner)
   if (loading)
     return (
-      <div className="flex items-center justify-center gap-2 min-h-screen">
+      <section className="flex items-center justify-center gap-2 min-h-screen">
         <span>درحال بارگزاری</span>
         <PulseLoader size={7} />
-      </div>
+      </section>
     );
+
   return (
-    <>
-      <div className="flex flex-col gap-6 md:p-8 p-3 bg-white dark:bg-slate-900 rounded-lg items-center justify-center w-full">
-        {/* Search */}
+    <section>
+      {/* Filters & Search Panel */}
+      <section className="flex flex-col gap-6 md:p-8 p-3 bg-white dark:bg-slate-900 rounded-lg items-center justify-center w-full">
+        {/* Search box and trigger */}
         <div className="lg:w-2/3 w-full relative">
           <div className="flex lg:flex-row flex-col justify-center lg:items-center gap-4">
             <div className="lg:w-3/3 relative flex gap-1 items-center">
@@ -185,9 +207,9 @@ export default function Users() {
           </div>
         </div>
 
-        {/* Role & Flags (desktop) */}
+        {/* Banned flag & User flags */}
         <div className="w-full lg:text-base text-sm flex flex-col lg:flex-row items-center justify-center lg:justify-around gap-6">
-          {/* نقش */}
+          {/* Banned status filter */}
           <fieldset className="grid lg:grid-cols-[auto_1fr] place-items-center items-center gap-3" dir="rtl">
             <legend className="sr-only">بن بودن : </legend>
             <span className="relative pr-3 after:bg-foreground/80 after:w-2 after:h-2 after:absolute after:rounded-full after:right-0 after:top-1/2 after:-translate-y-1/2">بن بودن :</span>
@@ -205,7 +227,7 @@ export default function Users() {
 
           <Separator className="w-full lg:hidden bg-foreground/20" />
 
-          {/* پرچم‌گذاری */}
+          {/* User flag filter (status) */}
           <fieldset className="grid lg:grid-cols-[auto_1fr] lg:grid-rows-1 grid-rows-2 place-items-center items-center gap-3" dir="rtl">
             <legend className="sr-only">پرچم‌گذاری :</legend>
             <span className="relative pr-3 after:bg-foreground/80 after:w-2 after:h-2 after:absolute after:rounded-full after:right-0 after:top-1/2 after:-translate-y-1/2">پرچم‌گذاری :</span>
@@ -236,7 +258,7 @@ export default function Users() {
 
         <Separator className="w-full bg-foreground/20" />
 
-        {/* Sort */}
+        {/* Sort controls */}
         <fieldset className="grid lg:grid-cols-[auto_1fr] lg:grid-rows-1 grid-rows-2 place-items-center items-center gap-3" dir="rtl">
           <legend className="sr-only">مرتب‌سازی براساس :</legend>
           <span className="relative pr-3 after:bg-foreground/80 after:w-2 after:h-2 after:absolute after:rounded-full after:right-0 after:top-1/2 after:-translate-y-1/2">مرتب‌سازی براساس :</span>
@@ -252,7 +274,7 @@ export default function Users() {
           </RadioGroup>
         </fieldset>
 
-        {/* Actions */}
+        {/* Filter actions */}
         <div className="flex gap-3">
           <Button variant="secondary" onClick={handleRemove} type="button" className="cursor-pointer">
             پاک‌کردن فیلترها
@@ -261,8 +283,11 @@ export default function Users() {
             اعمال فیلترها
           </Button>
         </div>
-      </div>
-      <div className="flex flex-col gap-6 lg:p-8 p-1 bg-white dark:bg-slate-900 rounded-lg items-center justify-start w-full min-h-screen pb-4">
+      </section>
+
+      {/* Users table section */}
+      <section className="flex flex-col mt-6 gap-6 lg:p-8 p-1 bg-white dark:bg-slate-900 rounded-lg items-center justify-start w-full min-h-screen pb-4">
+        {/* Data table of users */}
         <Table dir="rtl">
           <TableCaption>لیست کاربران سایت کپسول</TableCaption>
           <TableHeader>
@@ -279,23 +304,36 @@ export default function Users() {
           <TableBody>
             {filterUser?.map((user, i) => (
               <TableRow className={`${user.flag === 'sus' ? 'bg-orange-500/30' : user.flag === 'review' ? 'bg-orange-500/30' : user.flag === 'violation' ? 'bg-red-500/30' : ''}`} key={user._id}>
+                {/* Row index */}
                 <TableCell>{i + 1}</TableCell>
+
+                {/* User name / modal trigger on mobile */}
                 <TableCell className="md:font-medium">
                   <span className="md:hidden">
                     <UsersModal user={user} />
                   </span>
                   <span className="hidden md:block">{user.name ?? '...'}</span>
                 </TableCell>
+
+                {/* Email (wrapped for long addresses) */}
                 <TableCell className="whitespace-normal break-all">{user.email}</TableCell>
+
+                {/* User flag control (desktop) */}
                 <TableCell className="hidden md:table-cell">
                   <UserFlagModal user={user} />
                 </TableCell>
+
+                {/* Ban/unban control (desktop) */}
                 <TableCell className="hidden md:table-cell">
                   <UserBannedModal user={user} />
                 </TableCell>
+
+                {/* Role control (desktop) */}
                 <TableCell className="hidden md:table-cell">
                   <UserTypeModal user={user} />
                 </TableCell>
+
+                {/* Link to user details page (desktop) */}
                 <TableCell className="hidden md:table-cell">
                   <Link className="flex items-center gap-2 font-light text-base text-primary hover:text-foreground/80 duration-300" href={`/dashboard/admin/users/${user._id}`}>
                     دیدن
@@ -306,8 +344,10 @@ export default function Users() {
             ))}
           </TableBody>
         </Table>
+
+        {/* Pagination controls (shown only if multiple pages) */}
         {users && users.pagination.pages > 1 && (
-          <div className="self-center mt-auto">
+          <nav className="self-center mt-auto" aria-label="pagination">
             <Pagination dir="rtl">
               <PaginationContent>
                 {currentPage !== 1 && (
@@ -337,9 +377,9 @@ export default function Users() {
                 )}
               </PaginationContent>
             </Pagination>
-          </div>
+          </nav>
         )}
-      </div>
-    </>
+      </section>
+    </section>
   );
 }
