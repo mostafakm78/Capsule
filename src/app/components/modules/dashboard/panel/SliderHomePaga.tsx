@@ -47,7 +47,7 @@ export default function SliderHomePageDashboard({ capsules }: Props) {
       </div>
 
       {/* Slider container with responsive max widths */}
-      <div className="relative overflow-visible w-full lg:px-4 mx-auto max-w-[400px] md:max-w-[430px] lg:max-w-[530px] xl:max-w-4xl 2xl:max-w-5xl min-h-[400px]">
+      <div className="relative overflow-visible w-full lg:px-4 mx-auto max-w-[350px] md:max-w-[430px] lg:max-w-[530px] xl:max-w-4xl 2xl:max-w-5xl min-h-[400px]">
         {/* Empty state when there are no capsules to display */}
         {capsules.length <= 0 && <div className="flex items-center w-full h-full justify-center text-2xl lg:text-3xl text-foreground/80">شما هنوز کپسولی نساختین!</div>}
 

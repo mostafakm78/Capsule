@@ -1,36 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌌 Capsule — Keep Your Moments Safe in Time
 
-## Getting Started
+> **Capsule** is a time-keeper for your memories.
+Store your moments — with sound, image, or text — inside a capsule, set the time when it should open again, and let it rest... until the day you come back to it.
+For yourself, for someone special, or maybe for someone you haven’t even met yet.
 
-First, run the development server:
+[فارسی](./README.fa.md)
+
+---
+
+## ✨ Features
+
+- ⏳ Create time capsules with text, image, or audio
+- 🎧 Attach custom sounds or recordings to each capsule
+- 🗓️ Set the exact date & time when the capsule opens
+- 🔒 Capsules stay hidden until their release moment
+- 💌 Designed for personal memories, messages to loved ones, or future reflections
+- 🖥️ Beautiful and minimal dashboard interface
+- 📱 Fully responsive design for all devices
+
+---
+
+## 🧠 Tech Stack
+
+- **Next.js (App Router)**
+- **React**
+- **TypeScript**
+- **Redux Toolkit**
+- **Axios**
+- **Tailwind CSS**
+- **ShadCN/UI**
+- **React Hook Form**
+
+---
+
+## 📁 Project Structure
+
+```
+app/
+ ├── (site routes)         # Public routes (home, about, capsules, etc.)
+ ├── (dashboard)    # User dashboard for managing capsules
+ ├── login          # Authentication pages
+ ├── components/    # Reusable UI components
+ ├── lib/           # Utilities and helpers
+ ├── store/         # Redux slices and configuration
+ ├── services/      # API configuration
+```
+
+---
+
+## ⚙️ Setup & Run Locally
+
+Clone the project:
+
+```bash
+git clone https://github.com/mostafakm78/Capsule
+```
+
+Go to the project directory:
+
+```bash
+cd capsule
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🪶 Folder Naming Convention
 
-## Learn More
+- `app/(site)` → Main public routes
+- `app/(dashboard)` → User dashboard routes
+- `app/login` → Login and authentication
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🚀 Roadmap
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- [ ] Add authentication and user roles
+- [ ] Implement capsule sharing via links
+- [ ] Add backend API and database
+- [ ] Enable online deployment
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 💡 Vision
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Capsule isn’t just an app — it’s a **digital time machine**.
+It helps you preserve emotions, voices, and thoughts that deserve to be rediscovered later.
+
+---
+
+## 📜 License
+
+This project is **open-source** and available under the [MIT License](LICENSE).
+
+---
+
+## 🧑‍💻 Author
+
+**Mostafa Kamari**
+Frontend Developer | React & Next.js
+[GitHub](https://github.com/mostafakm78) • [LinkedIn](http://linkedin.com/in/mostafa-kamari-b82450351)
