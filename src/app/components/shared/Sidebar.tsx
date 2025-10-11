@@ -12,7 +12,7 @@ import { IoCall } from 'react-icons/io5';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { LinkProps } from '@/lib/types';
-import { JSX, useCallback, useState } from 'react';
+import { JSX, useCallback, useEffect, useState } from 'react';
 import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import { IoIosSearch } from 'react-icons/io';
@@ -53,6 +53,11 @@ export default function Sidebar() {
     const isActive = href === '/' ? pathName === '/' : pathName.startsWith(href);
     return `flex items-center ${isActive ? 'text-secondary' : 'text-foreground/80'} text-base md:text-xl bg-accent p-2 rounded-lg active:text-primary justify-start gap-4`;
   };
+
+  // Close sidebar when route changes
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathName]);
 
   // NOTE: routing helpers (unchanged)
   /* Pushes to /capsules with mutated query params; isolates query logic */
