@@ -6,11 +6,13 @@ import { Toaster } from '@/components/ui/sonner';
 import ProgressBarLoading from './components/shared/Progressbar';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.PUBLIC_URL ?? 'http://localhost:3000'),
   title: 'سایت کپسول',
   description: 'کپسول یه جور زمان‌نگهداره. خاطره‌هات رو با صدا، عکس یا نوشته می‌ذاری توش، زمان باز شدنش رو مشخص می‌کنی، و بعد... می‌مونه تا روزی که برگردی و دوباره بخونیش. برای خودت، برای یه عزیز، یا حتی واسه کسی که هنوز پیداش نکردی.',
   icons: [{ url: '/images/Logo.png' }],
   openGraph: {
     title: 'سایت کپسول',
+    url: process.env.PUBLIC_URL ?? 'http://localhost:3000',
     description: 'کپسول یه جور زمان‌نگهداره. خاطره‌هات رو با صدا، عکس یا نوشته می‌ذاری توش، زمان باز شدنش رو مشخص می‌کنی، و بعد... می‌مونه تا روزی که برگردی و دوباره بخونیش. برای خودت، برای یه عزیز، یا حتی واسه کسی که هنوز پیداش نکردی.',
     images: [
       {
@@ -20,8 +22,14 @@ export const metadata: Metadata = {
         alt: 'سایت کپسول',
       },
     ],
-    locale : 'fa_IR',
-    type : 'website'
+    locale: 'fa_IR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'سایت کپسول',
+    description: 'کپسول یه جور زمان‌نگهداره. خاطره‌هات رو با صدا، عکس یا نوشته می‌ذاری توش، زمان باز شدنش رو مشخص می‌کنی، و بعد... می‌مونه تا روزی که برگردی و دوباره بخونیش. برای خودت، برای یه عزیز، یا حتی واسه کسی که هنوز پیداش نکردی.',
+    images: ['/images/Logo.png'],
   },
 };
 
