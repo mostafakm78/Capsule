@@ -31,6 +31,11 @@ interface Logo {
   bungee: { className: string };
 }
 
+interface FetchError {
+  status: number;
+  message: string;
+}
+
 /* Static data: header nav links used in the sub-header */
 const headerLinks: LinkProps[] = [
   { link: '/', title: 'صفحه اصلی' },
@@ -73,15 +78,20 @@ export default function Header({ bungee }: Logo) {
   // ───────────────────────── Effect: fetch current user ─────────────────────────
   // On mount, try to resolve authenticated user; if 403, raise banned alert
   useEffect(() => {
-    (async () => {
-      try {
-        await dispatch(fetchMe()).unwrap();
-      } catch (error) {
-        if (error === 403) {
-          setBannedAlert(true);
-        }
-      }
-    })();
+    const promise = dispatch(fetchMe());
+
+    promise
+      .unwrap()
+      .then((me) => {
+        setBannedAlert(Boolean(me.isBanned));
+      })
+      .catch((err: FetchError) => {
+        if (err.status === 403 && err.message === 'User is banned') setBannedAlert(true);
+      });
+
+    return () => {
+      promise.abort();
+    };
   }, [dispatch]);
 
   // ───────────────────────── GSAP: intro animations ─────────────────────────

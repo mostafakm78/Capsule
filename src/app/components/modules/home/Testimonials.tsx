@@ -5,10 +5,8 @@ import { BiSolidLeftArrow, BiSolidRightArrow } from 'react-icons/bi';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import dynamic from 'next/dynamic';
+import Card from './Card';
 
-// Dynamically import the Card (Swiper) to avoid SSR issues with window/DOM APIs
-const Card = dynamic(() => import('./Card'), { ssr: false });
 
 // Minimal API surface we need from the Swiper instance
 type SwiperApi = {

@@ -4,152 +4,120 @@ import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useRef } from 'react';
 import Image from 'next/image';
+import { Separator } from '@/components/ui/separator';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 export default function UseCases() {
   // Refs used for cursor-follow radial gradients; must stay attached to <div> for typing compatibility
   const divRef = useRef<HTMLDivElement | null>(null);
-  const divTwoRef = useRef<HTMLDivElement | null>(null);
 
-  useGSAP(() => {
-    // Scoped GSAP context to cleanly revert animations on unmount
-    const ctx = gsap.context(() => {
-      // Infinite conic-gradient rotation (CSS custom property --angle)
-      gsap.to('.spinning-gradient', {
-        duration: 7,
-        repeat: -1,
-        ease: 'none',
-        '--angle': '+=360deg',
-      });
+  useGSAP(
+    () => {
+      const ctx = gsap.context(() => {
+        const mm = gsap.matchMedia();
 
-      // Second angle rotation to create a richer effect (CSS custom property --angleTwo)
-      gsap.to('.spinning-gradient', {
-        duration: 7,
-        repeat: -1,
-        ease: 'none',
-        '--angleTwo': '+=360deg',
-      });
+        mm.add('(min-width: 1000px)', () => {
+          const layers = gsap.utils.toArray<HTMLElement>('.layer');
+          const total = layers.length;
 
-      // Light oscillation on each ".dot" element
-      const dots = gsap.utils.toArray('.dot');
-      dots.forEach((dot) => {
-        gsap.fromTo(
-          dot as HTMLElement,
-          { x: -20 },
-          {
-            x: 20,
-            duration: 0.9,
-            ease: 'sine.inOut',
-            yoyo: true,
-            repeat: -1,
-            stagger: 0.3,
-          }
-        );
-      });
+          layers.forEach((el, i) => {
+            gsap.fromTo(
+              el,
+              { y: 1000, opacity: 0.7 },
+              {
+                y: 0,
+                opacity: 1,
+                ease: 'power2.out',
+                scrollTrigger: {
+                  trigger: '#pinned-section',
+                  start: () => `top+=${i * window.innerHeight} top`,
+                  end: () => `+=${window.innerHeight}`,
+                  toggleActions: 'play none none reverse',
+                  scrub: 1,
+                },
+              }
+            );
+          });
 
-      // Desktop-only layered entrance animations
-      const mm = gsap.matchMedia();
-
-      mm.add('(min-width: 1000px)', () => {
-        const layers = gsap.utils.toArray('.layer');
-
-        layers.forEach((layer, i) => {
-          const element = layer as HTMLElement;
-          const isFadeOnly = element.classList.contains('fade-layer');
-          const isRightOnly = element.classList.contains('right-layer');
-
-          // Configure from/to vars based on layer kind
-          let fromVars: gsap.TweenVars = {};
-          let toVars: gsap.TweenVars = { opacity: 1 };
-
-          if (isFadeOnly) {
-            fromVars = { ...fromVars, x: -500, opacity: 0 };
-            toVars = { ...toVars, x: 0 };
-          } else if (isRightOnly) {
-            fromVars = { ...fromVars, x: 500, opacity: 0 };
-            toVars = { ...toVars, x: 0 };
-          } else {
-            fromVars = { ...fromVars, y: 1000, opacity: 0.7 };
-            toVars = { ...toVars, y: 0 };
-          }
-
-          // Scroll-triggered entrance for each layer
-          gsap.fromTo(element, fromVars, {
-            ...toVars,
-            duration: 1,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: '#pinned-section',
-              start: () => `top+=${i * window.innerHeight} top`,
-              end: () => `+=${window.innerHeight}`,
-              toggleActions: 'play none none reverse',
-              scrub: false,
+          const heights = ['0px', '200px', '450px', '100vh'];
+          ScrollTrigger.create({
+            trigger: '#pinned-section',
+            start: 'top top',
+            end: () => `+=${total * window.innerHeight}`,
+            pin: true,
+            pinSpacing: true,
+            scrub: 1,
+            anticipatePin: 1,
+            onUpdate(self) {
+              const step = Math.min(total, Math.max(0, Math.round(self.progress * total)));
+              const h = heights[step] ?? heights[heights.length - 1];
+              if (divRef.current) {
+                gsap.to(divRef.current, {
+                  ['--before-h' as string]: h,
+                  duration: 0.3,
+                  ease: 'power2.out',
+                  overwrite: 'auto',
+                });
+              }
             },
           });
-        });
 
-        // Pin the whole section across the stacked layer scroll length
-        ScrollTrigger.create({
-          trigger: '#pinned-section',
-          start: 'center center',
-          end: () => `+=${document.querySelectorAll('.layer').length * window.innerHeight}`,
-          pin: true,
-          pinSpacing: true,
+          requestAnimationFrame(() => ScrollTrigger.refresh());
         });
       });
-    });
 
-    // Cleanup GSAP on unmount
-    return () => ctx.revert();
-  }, []);
-
-  // Mouse-follow handler to update CSS vars for radial highlight (per container)
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, ref: React.RefObject<HTMLDivElement | null>) => {
-    const div = ref.current;
-    if (!div) return;
-
-    const rect = div.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    gsap.to(div, {
-      duration: 0.3,
-      delay: 0.1,
-      ease: 'power2.out',
-      '--x': `${x}px`,
-      '--y': `${y}px`,
-    });
-  };
+      return () => ctx.revert();
+    },
+    { scope: divRef }
+  );
 
   return (
     // Main pinned section for "What does Capsule do?"
-    <section aria-label="کپسول چیکار میکنه ؟" id="pinned-section" className="lg:h-[700px]">
-      {/* Two-column responsive layout (textual cards left, hero message right) */}
-      <section className="flex lg:flex-row flex-col h-full w-full px-1 md:px-6 lg:px-10 gap-10">
-        {/* LEFT COLUMN: interactive card stack with radial hover highlight */}
-        {/* Keep as <div> due to attached ref typing (HTMLDivElement) */}
-        <div
-          ref={divRef}
-          onMouseMove={(e) => handleMouseMove(e, divRef)}
-          className={`h-full relative lg:p-20 z-[1] lg:w-[50%] w-full bg-foreground/10 py-2 md:py-6 rounded-xl overflow-hidden flex flex-col justify-around items-center gap-10 before:content-[''] before:absolute before:bg-[radial-gradient(var(--color-primary))] before:w-[800px] before:h-[800px] before:top-[var(--y)] before:left-[var(--x)] before:-translate-x-1/2 before:-translate-y-1/2 before:rounded-full before:opacity-0 hover:before:opacity-100 before:blur-2xl after:content-[''] after:absolute after:inset-0.5 after:rounded-lg after:bg-background/85`}
-        >
-          {/* Card 1: Use-case overview */}
-          <article className="md:w-[90%] w-[95%] p-4 lg:absolute relative md:h-[90%] h-[95%] shadow-md flex-col layer z-10 bg-[#CC66DA] flex justify-around items-center rounded-lg">
-            {/* Spinning conic-gradient border (background layer) */}
-            <div className={`spinning-gradient absolute inset-0 -z-10 rounded-lg p-[2.5px] bg-[conic-gradient(from_var(--angle),transparent_70%,var(--color-foreground))] opacity-50`}>
-              <div className="w-full h-full rounded-md bg-[#CC66DA]"></div>
-            </div>
+    <section aria-label="کپسول چیکار میکنه ؟" id="pinned-section" className="lg:h-screen p-4">
+      {/* Keep as <div> due to attached ref typing (HTMLDivElement) */}
+      <div
+        ref={divRef}
+        className={`before-target h-full relative p-8 z-[1] w-full bg-foreground/10 rounded-xl overflow-hidden flex lg:flex-row flex-col justify-around items-center gap-10
+        before:content-[''] before:absolute before:bg-foreground dark:before:bg-secondary before:w-full before:bottom-0 before:left-1/2 before:-translate-x-1/2 before:opacity-80 before:blur-lg
+        after:content-[''] after:absolute after:inset-0.5 after:rounded-lg after:bg-background/90`}
+        style={{ ['--before-h' as string]: '0px' }}
+      >
+        <style jsx>{`
+          .before-target::before {
+            height: var(--before-h, 0px);
+          }
+        `}</style>
 
+        <div className="absolute inset-0.5 rounded-lg dark:bg-background/70 bg-background/50" />
+        <div className="lg:w-1/2 w-full h-full flex flex-col items-center justify-around gap-4 z-10">
+          <div className="flex items-center justify-center w-full gap-3">
+            <Image src="/images/Logo.png" alt="site Logo" width={500} height={500} className="lg:w-[100px] lg:h-[100px] w-[70px] h-[70px]" />
+            <h1 className="lg:text-4xl text-2xl font-kalmeh">کپسول چیکار میکنه ؟</h1>
+          </div>
+          <p className="text-xl relative text-foreground/80 pr-4 before:content-[''] before:absolute before:h-full before:w-0.5 before:right-0 before:top-0 before:bg-foreground/50">
+            <strong className="underline-offset-4 underline">کپسول یه جور زمان‌نگهداره.</strong> خاطره‌هات رو با صدا، عکس یا نوشته می‌ذاری توش، زمان باز شدنش رو مشخص می‌کنی، و بعد... می‌مونه تا روزی که برگردی و دوباره بخونیش. برای خودت، برای یه عزیز، یا حتی واسه کسی که هنوز پیداش نکردی.
+          </p>
+          <p className="text-xl relative text-foreground/80 pr-4 before:content-[''] before:absolute before:h-full before:w-0.5 before:right-0 before:top-0 before:bg-foreground/50">
+            با کپسول میتونی خاطرات ، تجربه ها و حتی هدف های خودت با دیگران در <strong className="underline-offset-4 underline">کپسول های عمومی</strong> به اشتراک بزاری. میتونی برای خودت نگه داری و اطمینان داشته باشی از اینکه نوشته هات همیشه دردسترس هست و هروقت بخوای میتونی تغییرشون بدی.
+          </p>
+        </div>
+
+        <Separator orientation="vertical" className="bg-foreground/20 z-10 hidden lg:block" />
+        <Separator className="bg-foreground/30 z-10 lg:hidden" />
+
+        <div className="lg:w-1/2 w-full h-full z-10 flex flex-col items-center justify-between">
+          {/* Card 1: Use-case overview */}
+          <article className="p-2 relative w-full layer z-10 bg-transparent flex flex-col justify-between items-center gap-2 rounded-lg">
             {/* Card header: icon/title/subtitle */}
-            <header className="flex flex-col items-center gap-4">
-              <Image src="/images/question.png" alt="think" width={200} height={200} className="drop-shadow-xl" />
+            <header className="flex items-center justify-center gap-6">
+              <Image src="/images/question.png" alt="think" width={200} height={200} className="drop-shadow-xl w-20 h-20" />
               <h3 className="text-foreground lg:text-3xl md:text-2xl text-xl font-kalmeh">به چه دردی میخوره ؟</h3>
-              <p className="text-foreground/70 lg:text-xl md:text-lg text-base">کاربرد ها</p>
             </header>
+            <p className="text-foreground/70 lg:text-xl md:text-lg text-base">کاربرد ها</p>
 
             {/* Bullet list of use cases */}
-            <ul className="list-disc lg:text-xl md:text-lg px-4 py-10 lg:py-2 text-base text-foreground/90">
+            <ul className="list-disc flex flex-wrap items-center justify-center gap-x-8 gap-y-1 text-base text-foreground/90">
               <li>برای خودت در آینده</li>
               <li>برای فرزندت در ۱۰ سال بعد</li>
               <li>برای عاشقانه‌ای که هنوز نیومده</li>
@@ -158,21 +126,16 @@ export default function UseCases() {
           </article>
 
           {/* Card 2: How it works (3 steps) */}
-          <article className="md:w-[90%] w-[95%] p-4 lg:absolute relative md:h-[90%] h-[95%] shadow-md flex-col layer z-10 bg-secondary flex justify-around items-center rounded-lg">
-            {/* Spinning conic-gradient border (background layer) */}
-            <div className={`spinning-gradient absolute inset-0 -z-10 rounded-lg p-[2.5px] bg-[conic-gradient(from_var(--angle),transparent_70%,var(--color-foreground))] opacity-50`}>
-              <div className="w-full h-full rounded-md bg-secondary"></div>
-            </div>
-
+          <article className="p-2 relative w-full layer z-10 bg-transparent flex flex-col justify-between items-center gap-2 rounded-lg">
             {/* Card header: icon/title/subtitle */}
-            <header className="flex flex-col text-justify items-center gap-4">
-              <Image src="/images/think.png" alt="think" width={200} height={200} className="drop-shadow-xl" />
-              <h3 className="text-foreground lg:text-3xl md:text-2xl text-xl font-kalmeh">چطور کار میکنه ؟</h3>
-              <p className="text-foreground/70 lg:text-xl md:text-lg text-base">مراحل ساخت کپسول در 3 قدم</p>
+            <header className="flex items-center justify-center gap-6">
+              <Image src="/images/think.png" alt="think" width={200} height={200} className="drop-shadow-xl w-17 h-25" />
+              <h3 className="text-foreground lg:text-2xl text-xl font-kalmeh">چطور کار میکنه ؟</h3>
             </header>
+            <p className="text-foreground/70 lg:text-xl md:text-lg text-base">مراحل ساخت کپسول در 3 قدم</p>
 
             {/* Bullet list of steps */}
-            <ul className="list-disc lg:text-xl md:text-lg px-4 py-10 lg:py-2 text-base text-foreground/90">
+            <ul className="list-disc flex flex-wrap items-center justify-center gap-x-8 gap-y-1 text-base text-foreground/90">
               <li>مرحله ۱: انتخاب محتوا (متن، صدا، تصویر)</li>
               <li>مرحله ۲: تعیین زمان ارسال</li>
               <li>مرحله ۳: ارسال و انتظار برای باز شدن</li>
@@ -180,55 +143,24 @@ export default function UseCases() {
           </article>
 
           {/* Card 3: Privacy & security */}
-          <article className="md:w-[90%] w-[95%] p-4 lg:absolute relative md:h-[90%] h-[95%] shadow-md flex-col layer z-10 bg-primary flex justify-around items-center rounded-lg">
-            {/* Spinning conic-gradient border (background layer) */}
-            <div className={`spinning-gradient absolute inset-0 -z-10 rounded-lg p-[2.5px] bg-[conic-gradient(from_var(--angle),transparent_70%,var(--color-foreground))] opacity-50`}>
-              <div className="w-full h-full rounded-md bg-primary"></div>
-            </div>
-
+          <article className="p-2 relative w-full layer z-10 bg-transparent flex flex-col justify-between items-center gap-2 rounded-lg">
             {/* Card header: icon/title/subtitle */}
-            <header className="flex flex-col items-center justify-center gap-4">
-              <Image src="/images/privacy.png" alt="think" width={200} height={200} className="drop-shadow-xl" />
-              <h3 className="text-foreground lg:text-3xl md:text-2xl text-xl font-kalmeh">امنیت و حریم خصوصی داره ؟</h3>
-              <p className="text-foreground/70 lg:text-xl md:text-lg text-base">بله خیلی مهمه چون کاربر داده شخصی می‌ده</p>
+            <header className="flex items-center justify-center gap-6">
+              <Image src="/images/privacy.png" alt="think" width={200} height={200} className="drop-shadow-xl w-25 h-20" />
+              <h3 className="text-foreground lg:text-2xl text-xl font-kalmeh">امنیت و حریم خصوصی داره ؟</h3>
             </header>
 
+            <p className="text-foreground/70 lg:text-xl md:text-lg text-base">بله خیلی مهمه چون کاربر داده شخصی می‌ده</p>
+
             {/* Bullet list of security claims */}
-            <ul className="list-disc lg:text-xl md:text-lg px-4 py-10 lg:py-2 text-base text-foreground/90">
+            <ul className="list-disc flex flex-wrap items- justify-center gap-x-8 gap-y-1 text-base text-foreground/90">
               <li>رمزگذاری انتها به انتها</li>
               <li>فقط گیرنده بهش دسترسی داره</li>
               <li>روی سرورهای امن نگهداری می‌شه</li>
             </ul>
           </article>
         </div>
-
-        {/* RIGHT COLUMN: headline, decorative dots, and explanatory paragraph */}
-        {/* Keep as <div> due to attached ref typing (HTMLDivElement) */}
-        <div
-          ref={divTwoRef}
-          onMouseMove={(e) => handleMouseMove(e, divTwoRef)}
-          className={`h-full relative md:p-20 sm:p-10 p-4 z-[1] lg:w-[50%] w-full bg-foreground/10 py-6 rounded-xl overflow-hidden flex flex-col justify-around items-center gap-10 before:content-[''] before:absolute before:bg-[radial-gradient(var(--color-secondary))] before:w-[800px] before:h-[800px] before:top-[var(--y)] before:left-[var(--x)] before:-translate-x-1/2 before:-translate-y-1/2 before:rounded-full before:opacity-0 hover:before:opacity-100 before:blur-2xl after:content-[''] after:absolute after:inset-0.5 after:rounded-lg after:bg-background/85`}
-        >
-          {/* Big headline block */}
-          <header className="w-[100%] lg:w-[90%] h-[50%] pt-10 lg:pt-0 flex flex-col layer z-10 justify-around items-center rounded-lg">
-            <h3 className="text-foreground lg:text-5xl text-2xl text-center font-bold leading-snug">خاطره هات رو در کپسول زمان ذخیره کن!</h3>
-          </header>
-
-          {/* Decorative moving dots (purely illustrative) */}
-          <div className="w-[90%] layer z-10 flex gap-6 justify-center items-center rounded-lg  fade-layer">
-            <div className="dot lg:w-5 lg:h-5 h-3 w-3 rounded-full bg-secondary"></div>
-            <div className="dot lg:w-5 lg:h-5 h-3 w-3 rounded-full bg-secondary"></div>
-            <div className="dot lg:w-5 lg:h-5 h-3 w-3 rounded-full bg-secondary"></div>
-          </div>
-
-          {/* Explanatory paragraph block */}
-          <article className="w-[100%] lg:w-[90%] h-[50%] pb-10 lg:pb-0 flex-col layer z-10 flex justify-around items-center rounded-lg right-layer">
-            <p className="text-foreground/80 lg:text-xl text-base text-justify">
-              کپسول یه جور زمان‌نگهداره. خاطره‌هات رو با صدا، عکس یا نوشته می‌ذاری توش، زمان باز شدنش رو مشخص می‌کنی، و بعد... می‌مونه تا روزی که برگردی و دوباره بخونیش. برای خودت، برای یه عزیز، یا حتی واسه کسی که هنوز پیداش نکردی.
-            </p>
-          </article>
-        </div>
-      </section>
+      </div>
     </section>
   );
 }
