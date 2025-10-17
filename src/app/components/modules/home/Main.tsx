@@ -10,20 +10,20 @@ export default function Main() {
     // Landmark region for the primary content of the page
     // Note: Child components already expose their own semantic structure (<header>, <section>, etc.)
     <main aria-label="main section">
-      {/* Hero banner: page introduction and primary CTA */}
-      <HeroSection />
+        {/* Hero banner: page introduction and primary CTA */}
+        <HeroSection />
 
-      {/* Short explanatory "What is this?" feature trio */}
-      <WhatIsThis />
+        {/* Short explanatory "What is this?" feature trio */}
+        <WhatIsThis />
 
-      {/* Use-cases / how-it-works stacked cards with scroll/pin effects */}
-      <UseCases />
+        {/* Use-cases / how-it-works stacked cards with scroll/pin effects */}
+        <UseCases />
 
-      {/* Testimonials carousel + controls */}
-      <Testimonials />
+        {/* Testimonials carousel + controls */}
+        <Testimonials />
 
-      {/* Registration CTA section */}
-      <Register />
+        {/* Registration CTA section */}
+        <Register />
     </main>
   );
 }
