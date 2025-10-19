@@ -187,10 +187,12 @@ export default function DashboardLayoutIndex({ children }: { children: React.Rea
             </div>
 
             {/* Current user avatar (falling back to default image) */}
-            <Avatar className="h-10 w-10 ring-2 ring-secondary">
-              <AvatarImage className="object-cover" src={user?.avatar ? `${baseURL}/images/${user.avatar}` : '/images/default.png'} />
-              <AvatarFallback>...</AvatarFallback>
-            </Avatar>
+            <Link href="/dashboard/setting" className='hover:scale-105 duration-300'>
+              <Avatar className="h-10 w-10 ring-2 ring-secondary">
+                <AvatarImage className="object-cover" src={user?.avatar ? `${baseURL}/images/${user.avatar}` : '/images/default.png'} />
+                <AvatarFallback>...</AvatarFallback>
+              </Avatar>
+            </Link>
           </div>
         </nav>
 

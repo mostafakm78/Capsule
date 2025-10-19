@@ -25,11 +25,11 @@ export default function Footer({ bungee }: Logo) {
   }, []);
 
   return (
-    <footer aria-label="پاورقی سایت" role="contentinfo" className="bg-linear-to-b from-background to-foreground/20">
+    <footer aria-label="پاورقی سایت" role="contentinfo" className="lg:px-10 bg-linear-to-b from-background to-foreground/20">
       <div className="container mx-auto">
         <div className="flex flex-col pb-16 gap-12 justify-center pt-16 items-center">
           {/* UI Section: brand strip + social navigation */}
-          <section className="flex lg:flex-row flex-col w-full lg:w-2/4 text-5xl text-muted items-center gap-10 justify-center px-12">
+          <section className="flex lg:flex-row flex-col w-full text-5xl text-muted items-center gap-10 justify-center px-12">
             {/* UI: brand/logo block; purely presentational text + image */}
             <div className="flex text-3xl md:text-5xl items-center gap-2">
               {/* UI: brand image with proper alt; decorative but still descriptive */}
@@ -39,7 +39,9 @@ export default function Footer({ bungee }: Logo) {
             </div>
 
             {/* UI: visual divider between brand and social links (decorative) */}
-            <Separator className="bg-foreground/15 mr-6 hidden lg:block" />
+            <div className="hidden w-full lg:block mr-10">
+              <Separator className="bg-foreground/15 hidden w-full lg:block" />
+            </div>
 
             {/* Semantics: social media navigation; localized aria-label */}
             <nav aria-label="شبکه‌های اجتماعی">
@@ -80,9 +82,9 @@ export default function Footer({ bungee }: Logo) {
           </section>
 
           {/* UI Section: informational grid (about, site links, contacts) */}
-          <section className="grid lg:grid-cols-12 lg:gap-0 gap-8 grid-cols-1 w-full px-4 md:px-12 place-items-center" aria-label="بخش‌های اطلاعاتی پاورقی">
+          <section className="grid lg:grid-cols-12 lg:gap-0 gap-8 grid-cols-1 w-full px-4 place-items-center" aria-label="بخش‌های اطلاعاتی پاورقی">
             {/* UI: About block; descriptive text about the platform */}
-            <section className="col-span-4 self-start flex flex-col lg:mr-28 text-right justify-between gap-4">
+            <section className="col-span-4 self-start flex flex-col text-right justify-between gap-4">
               {/* Semantics: section title as a subheading within footer */}
               <h2 className="font-kalmeh text-xl lg:self-start self-center text-foreground">درباره کپسول</h2>
               {/* UI: about paragraph; provides brief platform description */}
@@ -142,7 +144,7 @@ export default function Footer({ bungee }: Logo) {
             </nav>
 
             {/* Semantics: contact information; <address> is appropriate for contact details */}
-            <address className="col-span-4 lg:ml-28 not-italic flex flex-col gap-4 self-start" aria-label="اطلاعات تماس">
+            <address className="col-span-4 not-italic flex flex-col gap-4 self-start" aria-label="اطلاعات تماس">
               {/* UI: subheading for contact section */}
               <h2 className="font-kalmeh lg:self-start self-center text-xl">ارتباط با ما</h2>
 

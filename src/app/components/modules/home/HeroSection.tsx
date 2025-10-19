@@ -28,12 +28,12 @@ export default function HeroSection() {
 
   return (
     // Hero banner for the page; exposes an accessible label for screen readers
-    <header aria-label="معرفی سایت" className="flex flex-col relative mb-6 bg-linear-to-b from-foreground/20 to-background justify-center lg:pt-16 items-center">
+    <header aria-label="معرفی سایت" className="flex flex-col w-full relative mb-6 bg-linear-to-b from-foreground/20 to-background justify-between lg:pt-16 items-center">
       {/* Semantic wrapper for hero content columns (text/media) */}
       <div className="container mx-auto">
-        <section className="flex lg:flex-row flex-col-reverse px-10 items-center md:gap-4 lg:py-6 pb-6 lg:gap-8 rounded-lg w-full">
+        <section className="flex lg:flex-row flex-col-reverse justify-around items-center md:gap-4 lg:py-6 pb-6 lg:gap-8 rounded-lg w-full">
           {/* Left column: textual pitch + CTA (grouped as a section) */}
-          <section className="flex flex-col lg:w-1/2 w-full gap-10 justify-center items-center">
+          <section className="flex flex-col lg:w-1/2 w-full gap-10 justify-center items-center px-4 lg:px-0">
             {/* Subsection: Step 1 title + subtitle */}
             <section className="text-center">
               {/* Main hero slogans (animated via GSAP classes) */}
@@ -54,9 +54,11 @@ export default function HeroSection() {
             </section>
 
             {/* Primary call-to-action button; navigation handled by Next.js router */}
-            <ShinyButton onClick={() => router.push('/login')} className="md:w-2/3 w-full bg-secondary hover:bg-primary hover:border-primary shadow-lg py-4">
-              <span className="start">شروع رایگان</span>
-            </ShinyButton>
+            <div className="md:w-2/3 w-full flex items-center justify-center px-10 lg:px-0">
+              <ShinyButton onClick={() => router.push('/login')} className="w-full bg-secondary hover:bg-primary hover:border-primary shadow-lg py-4">
+                <span className="start">شروع رایگان</span>
+              </ShinyButton>
+            </div>
           </section>
 
           {/* Right column: illustrative visual area (as a figure to semantically group media) */}

@@ -45,9 +45,9 @@ export default function Register() {
   return (
     // Main register section (region) with accessible name for screen readers
     <div className="container mx-auto">
-      <section aria-label="ثبت نام در سایت" className="flex flex-col mb-20 px-4 md:px-6 lg:px-10 justify-center lg:mt-44 mt-20 items-center">
+      <section aria-label="ثبت نام در سایت" className="flex flex-col mb-20 justify-around lg:mt-44 mt-20 items-center">
         {/* Semantic grouping for the two-column layout (text + CTA) */}
-        <section className="flex lg:flex-row flex-col gap-10 justify-center items-center">
+        <section className="flex lg:flex-row w-full lg:px-10 px-4 flex-col gap-10 justify-around items-center">
           {/* Left column: statement + supporting paragraph as a self-contained article */}
           <article className="w-full space-y-6">
             {/* Section header for the left column (headline + decorative icon) */}
@@ -60,11 +60,11 @@ export default function Register() {
               </svg>
 
               {/* Key message heading */}
-              <h4 className="section-one lg:text-4xl lg:text-right text-xl md:text-2xl mx-auto lg:mx-0 font-kalmeh text-foreground">خاطرات امروز، گنجینه فردای تو هستند</h4>
+              <h4 className="section-one lg:text-4xl lg:text-right text-3xl mx-auto lg:mx-0 font-kalmeh text-foreground">خاطرات امروز، گنجینه فردای تو هستند</h4>
             </header>
 
             {/* Supporting copy under the headline */}
-            <p className="section-one lg:text-xl  md:text-right text-sm md:text-base text-foreground/70 mx-auto lg:mx-0 w-full lg:w-2/3 lg:mr-14 ">متن، عکس، ویدئو یا صدایی که امروز ثبت می‌کنی، فردا ممکنه باارزش‌ترین چیزی باشه که داری</p>
+            <p className="section-one lg:text-xl md:text-right text-sm md:text-base text-foreground/70 mx-auto text-center lg:text-right lg:mx-0 w-full lg:w-2/3 lg:mr-14 lg:px-0 px-10">متن، عکس، ویدئو یا صدایی که امروز ثبت می‌کنی، فردا ممکنه باارزش‌ترین چیزی باشه که داری</p>
           </article>
 
           {/* Right column: CTA area and trust statement */}
@@ -84,9 +84,11 @@ export default function Register() {
             </div>
 
             {/* Primary CTA button; navigates to login/register flow */}
-            <ShinyButton onClick={() => router.push('/login')} className="w-full bg-secondary hover:bg-primary hover:border-primary shadow-lg py-4">
-              شروع رایگان
-            </ShinyButton>
+            <div className="md:w-2/3 w-full flex items-center justify-center px-10 lg:px-0">
+              <ShinyButton onClick={() => router.push('/login')} className="w-full bg-secondary hover:bg-primary hover:border-primary shadow-lg py-4">
+                شروع رایگان
+              </ShinyButton>
+            </div>
           </section>
         </section>
       </section>

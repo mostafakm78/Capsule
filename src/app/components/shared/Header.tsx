@@ -189,7 +189,7 @@ export default function Header({ bungee }: Logo) {
       ref={scope}
       role="banner"
       aria-label="هدر سایت"
-      className={`flex z-10 flex-col relative w-full ${
+      className={`flex z-10 flex-col relative w-full lg:px-10 ${
         pathname === '/' ? 'bg-foreground/20' : 'bg-background pb-10 after:bg-linear-to-b after:from-foreground/30 after:to-foreground/10 after:content-[""] after:w-full after:h-full after:absolute dark:after:opacity-45 after:opacity-80 after:z-[1] after:blur-2xl after:pointer-events-none'
       } items-center justify-center`}
     >
@@ -232,7 +232,7 @@ export default function Header({ bungee }: Logo) {
 
           {/* ===================== Primary navigation ===================== */}
           {/* Semantics: main nav (site-level); localized aria-label */}
-          <nav className="header-main relative w-11/12 z-[60] lg:w-10/12 bg-background py-10 px-3 sm:px-6 md:px-10 mt-8 flex items-center shadow-lg justify-around rounded-xl gap-2 md:gap-4 will-change-transform" role="navigation" aria-label="منوی اصلی">
+          <nav className="header-main relative w-11/12 z-[60] lg:w-full bg-background py-8 px-3 sm:px-6 md:px-10 mt-8 flex items-center shadow-lg justify-around rounded-xl gap-2 md:gap-4 will-change-transform" role="navigation" aria-label="منوی اصلی">
             {/* Mobile menu trigger; Sidebar handles its own accessibility */}
             <div className="nav-link-anim lg:hidden text-4xl cursor-pointer will-change-transform" aria-label="منوی کناری" role="button" tabIndex={0}>
               {isMobile && <Sidebar />}
@@ -240,7 +240,7 @@ export default function Header({ bungee }: Logo) {
 
             {/* Brand block: logo + wordmark (acts as site identity) */}
             <div className="brand-anim flex xl:text-5xl md:text-4xl text-2xl text-muted items-center gap-2 justify-center will-change-transform" aria-label="لوگوی سایت">
-              <Image className="logo h-[30px] w-[30px] lg:h-[40px] lg:w-[40px] xl:w-[50px] xl:h-[50px]" src="/images/Logo.png" alt="لوگوی کپسول" width={20} height={20} />
+              <Image className="logo h-[30px] w-[30px] lg:h-[40px] lg:w-[40px] xl:w-[50px] xl:h-[50px]" quality={90} src="/images/Logo.png" alt="لوگوی کپسول" width={500} height={500} />
               <h1 className={`${logoClassName}`}>Capsule</h1>
             </div>
 

@@ -44,9 +44,9 @@ export default function WhatIsThis() {
     // Main section describing "What is Capsule?"
     <section aria-label="کپسول چیه ؟">
       <div className="container mx-auto">
-        <div className="flex flex-col px-10 xl:mt-24 justify-start items-center">
+        <div className="flex w-full lg:px-10 flex-col xl:mt-24 justify-start items-center">
           {/* Semantic wrapper for the trio of feature steps */}
-          <section className="flex lg:flex-row flex-col gap-4 lg:gap-0 w-full xl:w-2/3 lg:w-3/4 px-10 justify-between">
+          <section className="flex lg:flex-row flex-col gap-4 lg:gap-0 w-full xl:w-2/3 lg:w-3/4 lg:px-10 justify-between">
             {/* Feature 1: Add photos */}
             <article className="text flex items-center justify-center gap-2 text-xl lg:text-2xl">
               {/* Icon with decorative halo via ::after */}
@@ -75,7 +75,7 @@ export default function WhatIsThis() {
           </section>
 
           {/* Decorative arrow separator; kept as a figure for better media semantics */}
-          <figure className="arrow my-10">
+          <figure className="arrow my-20">
             <svg
               className="text-foreground/70 h-[70px] lg:h-[100px]"
               width="98"

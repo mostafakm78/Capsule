@@ -126,7 +126,7 @@ export default function UserPassChange() {
 
       {/* Submit button: disabled when both fields are empty */}
       <div className="self-center">
-        <Button disabled={!currentPassword && !newPassword} onClick={handleSubmit} className="cursor-pointer">
+        <Button disabled={!currentPassword && !newPassword} onClick={handleSubmit} className="cursor-pointer text-lg py-6">
           ثبت تغییرات
         </Button>
       </div>

@@ -278,7 +278,7 @@ export default function UserAccInfo() {
 
       {/* Submit button (disabled until something changes) */}
       <div className="self-center mt-4">
-        <Button disabled={!isChanged()} onClick={handleSubmit} className="cursor-pointer">
+        <Button disabled={!isChanged()} onClick={handleSubmit} className="cursor-pointer text-lg py-6">
           ثبت تغییرات
         </Button>
       </div>

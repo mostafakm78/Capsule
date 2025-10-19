@@ -55,9 +55,9 @@ export default function Testimonials() {
   return (
     // Root region for the testimonials area with an accessible name
     <div className="container mx-auto">
-      <section aria-label="تجربه کاربران" className="flex mb-16 px-4 md:px-6 lg:px-10 justify-center lg:mt-44 mt-20 items-center">
+      <section aria-label="تجربه کاربران" className="flex mb-16 justify-center mt-32 items-center">
         {/* Two-column responsive layout: left (copy/controls) + right (carousel) */}
-        <section className="flex lg:flex-row flex-col gap-10 justify-center items-center">
+        <section className="flex w-full lg:px-10 px-4 lg:flex-row flex-col gap-10 justify-around items-center">
           {/* Introductory copy and local controls for the testimonials */}
           <article className="w-full space-y-6">
             {/* Heading row with decorative icon and section title */}
@@ -67,11 +67,11 @@ export default function Testimonials() {
                 <circle cx="30" cy="13" r="7" fill="currentColor" fillOpacity="0.4"></circle>
                 <circle cx="15" cy="4" r="4" fill="currentColor" fillOpacity="0.7"></circle>
               </svg>
-              <h4 className="lg:text-4xl text-center lg:text-right text-2xl md:text-3xl font-kalmeh mx-auto lg:mx-0 text-foreground">شما در مورد کپسول چی گفتین ؟</h4>
+              <h4 className="lg:text-4xl text-center lg:text-right text-3xl font-kalmeh mx-auto lg:mx-0 text-foreground">شما در مورد کپسول چی گفتین ؟</h4>
             </header>
 
             {/* Short description/subtitle for the testimonials section */}
-            <p className="section-right lg:text-xl text-sm md:text-base text-foreground/70 lg:w-2/3 w-full lg:mr-14 mx-auto">بخش کوچیکی از نظرات کاربرای کپسول درباره تجربه ای که اینجا داشتن</p>
+            <p className="section-right lg:text-xl text-sm md:text-base text-foreground/70 lg:w-2/3 w-full text-center lg:text-right lg:mr-14 mx-auto">بخش کوچیکی از نظرات کاربرای کپسول درباره تجربه ای که اینجا داشتن</p>
 
             {/* Local navigation for the testimonial carousel (prev/next controls + decorative SVGs) */}
             <nav aria-label="گردش بین نظرات" className="section-right flex items-center w-2/3 justify-between lg:text-xl text-2xl text-foreground/70 lg:mr-14 mx-auto">

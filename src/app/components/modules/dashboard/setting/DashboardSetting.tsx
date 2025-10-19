@@ -5,7 +5,7 @@ import UserPassChange from './PassChange';
 export default function DashboardSettingIndex() {
   return (
     /* Page-level settings section (semantic landmark for the settings area) */
-    <section className="flex flex-col h-full gap-10">
+    <section>
       {/* Content wrapper: page heading + settings card container */}
       <div className="flex flex-col h-full justify-start gap-10">
         {/* Page heading: "Account Settings" with decorative dot via ::after */}
@@ -17,7 +17,7 @@ export default function DashboardSettingIndex() {
           <UserAccInfo />
 
           {/* Visual separator between account info and password change modules */}
-          <Separator className="w-full bg-foreground/20" />
+            <Separator className="w-full bg-foreground/20" />
 
           {/* Password change form (current/new/confirm) */}
           <UserPassChange />

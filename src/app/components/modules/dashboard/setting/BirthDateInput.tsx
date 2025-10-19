@@ -126,13 +126,13 @@ export default function BirthDateInputs({ birthday, setBirthday }: Props) {
     // Semantic wrapper for the three birthdate inputs (keeps existing styles intact)
     <section className="flex w-full items-center justify-center gap-2 border border-primary rounded-lg p-2">
       {/* Day input (numeric, shows Persian digits but stores ASCII internally) */}
-      <input type="text" inputMode="numeric" value={day ? toPersianDigits(day) : ''} onChange={handleDayChange} placeholder="روز" className="w/full text-center bg-transparent outline-none" />
+      <input type="text" inputMode="numeric" value={day ? toPersianDigits(day) : ''} onChange={handleDayChange} placeholder="روز" className="w-full text-center bg-transparent outline-none" />
       <span>/</span>
       {/* Month input */}
-      <input type="text" inputMode="numeric" value={month ? toPersianDigits(month) : ''} onChange={handleMonthChange} placeholder="ماه" className="w/full text-center bg-transparent outline-none" />
+      <input type="text" inputMode="numeric" value={month ? toPersianDigits(month) : ''} onChange={handleMonthChange} placeholder="ماه" className="w-full text-center bg-transparent outline-none" />
       <span>/</span>
       {/* Year input with range validation on blur */}
-      <input type="text" inputMode="numeric" value={year ? toPersianDigits(year) : ''} onChange={handleYearChange} onBlur={handleYearBlur} placeholder="سال" className="w/full text-center bg-transparent outline-none" />
+      <input type="text" inputMode="numeric" value={year ? toPersianDigits(year) : ''} onChange={handleYearChange} onBlur={handleYearBlur} placeholder="سال" className="w-full text-center bg-transparent outline-none" />
     </section>
   );
 }

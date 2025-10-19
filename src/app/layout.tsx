@@ -5,6 +5,7 @@ import { ReduxProvider } from './providers/Redux-Provider';
 import { Toaster } from '@/components/ui/sonner';
 import ProgressBarLoading from './components/shared/Progressbar';
 
+
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.PUBLIC_URL ?? 'http://localhost:3000'),
   title: 'سایت کپسول',

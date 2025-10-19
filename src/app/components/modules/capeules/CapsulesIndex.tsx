@@ -19,7 +19,7 @@ type Props = {
   capsules: GetCapsulesResponse;
 };
 
-const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL
+const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export default function CapsulesIndex({ capsules }: Props) {
   // Read authenticated user from Redux store to mark "your capsule" badges
@@ -143,14 +143,9 @@ export default function CapsulesIndex({ capsules }: Props) {
                       </div>
 
                       {/* Cover image (fallback to a default if missing) */}
-                      <Image
-                        className="object-cover w-full h-[130px] mb-2 p-0.5 rounded-t-md rounded-b-sm ring-secondary shadow-secondary/30"
-                        src={item.image ? `${baseURL}/images/${item.image}` : '/images/def.jpg'}
-                        alt={`${item.title} image`}
-                        width={500}
-                        height={500}
-                        priority
-                      />
+                      <div className="overflow-hidden rounded-t-md rounded-b-sm shadow-secondary/30">
+                        <Image className="object-cover w-full h-[130px] transform transition-transform duration-300 ease-out hover:scale-110" src={item.image ? `${baseURL}/images/${item.image}` : '/images/def.jpg'} alt={`${item.title} image`} width={500} height={500} priority />
+                      </div>
 
                       {/* Meta: owner and title */}
                       <CardDescription className="text-center text-sm text-foreground/80">

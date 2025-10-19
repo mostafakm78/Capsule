@@ -25,9 +25,6 @@ export default function Card({ setSwiperApi, isEnd, isBegining }: CardProps) {
     <>
       <section aria-labelledby="testimonials-heading">
         {/* Section heading; improves structure and discoverability */}
-        <h2 id="testimonials-heading" className="mb-3 text-foreground/70">
-          نظرات کاربران
-        </h2>
         <Swiper
           aria-label="نظرات کاربران"
           effect={'cards'}
@@ -43,7 +40,7 @@ export default function Card({ setSwiperApi, isEnd, isBegining }: CardProps) {
           {/* === Slide 1 === */}
           <SwiperSlide>
             {/* Each testimonial is a self-contained piece, so <article> is appropriate */}
-            <article className="w-full relative h-full text-background/90 flex flex-col p-6 items-center justify-center gap-4">
+            <article className="w-full relative h-full text-background/90 dark:text-foreground/90 flex flex-col p-6 items-center justify-center gap-4">
               {/* Quote content wrapped in <blockquote> for proper citation semantics */}
               <blockquote>
                 <p className="md:text-lg text-base font-light text-center">هر روز از پسرم یه عکس می‌گیرم و با چند خط توضیح توی کپسول ثبتش می‌کنم. دلم می‌خواد وقتی بزرگ شد، ببینه مامانش چقدر براش لحظه‌به‌لحظه خاطره ساخته</p>
@@ -60,7 +57,7 @@ export default function Card({ setSwiperApi, isEnd, isBegining }: CardProps) {
 
           {/* === Slide 2 === */}
           <SwiperSlide>
-            <article className="w-full h-full flex flex-col text-background/90 p-6 items-center justify-center gap-4">
+            <article className="w-full h-full flex flex-col text-background/90 dark:text-foreground/90 p-6 items-center justify-center gap-4">
               <blockquote>
                 <p className="md:text-lg text-base font-light text-center">قبل از اینکه از ایران برم، چندتا ویدئو و یادداشت از خونواده‌م توی کپسول گذاشتم. تو غربت هروقت دلم تنگ می‌شه، یه سر به خاطره‌هام می‌زنم</p>
               </blockquote>
@@ -76,7 +73,7 @@ export default function Card({ setSwiperApi, isEnd, isBegining }: CardProps) {
 
           {/* === Slide 3 === */}
           <SwiperSlide>
-            <article className="w-full h-full flex flex-col text-background/90 p-6 items-center justify-center gap-4">
+            <article className="w-full h-full flex flex-col text-background/90 dark:text-foreground/90 p-6 items-center justify-center gap-4">
               <blockquote>
                 <p className="md:text-lg text-base font-light text-center">تولد ۳۰ سالگیمو کامل توی یه کپسول ثبت کردم: عکس، ویدئو، متنِ دوستام. وقتی برگشتم و دیدمش، اشکم دراومد. کپسول مثل یک آلبوم دیجیتالِ زنده‌ست</p>
               </blockquote>
@@ -92,7 +89,7 @@ export default function Card({ setSwiperApi, isEnd, isBegining }: CardProps) {
 
           {/* === Slide 4 === */}
           <SwiperSlide>
-            <article className="w-full h-full flex flex-col text-background/90 p-6 items-center justify-center gap-4">
+            <article className="w-full h-full flex flex-col text-background/90 dark:text-foreground/90 p-6 items-center justify-center gap-4">
               <blockquote>
                 <p className="md:text-lg text-base font-light text-center">من یه کپسول ساختم برای روزی که ازدواج کنم. هر وقت حسی خاصی دارم، یه صدای کوتاه ضبط می‌کنم و می‌ذارمش اون تو. یه روزی می‌خوام با همسرم بازش کنیم</p>
               </blockquote>
