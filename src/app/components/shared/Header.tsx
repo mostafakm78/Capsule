@@ -194,9 +194,7 @@ export default function Header({ bungee }: Logo) {
       } items-center justify-center`}
     >
       <div className="container mx-auto">
-        <section
-          className={`flex z-10 flex-col relative w-full items-center justify-center`}
-        >
+        <section className={`flex z-10 flex-col relative w-full items-center justify-center`}>
           {/* ===================== Alert: banned account ===================== */}
           {/* Semantics: role="alert" to announce immediately; localized label */}
           {bannedAlert && (
@@ -234,14 +232,16 @@ export default function Header({ bungee }: Logo) {
           {/* Semantics: main nav (site-level); localized aria-label */}
           <nav className="header-main relative w-11/12 z-[60] lg:w-full bg-background py-8 px-3 sm:px-6 md:px-10 mt-8 flex items-center shadow-lg justify-around rounded-xl gap-2 md:gap-4 will-change-transform" role="navigation" aria-label="منوی اصلی">
             {/* Mobile menu trigger; Sidebar handles its own accessibility */}
-            <div className="nav-link-anim lg:hidden text-4xl cursor-pointer will-change-transform" aria-label="منوی کناری" role="button" tabIndex={0}>
+            <div title="منوی کناری" className="nav-link-anim lg:hidden text-4xl cursor-pointer will-change-transform" aria-label="منوی کناری" role="button" tabIndex={0}>
               {isMobile && <Sidebar />}
             </div>
 
             {/* Brand block: logo + wordmark (acts as site identity) */}
             <div className="brand-anim flex xl:text-5xl md:text-4xl text-2xl text-muted items-center gap-2 justify-center will-change-transform" aria-label="لوگوی سایت">
-              <Image className="logo h-[30px] w-[30px] lg:h-[40px] lg:w-[40px] xl:w-[50px] xl:h-[50px]" quality={90} src="/images/Logo.png" alt="لوگوی کپسول" width={500} height={500} />
-              <h1 className={`${logoClassName}`}>Capsule</h1>
+              <Image title="لوگو کپسول" className="logo h-[30px] w-[30px] lg:h-[40px] lg:w-[40px] xl:w-[50px] xl:h-[50px]" quality={90} src="/images/Logo.png" alt="لوگوی کپسول" width={500} height={500} />
+              <h1 title="کپسول" className={`${logoClassName}`}>
+                Capsule
+              </h1>
             </div>
 
             {/* Desktop search area; role=search communicates purpose */}
@@ -259,7 +259,7 @@ export default function Header({ bungee }: Logo) {
                 placeholder="کپسول مورد نظر خودت رو جستجو کن"
               />
               {/* Click target for executing search; visually merged with input */}
-              <div className="bg-primary absolute left-0 h-full rounded-l-lg flex items-center justify-center shadow-inner shadow-foreground/50" role="button" tabIndex={0} aria-label="جستجو">
+              <div title="جستجو" className="bg-primary absolute left-0 h-full rounded-l-lg flex items-center justify-center shadow-inner shadow-foreground/50" role="button" tabIndex={0} aria-label="جستجو">
                 <IoIosSearch onClick={performSearchAction} className="text-3xl cursor-pointer hover:animate-caret-blink mx-2 text-foreground/70" />
               </div>
             </div>

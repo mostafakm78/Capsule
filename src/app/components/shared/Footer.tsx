@@ -33,9 +33,9 @@ export default function Footer({ bungee }: Logo) {
             {/* UI: brand/logo block; purely presentational text + image */}
             <div className="flex text-3xl md:text-5xl items-center gap-2">
               {/* UI: brand image with proper alt; decorative but still descriptive */}
-              <Image className="logo h-[30px] w-[30px] lg:h-[40px] lg:w-[40px] xl:w-[50px] xl:h-[50px]" src="/images/Logo.png" alt="لوگوی کپسول" width={50} height={50} />
+              <Image title="لوگو کپسول" className="logo h-[30px] w-[30px] lg:h-[40px] lg:w-[40px] xl:w-[50px] xl:h-[50px]" src="/images/Logo.png" alt="لوگوی کپسول" width={50} height={50} />
               {/* UI: brand heading; visual headline for the brand in the footer */}
-              <h1 className={`${logoClassName}`}>Capsule</h1>
+              <h1 title="کپسول" className={`${logoClassName}`}>Capsule</h1>
             </div>
 
             {/* UI: visual divider between brand and social links (decorative) */}
@@ -48,31 +48,31 @@ export default function Footer({ bungee }: Logo) {
               {/* Semantics: list of social destinations (each item contains a link) */}
               <ul className="flex gap-2 items-center justify-center">
                 {/* UI: Instagram item; icon marked aria-hidden within the link */}
-                <li aria-label="اینستاگرام" className="bg-secondary/10 p-1 rounded-lg hover:bg-secondary text-secondary hover:text-background duration-300 text-3xl">
+                <li title='اینستاگرام' aria-label="اینستاگرام" className="bg-secondary/10 p-1 rounded-lg hover:bg-secondary text-secondary hover:text-background duration-300 text-3xl">
                   <Link href="http://www.instagram.com/imyour_mosi" target="_blank" rel="noopener noreferrer">
                     <FaInstagram aria-hidden="true" />
                   </Link>
                 </li>
                 {/* UI: Telegram item */}
-                <li className="bg-secondary/10 p-1 rounded-lg hover:bg-secondary text-secondary hover:text-background duration-300 text-3xl">
+                <li title='تلگرام' className="bg-secondary/10 p-1 rounded-lg hover:bg-secondary text-secondary hover:text-background duration-300 text-3xl">
                   <Link aria-label="تلگرام" href="https://t.me/Mostafakamari78" target="_blank" rel="noopener noreferrer">
                     <FaTelegram aria-hidden="true" />
                   </Link>
                 </li>
                 {/* UI: LinkedIn item */}
-                <li className="bg-secondary/10 p-1 rounded-lg hover:bg-secondary text-secondary hover:text-background duration-300 text-3xl">
+                <li title='لینکدین' className="bg-secondary/10 p-1 rounded-lg hover:bg-secondary text-secondary hover:text-background duration-300 text-3xl">
                   <Link aria-label="لینکدین" href="http://linkedin.com/in/mostafa-kamari-b82450351" target="_blank" rel="noopener noreferrer">
                     <FaLinkedin aria-hidden="true" />
                   </Link>
                 </li>
                 {/* UI: WhatsApp item */}
-                <li className="bg-secondary/10 p-1 rounded-lg hover:bg-secondary text-secondary hover:text-background duration-300 text-3xl">
+                <li title='واتساپ' className="bg-secondary/10 p-1 rounded-lg hover:bg-secondary text-secondary hover:text-background duration-300 text-3xl">
                   <Link aria-label="واتساپ" href="https://wa.me/989169799533" target="_blank" rel="noopener noreferrer">
                     <FaWhatsapp aria-hidden="true" />
                   </Link>
                 </li>
                 {/* UI: Back-to-top control; button triggers smooth scroll */}
-                <li className="cursor-pointer p-1 rounded-lg text-3xl">
+                <li title='رفتن به بالای سایت' className="cursor-pointer p-1 rounded-lg text-3xl">
                   <Button className="hover:bg-secondary text-secondary hover:text-background duration-300 bg-secondary/10 cursor-pointer" onClick={scrollToUp} aria-label="رفتن به بالای صفحه">
                     <FaArrowUp aria-hidden="true" />
                   </Button>

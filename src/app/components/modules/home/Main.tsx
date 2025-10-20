@@ -1,6 +1,5 @@
 // Page-level composition: stitches together the homepage sections
 import HeroSection from './HeroSection';
-import LastCapsules from './LastCapsules';
 import Register from './Register';
 import Testimonials from './Testimonials';
 import UseCases from './UseCases';
