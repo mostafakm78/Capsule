@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     description: 'کپسول یه جور زمان‌نگهداره. خاطره‌هات رو با صدا، عکس یا نوشته می‌ذاری توش، زمان باز شدنش رو مشخص می‌کنی، و بعد... می‌مونه تا روزی که برگردی و دوباره بخونیش. برای خودت، برای یه عزیز، یا حتی واسه کسی که هنوز پیداش نکردی.',
     images: [
       {
-        url: '/images/Logo.png',
+        url: `${process.env.PUBLIC_URL}/images/Logo.png`,
         width: 512,
         height: 512,
         alt: 'سایت کپسول',
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'سایت کپسول',
     description: 'کپسول یه جور زمان‌نگهداره. خاطره‌هات رو با صدا، عکس یا نوشته می‌ذاری توش، زمان باز شدنش رو مشخص می‌کنی، و بعد... می‌مونه تا روزی که برگردی و دوباره بخونیش. برای خودت، برای یه عزیز، یا حتی واسه کسی که هنوز پیداش نکردی.',
-    images: ['/images/Logo.png'],
+    images: [`${process.env.PUBLIC_URL}/images/Logo.png`],
   },
 };
 
