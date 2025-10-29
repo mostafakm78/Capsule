@@ -23,6 +23,24 @@ For yourself, for someone special, or maybe for someone you haven’t even met y
 
 ---
 
+## 📁 Website Screenshots
+
+| 🏠 Home Page | 🧭 Dashboard |
+|--------------|--------------|
+| ![Home Page](./Site-Screen-Shots/Home%20Page.png) | ![Dashboard](./Site-Screen-Shots/Dashboard.png) |
+
+| 🔑 Login Page | 🌐 Public Capsules |
+|---------------|--------------------|
+| ![Login Page](./Site-Screen-Shots/Login.png) | ![Public Capsules](./Site-Screen-Shots/Public%20Capsules.png) |
+
+| 🛎️ Admin Notifications | 📱 Mobile View 1 |
+|-------------------------|------------------|
+| ![Admin Notifications](./Site-Screen-Shots/dashboard_admin_notifications.png) | ![Mobile View 1](./Site-Screen-Shots/Mobile_1.png) |
+
+| 📱 Mobile View 2 | 📱 Mobile View 3 |
+|------------------|------------------|
+| ![Mobile View 2](./Site-Screen-Shots/Mobile_2.png) | ![Mobile View 3](./Site-Screen-Shots/Mobile_3.png) |
+
 ## 🧠 Tech Stack
 
 - **Next.js (App Router)**
