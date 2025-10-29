@@ -1,6 +1,9 @@
 # 🌌 Capsule — Keep Your Moments Safe in Time
 
 > **Capsule** is a time-keeper for your memories.
+
+• [Visit Site](https://www.capsule-memo.ir)
+
 Store your moments — with sound, image, or text — inside a capsule, set the time when it should open again, and let it rest... until the day you come back to it.
 For yourself, for someone special, or maybe for someone you haven’t even met yet.
 
@@ -90,8 +93,6 @@ Then open [http://localhost:3000](http://localhost:3000) to view it in your brow
 
 - [ ] Add authentication and user roles
 - [ ] Implement capsule sharing via links
-- [ ] Add backend API and database
-- [ ] Enable online deployment
 
 ---
 
