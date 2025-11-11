@@ -37,6 +37,7 @@ const capsuleType = [
 
 type CpType = (typeof capsuleType)[number]['value'] | '';
 
+
 /* Parse categoryItem(s) from URLSearchParams, supporting both repeated params
    (?categoryItem=a&categoryItem=b) and comma-separated single param (?categoryItem=a,b) */
 function parseCategoriesFromParams(sp: ReadonlyURLSearchParams): string[] {
@@ -62,6 +63,8 @@ export function DashboardCategorySidebar() {
   const [categoryItem, setCategoryItem] = useState<CategoryItem[] | null>(null);
   const [selectCategories, setSelectCategories] = useState<string[]>([]);
   const [CpType, setCpType] = useState<CpType>('');
+
+  
 
   /* Fetch available categories for the current user scope */
   useEffect(() => {

@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   description: 'بخش ورود/ثبت‌نام سایت کپسول برای عضویت یا وارد شدن به حساب در سایت کپسول',
 };
 
+
 export default function Login() {
+
   return <CheckUserLogin />;
 }
